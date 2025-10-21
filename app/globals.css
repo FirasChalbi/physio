@@ -120,3 +120,40 @@
     @apply bg-background text-foreground;
   }
 }
+/* Mobile FullCalendar Optimizations */
+@media (max-width: 768px) {
+  /* Smaller text for mobile */
+  .fc-toolbar-title {
+    font-size: 1.2rem !important;
+  }
+
+  .fc-button {
+    padding: 0.3rem 0.5rem !important;
+    font-size: 0.85rem !important;
+  }
+
+  .fc-event {
+    font-size: 0.75rem !important;
+  }
+
+  /* Better touch targets */
+  .fc-event {
+    min-height: 2rem !important;
+  }
+
+  /* Hide weekends on mobile for better space */
+  .fc-day-sat,
+  .fc-day-sun {
+    display: none;
+  }
+
+  /* Stack toolbar vertically on small screens */
+  .fc-toolbar {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+
+  .fc-toolbar-chunk {
+    margin: 0.25rem 0 !important;
+  }
+}
