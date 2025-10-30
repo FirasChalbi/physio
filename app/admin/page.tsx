@@ -279,6 +279,12 @@ export default function AdminPage() {
               day: 'Jour',
               list: 'Liste'
             }}
+            slotLabelFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false,
+              omitZeroMinute: false
+            }}
             locale="fr"
             contentHeight="auto"
             aspectRatio={1.8}
@@ -289,9 +295,11 @@ export default function AdminPage() {
             selectMirror={true}
             dayMaxEvents={true}
             weekends={true}
-            slotMinTime="09:00:00"
-            slotMaxTime="18:00:00"
-            slotDuration="00:30:00"
+            slotMinTime="08:00:00"
+            slotMaxTime="17:00:00"
+            slotDuration="00:15:00"
+            slotLabelInterval="00:30:00"
+            snapDuration="00:15:00"
             allDaySlot={false}
             nowIndicator={true}
             eventClick={(info) => {
@@ -302,6 +310,50 @@ export default function AdminPage() {
             select={(info) => {
               setSelectedSlot({ start: info.start, end: info.end })
               setAddDialogOpen(true)
+            }}
+            eventDrop={async (info) => {
+              const event = info.event
+              const booking = event.extendedProps.booking
+
+              const newDate = format(event.start!, "yyyy-MM-dd")
+              const newTime = format(event.start!, "HH:mm")
+              const newDuration = Math.round(((event.end?.getTime() ?? event.start!.getTime()) - event.start!.getTime()) / (1000 * 60)) || booking.duration || 60
+
+              const { error } = await supabase
+                .from('bookings')
+                .update({
+                  booking_date: newDate,
+                  booking_time: newTime,
+                  duration: newDuration,
+                })
+                .eq('id', booking.id)
+
+              if (error) {
+                alert("Erreur lors de l'enregistrement du déplacement.")
+                info.revert()
+              } else {
+                fetchBookings()
+              }
+            }}
+            eventResize={async (info) => {
+              const event = info.event
+              const booking = event.extendedProps.booking
+
+              const newDuration = Math.round(((event.end?.getTime() ?? event.start!.getTime()) - event.start!.getTime()) / (1000 * 60))
+
+              const { error } = await supabase
+                .from('bookings')
+                .update({
+                  duration: newDuration,
+                })
+                .eq('id', booking.id)
+
+              if (error) {
+                alert("Erreur lors de l'enregistrement de la nouvelle durée.")
+                info.revert()
+              } else {
+                fetchBookings()
+              }
             }}
           />
         </div>
@@ -315,7 +367,6 @@ export default function AdminPage() {
               <SheetHeader className="border-b px-6 py-4 sticky top-0 bg-white z-10">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    {/* Bouton de fermeture */}
                     <Button 
                       variant="ghost" 
                       size="icon"
