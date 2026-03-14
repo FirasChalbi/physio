@@ -155,7 +155,7 @@ export default function BookingPage() {
     if (loading) {
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+                <Loader2 className="w-8 h-8 animate-spin text-[#ff2c92]" />
             </div>
         )
     }
@@ -173,7 +173,7 @@ export default function BookingPage() {
                         <p className="text-sm"><span className="text-slate-500">Date :</span> <span className="font-medium">{selectedDate && format(selectedDate, 'EEEE d MMMM yyyy', { locale: fr })}</span></p>
                         <p className="text-sm"><span className="text-slate-500">Heure :</span> <span className="font-medium">{selectedTime}</span></p>
                         {selectedStaff && <p className="text-sm"><span className="text-slate-500">Avec :</span> <span className="font-medium">{selectedStaff.name}</span></p>}
-                        <p className="text-sm"><span className="text-slate-500">Prix :</span> <span className="font-semibold text-blue-600">{selectedService?.price} TND</span></p>
+                        <p className="text-sm"><span className="text-slate-500">Prix :</span> <span className="font-semibold text-[#ff2c92]">{selectedService?.price} TND</span></p>
                     </div>
                     <p className="text-sm text-slate-500">Nous vous enverrons une confirmation par SMS.</p>
                     <Link href="/" className="inline-flex items-center justify-center w-full py-3 bg-slate-900 text-white rounded-xl font-semibold hover:bg-slate-800 transition-colors">
@@ -275,11 +275,12 @@ export default function BookingPage() {
                                         <button
                                             key={s._id}
                                             onClick={() => { setSelectedService(s); goNext() }}
-                                            className={`w-full bg-white rounded-2xl border-2 p-4 flex items-center gap-4 text-left transition-all hover:shadow-md hover:border-blue-200 ${selectedService?._id === s._id ? 'border-blue-500 shadow-md bg-blue-50/50' : 'border-slate-100'
+                                            className={`w-full bg-white rounded-2xl border-2 p-4 flex items-center gap-4 text-left transition-all hover:shadow-md hover:border-[#ff2c92]/30 ${selectedService?._id === s._id ? 'border-[#ff2c92] shadow-md bg-[#ff2c92]/5' : 'border-slate-100'
                                                 }`}
                                         >
-                                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-xl flex-shrink-0">
-                                                ✨
+                                            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl flex-shrink-0" style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}>
+                                                <Sparkles className="w-6 h-6 text-white" />
+
                                             </div>
                                             <div className="flex-1 min-w-0">
                                                 <p className="font-semibold text-slate-800">{s.nameFr}</p>
@@ -289,7 +290,7 @@ export default function BookingPage() {
                                                 </div>
                                             </div>
                                             <div className="text-right flex-shrink-0">
-                                                <p className="text-lg font-bold text-blue-600">{s.price} TND</p>
+                                                <p className="text-lg font-bold text-[#ff2c92]">{s.price} TND</p>
                                             </div>
                                         </button>
                                     ))}
@@ -305,7 +306,7 @@ export default function BookingPage() {
                         <h2 className="text-xl font-bold text-slate-800">Choisissez un professionnel</h2>
                         <button
                             onClick={() => { setSelectedStaff(null); goNext() }}
-                            className={`w-full bg-white rounded-2xl border-2 p-4 flex items-center gap-4 text-left transition-all hover:shadow-md hover:border-blue-200 ${!selectedStaff ? 'border-blue-500 shadow-md' : 'border-slate-100'
+                            className={`w-full bg-white rounded-2xl border-2 p-4 flex items-center gap-4 text-left transition-all hover:shadow-md hover:border-[#ff2c92]/30 ${!selectedStaff ? 'border-[#ff2c92] shadow-md' : 'border-slate-100'
                                 }`}
                         >
                             <div className="w-14 h-14 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
@@ -320,10 +321,10 @@ export default function BookingPage() {
                             <button
                                 key={s._id}
                                 onClick={() => { setSelectedStaff(s); goNext() }}
-                                className={`w-full bg-white rounded-2xl border-2 p-4 flex items-center gap-4 text-left transition-all hover:shadow-md hover:border-blue-200 ${selectedStaff?._id === s._id ? 'border-blue-500 shadow-md' : 'border-slate-100'
+                                className={`w-full bg-white rounded-2xl border-2 p-4 flex items-center gap-4 text-left transition-all hover:shadow-md hover:border-[#ff2c92]/30 ${selectedStaff?._id === s._id ? 'border-[#ff2c92] shadow-md' : 'border-slate-100'
                                     }`}
                             >
-                                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                                <div className="w-14 h-14 rounded-full flex items-center justify-center text-white font-bold text-lg" style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}>
                                     {s.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)}
                                 </div>
                                 <div className="flex-1">
@@ -332,7 +333,7 @@ export default function BookingPage() {
                                     {s.specialties?.length > 0 && (
                                         <div className="flex flex-wrap gap-1 mt-1">
                                             {s.specialties.slice(0, 3).map((sp: string) => (
-                                                <span key={sp} className="text-xs px-2 py-0.5 bg-indigo-50 text-indigo-600 rounded-full">{sp}</span>
+                                                <span key={sp} className="text-xs px-2 py-0.5 bg-[#ff2c92]/10 text-[#ff2c92] rounded-full">{sp}</span>
                                             ))}
                                         </div>
                                     )}
@@ -355,16 +356,16 @@ export default function BookingPage() {
                                     <button
                                         key={date.toISOString()}
                                         onClick={() => setSelectedDate(date)}
-                                        className={`flex-shrink-0 w-16 py-3 rounded-2xl text-center transition-all ${isSelected ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' :
-                                                isToday ? 'bg-blue-50 border-2 border-blue-200 text-blue-700' :
+                                        className={`flex-shrink-0 w-16 py-3 rounded-2xl text-center transition-all ${isSelected ? 'bg-[#ff2c92] text-white shadow-lg shadow-[#ff2c92]/25' :
+                                                isToday ? 'bg-[#ff2c92]/10 border-2 border-[#ff2c92]/30 text-[#ff2c92]' :
                                                     'bg-white border border-slate-100 text-slate-700 hover:bg-slate-50'
                                             }`}
                                     >
-                                        <p className={`text-xs font-medium ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                                        <p className={`text-xs font-medium ${isSelected ? 'text-white' : 'text-slate-400'}`}>
                                             {format(date, 'EEE', { locale: fr })}
                                         </p>
                                         <p className="text-lg font-bold">{format(date, 'd')}</p>
-                                        <p className={`text-xs ${isSelected ? 'text-blue-100' : 'text-slate-400'}`}>
+                                        <p className={`text-xs ${isSelected ? 'text-white' : 'text-slate-400'}`}>
                                             {format(date, 'MMM', { locale: fr })}
                                         </p>
                                     </button>
@@ -385,9 +386,9 @@ export default function BookingPage() {
                                                 key={time}
                                                 disabled={taken}
                                                 onClick={() => setSelectedTime(time)}
-                                                className={`py-3 rounded-xl text-sm font-medium transition-all ${isSelected ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/25' :
+                                                className={`py-3 rounded-xl text-sm font-medium transition-all ${isSelected ? 'bg-[#ff2c92] text-white shadow-lg shadow-[#ff2c92]/25' :
                                                         taken ? 'bg-slate-100 text-slate-300 cursor-not-allowed line-through' :
-                                                            'bg-white border border-slate-200 text-slate-700 hover:border-blue-300 hover:bg-blue-50'
+                                                            'bg-white border border-slate-200 text-slate-700 hover:border-[#ff2c92]/50 hover:bg-[#ff2c92]/5'
                                                     }`}
                                             >
                                                 {time}
@@ -396,7 +397,7 @@ export default function BookingPage() {
                                     })}
                                 </div>
                                 {selectedTime && (
-                                    <button onClick={goNext} className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 mt-4">
+                                    <button onClick={goNext} className="w-full py-3 text-white rounded-xl font-semibold hover:opacity-90 transition-all flex items-center justify-center gap-2 mt-4" style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}>
                                         Continuer <ArrowRight className="w-4 h-4" />
                                     </button>
                                 )}
@@ -412,22 +413,22 @@ export default function BookingPage() {
                         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-slate-700 flex items-center gap-2"><User className="w-4 h-4 text-slate-400" />Nom complet *</label>
-                                <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Votre nom" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300 transition-all" />
+                                <input type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} required placeholder="Votre nom" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff2c92]/50 focus:border-[#ff2c92]/30 transition-all" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-slate-700 flex items-center gap-2"><Phone className="w-4 h-4 text-slate-400" />Téléphone *</label>
-                                <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} required placeholder="+33 6 12 34 56 78" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300 transition-all" />
+                                <input type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} required placeholder="+216 99 484 848" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff2c92]/50 focus:border-[#ff2c92]/30 transition-all" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-slate-700 flex items-center gap-2"><Mail className="w-4 h-4 text-slate-400" />Email (optionnel)</label>
-                                <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="votre@email.com" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300 transition-all" />
+                                <input type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} placeholder="votre@email.com" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff2c92]/50 focus:border-[#ff2c92]/30 transition-all" />
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-slate-700 flex items-center gap-2"><FileText className="w-4 h-4 text-slate-400" />Demandes spéciales</label>
-                                <textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} placeholder="Allergies, préférences..." className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-300 transition-all resize-none" />
+                                <textarea value={formData.notes} onChange={(e) => setFormData({ ...formData, notes: e.target.value })} rows={3} placeholder="Allergies, préférences..." className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#ff2c92]/50 focus:border-[#ff2c92]/30 transition-all resize-none" />
                             </div>
                         </div>
-                        <button onClick={goNext} disabled={!formData.name || !formData.phone} className="w-full py-3 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2">
+                        <button onClick={goNext} disabled={!formData.name || !formData.phone} className="w-full py-3 text-white rounded-xl font-semibold disabled:opacity-50 hover:opacity-90 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2" style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}>
                             Continuer <ArrowRight className="w-4 h-4" />
                         </button>
                     </div>
@@ -439,8 +440,8 @@ export default function BookingPage() {
                         <h2 className="text-xl font-bold text-slate-800">Confirmez votre réservation</h2>
                         <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-4">
                             <div className="flex items-center gap-4">
-                                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white text-2xl">
-                                    ✨
+                                <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white text-2xl" style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}>
+                                    <Sparkles className="w-6 h-6 text-white" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-slate-800">{selectedService?.nameFr}</h3>
@@ -455,13 +456,14 @@ export default function BookingPage() {
                             </div>
                             <div className="flex items-center justify-between pt-2 border-t border-slate-100">
                                 <span className="text-lg font-semibold text-slate-800">Total</span>
-                                <span className="text-2xl font-bold text-blue-600">{selectedService?.price} TND</span>
+                                <span className="text-2xl font-bold text-[#ff2c92]">{selectedService?.price} TND</span>
                             </div>
                         </div>
                         <button
                             onClick={handleSubmit}
                             disabled={submitting}
-                            className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl font-bold text-lg transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="w-full py-4 text-white rounded-xl font-bold text-lg transition-all shadow-lg shadow-[#ff2c92]/25 flex items-center justify-center gap-2 disabled:opacity-50"
+                            style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
                         >
                             {submitting ? (
                                 <><Loader2 className="w-5 h-5 animate-spin" /> Confirmation...</>

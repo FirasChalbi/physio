@@ -5,7 +5,8 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Loader2, Lock, Mail, User, Sparkles } from "lucide-react"
+import Image from "next/image"
+import { Loader2, Lock, Mail, User } from "lucide-react"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -110,7 +111,13 @@ export default function LoginPage() {
               boxShadow: '0 8px 32px rgba(255,44,146,0.3)',
             }}
           >
-            <Sparkles className="w-8 h-8 text-white" />
+              <Image
+                src="/logo.png"
+                alt="Institut Physio"
+                width={90}
+                height={90}
+                className="w-full h-full object-cover mt-1"
+              />
           </div>
           <h1
             className="text-3xl font-bold text-gray-900 tracking-tight"

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { auth } from "@/auth"
 import connectDB from "@/lib/mongodb"
 import { getServiceModel } from "@/lib/models"
 
@@ -17,6 +18,12 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const session = await auth()
+    const role = (session?.user as any)?.role
+    if (!session || (role !== 'admin' && role !== 'staff')) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 403 })
+    }
+
     await connectDB()
     const Service = getServiceModel()
     const { id } = await params
@@ -31,6 +38,12 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const session = await auth()
+    const role = (session?.user as any)?.role
+    if (!session || (role !== 'admin' && role !== 'staff')) {
+      return NextResponse.json({ error: "Non autorisé" }, { status: 403 })
+    }
+
     await connectDB()
     const Service = getServiceModel()
     const { id } = await params

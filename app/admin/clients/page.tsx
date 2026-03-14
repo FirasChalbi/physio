@@ -231,7 +231,7 @@ export default function ClientsPage() {
                         </div>
                         <div className="space-y-2">
                             <Label>Téléphone *</Label>
-                            <Input value={newClient.phone} onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })} required placeholder="+33 6 ..." />
+                            <Input value={newClient.phone} onChange={(e) => setNewClient({ ...newClient, phone: e.target.value })} required placeholder="+216 99 484 848" />
                         </div>
                         <div className="space-y-2">
                             <Label>Email</Label>

@@ -7,6 +7,7 @@ export interface IService {
   description: string
   descriptionFr: string
   category: string
+  subCategory: string
   duration: number
   price: number
   image?: string
@@ -21,6 +22,7 @@ const ServiceSchema = new Schema<IService>({
   description: { type: String, required: true },
   descriptionFr: { type: String, required: true },
   category: { type: String, required: true },
+  subCategory: { type: String, default: '' },
   duration: { type: Number, required: true },
   price: { type: Number, required: true },
   image: { type: String },

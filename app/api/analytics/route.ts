@@ -103,6 +103,26 @@ export async function GET(req: NextRequest) {
     const totalClients = await Client.countDocuments()
     const newClientsCount = await Client.countDocuments({ createdAt: { $gte: startDate, $lte: endDate } })
 
+    // Top 3 bookers
+    const clientBookingCount: Record<string, { clientId: string; count: number; revenue: number }> = {}
+    currentBookings.forEach(b => {
+      const cid = b.client?.toString()
+      if (!cid) return
+      if (!clientBookingCount[cid]) clientBookingCount[cid] = { clientId: cid, count: 0, revenue: 0 }
+      clientBookingCount[cid].count++
+      clientBookingCount[cid].revenue += b.price || 0
+    })
+    const topBookerIds = Object.values(clientBookingCount).sort((a, b) => b.count - a.count).slice(0, 3)
+    const topBookerClients = await Client.find({ _id: { $in: topBookerIds.map(t => t.clientId) } }).select('name phone')
+    const clientMap: Record<string, any> = {}
+    topBookerClients.forEach(c => { clientMap[c._id.toString()] = c })
+    const topBookers = topBookerIds.map(t => ({
+      name: clientMap[t.clientId]?.name || 'Inconnu',
+      phone: clientMap[t.clientId]?.phone || '',
+      bookings: t.count,
+      revenue: t.revenue,
+    }))
+
     return NextResponse.json({
       revenue, prevRevenue,
       totalBookings: currentBookings.length,
@@ -110,6 +130,7 @@ export async function GET(req: NextRequest) {
       topServices, busyDays, staffPerformance,
       noShowRate, retentionRate,
       revenueChart, totalClients, newClientsCount,
+      topBookers,
     })
   } catch (error) {
     console.error('Analytics error:', error)

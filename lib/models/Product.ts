@@ -9,6 +9,7 @@ export interface IProduct {
   category: string
   price: number
   image?: string
+  images: string[]
   slug: string
   stock: number
   isActive: boolean
@@ -23,6 +24,7 @@ const ProductSchema = new Schema<IProduct>({
   category: { type: String, required: true },
   price: { type: Number, required: true },
   image: { type: String },
+  images: { type: [String], default: [] },
   slug: { type: String, unique: true, sparse: true },
   stock: { type: Number, default: 0 },
   isActive: { type: Boolean, default: true },

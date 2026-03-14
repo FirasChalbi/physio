@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
 
                 {/* Staff Performance */}
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="font-semibold text-slate-800 mb-4">Performance de l'équipe</h3>
+                    <h3 className="font-semibold text-slate-800 mb-4">Performance de l&apos;équipe</h3>
                     <div className="space-y-3">
                         {(data?.staffPerformance || []).map((s: any, i: number) => (
                             <div key={s.name} className="flex items-center gap-3">
@@ -140,6 +140,32 @@ export default function AnalyticsPage() {
                             </div>
                         ))}
                         {(!data?.staffPerformance || data.staffPerformance.length === 0) && (
+                            <p className="text-center text-slate-400 py-4">Aucune donnée</p>
+                        )}
+                    </div>
+                </div>
+
+                {/* Top 3 Clients */}
+                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                    <h3 className="font-semibold text-slate-800 mb-4">Top 3 Clients</h3>
+                    <div className="space-y-3">
+                        {(data?.topBookers || []).map((c: any, i: number) => {
+                            const medals = ['🥇', '🥈', '🥉']
+                            return (
+                                <div key={c.name + i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
+                                    <span className="text-2xl">{medals[i]}</span>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="text-sm font-semibold text-slate-800 truncate">{c.name}</p>
+                                        {c.phone && <p className="text-xs text-slate-400">{c.phone}</p>}
+                                    </div>
+                                    <div className="text-right flex-shrink-0">
+                                        <p className="text-sm font-bold text-blue-600">{c.bookings} rdv</p>
+                                        <p className="text-xs text-slate-500">{c.revenue} TND</p>
+                                    </div>
+                                </div>
+                            )
+                        })}
+                        {(!data?.topBookers || data.topBookers.length === 0) && (
                             <p className="text-center text-slate-400 py-4">Aucune donnée</p>
                         )}
                     </div>

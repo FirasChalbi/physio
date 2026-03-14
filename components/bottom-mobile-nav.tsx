@@ -52,10 +52,9 @@ export function BottomMobileNav() {
 
   return (
     <>
-      <nav 
-        className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 shadow-[0_-4px_24px_rgba(255,44,146,0.08)] transition-all duration-500 transform ${
-          isHome && !scrolled ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100 pointer-events-auto'
-        }`}
+      <nav
+        className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-100 shadow-[0_-4px_24px_rgba(255,44,146,0.08)] transition-all duration-500 transform ${isHome && !scrolled ? 'translate-y-[150%] opacity-0 pointer-events-none' : 'translate-y-0 opacity-100 pointer-events-auto'
+          }`}
       >
         <div className="flex items-center justify-around px-2 pb-safe">
           {navItems.map((item) => {
@@ -82,7 +81,7 @@ export function BottomMobileNav() {
                           alt="Institut Physio"
                           width={56}
                           height={56}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover mt-1"
                         />
                       </div>
                     </div>
