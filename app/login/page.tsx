@@ -174,7 +174,7 @@ export default function LoginPage() {
               )}
               Google
             </button>
-            <button
+            {/* <button
               onClick={() => handleSocialLogin("facebook")}
               disabled={!!socialLoading}
               className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 transition-all text-sm font-medium text-gray-700 disabled:opacity-50"
@@ -187,7 +187,7 @@ export default function LoginPage() {
                 </svg>
               )}
               Facebook
-            </button>
+            </button> */}
           </div>
 
           {/* Divider */}

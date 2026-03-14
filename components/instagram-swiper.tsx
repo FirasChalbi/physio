@@ -25,11 +25,11 @@ export default function InstagramSwiper() {
   return (
     <div className="mb-10 max-w-7xl mx-auto px-0 md:px-6">
       <div className="text-center mb-12">
-        <h2 className="inline-flex items-baseline gap-3 text-4xl lg:text-5xl leading-tight">
-          <span className="font-extrabold text-gray-900" style={{ fontFamily: 'Inter, sans-serif' }}>
+        <h2 className="flex flex-col md:flex-row md:inline-flex items-center md:items-baseline justify-center gap-1 md:gap-3 text-4xl lg:text-5xl leading-tight">
+          <span className="font-extrabold text-gray-900" style={{ fontFamily: 'Georgia, serif' }}>
             Suivez-nous sur
           </span>
-          <span className="font-extrabold" style={{ color: '#ff2c92', fontFamily: 'Inter, sans-serif' }}>
+          <span className="font-extrabold" style={{ color: '#ff2c92', fontFamily: 'Georgia, serif' }}>
             Instagram
           </span>
         </h2>

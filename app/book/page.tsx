@@ -249,6 +249,7 @@ export default function BookingPage() {
                         <div 
                             ref={scrollContainerRef}
                             className="flex overflow-x-auto pb-2 -mx-2 px-2 gap-2 scrollbar-hide scroll-smooth"
+                            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                         >
                             {categoriesList.map(cat => (
                                 <button

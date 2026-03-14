@@ -3,11 +3,15 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Menu } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 import { MobileMenuDrawer } from './mobile-menu-drawer'
-
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
+  
+  const isHome = pathname === '/'
+  const useDarkText = scrolled || !isHome
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20)
@@ -35,14 +39,14 @@ export function Navbar() {
           {/* Left links */}
           <div className="flex items-center gap-8 text-sm font-medium flex-1">
             <a
-              href="#services"
-              className={`transition-colors hover:text-[#ff2c92] ${scrolled ? 'text-gray-700' : 'text-white'}`}
+              href={isHome ? "#services" : "/#services"}
+              className={`transition-colors hover:text-[#ff2c92] ${useDarkText ? 'text-gray-700' : 'text-white'}`}
             >
               Services
             </a>
             <Link
               href="/products"
-              className={`transition-colors hover:text-[#ff2c92] ${scrolled ? 'text-gray-700' : 'text-white'}`}
+              className={`transition-colors hover:text-[#ff2c92] ${useDarkText ? 'text-gray-700' : 'text-white'}`}
             >
               Produits
             </Link>
@@ -52,7 +56,7 @@ export function Navbar() {
           <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
             <span
               className={`text-2xl font-bold tracking-widest uppercase transition-colors ${
-                scrolled ? 'text-gray-900' : 'text-white'
+                useDarkText ? 'text-gray-900' : 'text-white'
               }`}
               style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.2em' }}
             >
@@ -69,14 +73,14 @@ export function Navbar() {
           {/* Right links */}
           <div className="flex items-center gap-8 text-sm font-medium flex-1 justify-end">
             <a
-              href="#contact"
-              className={`transition-colors hover:text-[#ff2c92] ${scrolled ? 'text-gray-700' : 'text-white'}`}
+              href={isHome ? "#contact" : "/#contact"}
+              className={`transition-colors hover:text-[#ff2c92] ${useDarkText ? 'text-gray-700' : 'text-white'}`}
             >
               Contact
             </a>
             <Link
               href="/account"
-              className={`transition-colors hover:text-[#ff2c92] ${scrolled ? 'text-gray-700' : 'text-white'}`}
+              className={`transition-colors hover:text-[#ff2c92] ${useDarkText ? 'text-gray-700' : 'text-white'}`}
             >
               Compte
             </Link>
@@ -94,7 +98,7 @@ export function Navbar() {
         <div className="lg:hidden flex items-center justify-between px-4 h-16">
           <span
             className={`text-lg font-bold tracking-widest uppercase transition-colors ${
-              scrolled ? 'text-gray-900' : 'text-white'
+              useDarkText ? 'text-gray-900' : 'text-white'
             }`}
             style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.15em' }}
           >
@@ -104,7 +108,7 @@ export function Navbar() {
           <button
             onClick={() => setMobileMenuOpen(true)}
             className={`w-10 h-10 rounded-full border flex items-center justify-center hover:border-[#ff2c92] hover:bg-[#ff2c92]/10 transition-all ${
-              scrolled ? 'border-gray-200 text-gray-700' : 'border-white/30 text-white'
+              useDarkText ? 'border-gray-200 text-gray-700' : 'border-white/30 text-white'
             }`}
             aria-label="Ouvrir le menu"
           >

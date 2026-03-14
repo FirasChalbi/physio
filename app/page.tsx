@@ -284,7 +284,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {products.slice(0, 8).map((p: any) => (
-                <div key={p._id} className="group cursor-pointer">
+                <Link key={p._id} href={`/products/${p.slug || p._id}`} className="group cursor-pointer">
                   <div className="relative aspect-square bg-gray-50 rounded-2xl overflow-hidden mb-4 border border-gray-100 group-hover:border-[#ff2c92]/30 group-hover:shadow-xl group-hover:shadow-[#ff2c92]/10 transition-all duration-300">
                     {p.image ? (
                       <img
@@ -317,55 +317,53 @@ export default function HomePage() {
                   >
                     {p.price} TND
                   </p>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
         </section>
       )}
-      {/* ── AVANT / APRÈS ── Warm beige background like reference image */}
-      <section className="py-24" style={{ background: '#f5ede6' }}>
-        <div className="max-w-5xl mx-auto px-6">
+{/* ── AVANT / APRÈS ── */}
+<section className="py-24" style={{ background: '#f5ede6' }}>
+  <div className="max-w-5xl mx-auto px-6">
 
-          {/* Title: "Avant & Après" — black bold + pink bold, matching the image */}
-          <div className="text-center mb-12">
-            <h2 className="inline-flex items-baseline gap-3 text-4xl lg:text-5xl leading-tight">
-              <span className="font-extrabold text-gray-900" style={{ fontFamily: 'Inter, sans-serif' }}>
-                Avant
-              </span>
-              <span className="font-bold text-gray-500 text-3xl lg:text-4xl">&amp;</span>
-              <span className="font-extrabold" style={{ color: '#ff2c92', fontFamily: 'Inter, sans-serif' }}>
-                Après
-              </span>
-            </h2>
-            <p className="text-gray-500 max-w-xl mx-auto mt-4 text-sm leading-relaxed">
-              Des résultats réels et tangibles grâce à des protocoles de soins adaptés et maîtrisés par notre équipe d'experts.
-            </p>
-          </div>
+    {/* Title — matches Image 2 exactly */}
+    <div className="text-center mb-12">
+      <h2 className="text-4xl lg:text-5xl leading-tight font-extrabold" style={{ fontFamily: 'Georgia, serif' }}>
+        <span className="text-gray-900">Avant</span>
+        <span className="text-gray-900 font-normal"> &amp; </span>
+        <span style={{ color: '#ff2c92' }}>Après</span>
+      </h2>
+      <p className="text-gray-500 max-w-xl mx-auto mt-4 text-sm leading-relaxed">
+        Des résultats réels et tangibles grâce à des protocoles de soins adaptés et maîtrisés par notre équipe d'experts.
+      </p>
+    </div>
 
-          {/* Two sliders side by side */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {/* Slider 1 — young woman */}
-            <BeforeAfterSlider
-              beforeImage="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-              afterImage="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-              beforeLabel="AVANT"
-              afterLabel="APRÈS"
-              beforeClass="filter contrast-110 saturate-50 brightness-90"
-              afterClass="filter brightness-105 saturate-125 contrast-95"
-            />
-            {/* Slider 2 — mature woman */}
-            <BeforeAfterSlider
-              beforeImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-              afterImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-              beforeLabel="AVANT"
-              afterLabel="APRÈS"
-              beforeClass="filter contrast-125 saturate-40 brightness-85 sepia-[0.2]"
-              afterClass="filter brightness-108 saturate-120"
-            />
-          </div>
-        </div>
-      </section>
+    {/* 2 sliders on desktop, 1 on mobile */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
+      <BeforeAfterSlider
+        beforeImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
+          afterImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
+          beforeLabel="AVANT"
+        afterLabel="APRÈS"
+        beforeClass="filter contrast-110 saturate-50 brightness-90"
+        afterClass="filter brightness-105 saturate-125 contrast-95"
+      />
+
+      {/* Hidden on mobile, visible on md+ */}
+      <div className="hidden md:block">
+        <BeforeAfterSlider
+          beforeImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
+          afterImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
+          beforeLabel="AVANT"
+          afterLabel="APRÈS"
+          beforeClass="filter contrast-125 saturate-40 brightness-85 sepia-[0.2]"
+          afterClass="filter brightness-108 saturate-120"
+        />
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* ── INSTAGRAM SWIPER ── */}
       <section className="py-24 bg-white overflow-hidden">

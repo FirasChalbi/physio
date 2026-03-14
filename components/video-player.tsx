@@ -192,11 +192,11 @@ export default function VideoPlayer({
                         height={32}
                         className="rounded-full border border-white/20"
                     />
-                    <Link href="https://www.instagram.com/by_khouloud_abid/"
+                    <Link href="https://www.instagram.com/institut_physio/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-white text-sm font-medium hover:underline flex items-center gap-2">
-                        Heaven.Glow 
+                        Institut.Physio 
                         {/* We removed the explicit seal.avif image assumption or uncomment if image exists */}
                     </Link>
                 </div>
