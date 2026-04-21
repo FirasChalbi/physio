@@ -9,7 +9,7 @@ interface LogoProps {
 
 export default function Logo({ size = "md", href = "/", className = "" }: LogoProps) {
   const sizes = {
-    sm: { icon: "w-5 h-5", life: "text-sm", yvelines: "text-[9px]" },
+    sm: { icon: "w-5 h-4", life: "text-sm", yvelines: "text-[9px]" },
     md: { icon: "w-6 h-6", life: "text-lg", yvelines: "text-[10px]" },
     lg: { icon: "w-8 h-8", life: "text-xl", yvelines: "text-[11px]" },
   }
