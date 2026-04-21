@@ -1,175 +1,115 @@
 // app/admin/analytics/page.tsx
 "use client"
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from "recharts"
+import { TrendingUp, Eye, ShoppingCart, DollarSign } from "lucide-react"
 
-import { useEffect, useState } from "react"
-import { BarChart3, TrendingUp, Users, Calendar, DollarSign, Loader2, UserCheck, UserX } from "lucide-react"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts'
+const monthlyRevenue = [
+    { name: 'Jan', revenue: 8200 }, { name: 'Fév', revenue: 9400 }, { name: 'Mar', revenue: 11200 },
+    { name: 'Avr', revenue: 15200 }, { name: 'Mai', revenue: 0 }, { name: 'Jun', revenue: 0 },
+]
 
-const COLORS = ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#f97316']
+const categorySplit = [
+    { name: 'Restaurants', value: 35, color: '#10b981' },
+    { name: 'Spa', value: 25, color: '#06b6d4' },
+    { name: 'Hôtels', value: 20, color: '#8b5cf6' },
+    { name: 'Beauté', value: 12, color: '#f59e0b' },
+    { name: 'Sport', value: 8, color: '#f43f5e' },
+]
+
+const dailyOrders = [
+    { day: 'Lun', orders: 12, views: 340 }, { day: 'Mar', orders: 18, views: 520 },
+    { day: 'Mer', orders: 14, views: 410 }, { day: 'Jeu', orders: 22, views: 680 },
+    { day: 'Ven', orders: 28, views: 890 }, { day: 'Sam', orders: 35, views: 1200 },
+    { day: 'Dim', orders: 24, views: 760 },
+]
+
+const kpis = [
+    { label: 'Vues totales', value: '24,860', change: '+18%', icon: Eye, color: '#06b6d4' },
+    { label: 'Commandes', value: '153', change: '+24%', icon: ShoppingCart, color: '#10b981' },
+    { label: 'Revenu total', value: '44,000 DT', change: '+15%', icon: DollarSign, color: '#8b5cf6' },
+    { label: 'Taux conversion', value: '6.2%', change: '+0.8%', icon: TrendingUp, color: '#f59e0b' },
+]
 
 export default function AnalyticsPage() {
-    const [data, setData] = useState<any>(null)
-    const [loading, setLoading] = useState(true)
-    const [period, setPeriod] = useState('month')
-
-    useEffect(() => {
-        const fetchAnalytics = async () => {
-            setLoading(true)
-            try {
-                const res = await fetch(`/api/analytics?period=${period}`)
-                setData(await res.json())
-            } catch (e) { console.error(e) }
-            finally { setLoading(false) }
-        }
-        fetchAnalytics()
-    }, [period])
-
-    if (loading) return <div className="flex items-center justify-center h-96"><Loader2 className="w-8 h-8 animate-spin text-blue-500" /></div>
-
-    const statCards = [
-        { label: 'Revenu', value: `${data?.revenue || 0} TND`, prev: `${data?.prevRevenue || 0} TND`, icon: DollarSign, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-        { label: 'Réservations', value: data?.totalBookings || 0, prev: data?.prevTotalBookings || 0, icon: Calendar, color: 'text-blue-600', bg: 'bg-blue-50' },
-        { label: 'Taux de rétention', value: `${data?.retentionRate || 0}%`, icon: UserCheck, color: 'text-purple-600', bg: 'bg-purple-50' },
-        { label: 'Taux d\'absence', value: `${data?.noShowRate || 0}%`, icon: UserX, color: 'text-orange-600', bg: 'bg-orange-50' },
-        { label: 'Total clients', value: data?.totalClients || 0, icon: Users, color: 'text-indigo-600', bg: 'bg-indigo-50' },
-        { label: 'Nouveaux clients', value: data?.newClientsCount || 0, icon: TrendingUp, color: 'text-pink-600', bg: 'bg-pink-50' },
-    ]
-
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-2xl font-bold text-slate-800">Analytiques & Rapports</h1>
-                <Select value={period} onValueChange={setPeriod}>
-                    <SelectTrigger className="w-40"><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="week">Cette semaine</SelectItem>
-                        <SelectItem value="month">Ce mois</SelectItem>
-                        <SelectItem value="year">Cette année</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
+        <div className="space-y-6 animate-fade-in">
+            <div><h1 className="text-2xl font-bold text-white">Analytiques</h1><p className="text-sm text-[#6a6a80] mt-1">Vue d'ensemble des performances</p></div>
 
-            {/* Stat Cards */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
-                {statCards.map((card) => {
-                    const Icon = card.icon
+            {/* KPI Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {kpis.map(kpi => {
+                    const Icon = kpi.icon
                     return (
-                        <div key={card.label} className="bg-white rounded-2xl p-4 border border-slate-100 shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                                <span className="text-xs font-medium text-slate-500">{card.label}</span>
-                                <div className={`p-1.5 rounded-lg ${card.bg}`}><Icon className={`w-4 h-4 ${card.color}`} /></div>
+                        <div key={kpi.label} className="stat-card rounded-2xl p-5 border" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${kpi.color}15` }}><Icon className="w-5 h-5" style={{ color: kpi.color }} /></div>
+                                <span className="text-xs font-medium text-emerald-400">{kpi.change}</span>
                             </div>
-                            <p className="text-2xl font-bold text-slate-800">{card.value}</p>
+                            <p className="text-2xl font-bold text-white">{kpi.value}</p>
+                            <p className="text-xs text-[#6a6a80] mt-1">{kpi.label}</p>
                         </div>
                     )
                 })}
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Charts */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Revenue Chart */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="font-semibold text-slate-800 mb-4">Revenu par jour</h3>
-                    <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={data?.revenueChart || []}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                                <XAxis dataKey="date" tick={{ fontSize: 11 }} tickFormatter={(v) => v.slice(5)} />
-                                <YAxis tick={{ fontSize: 11 }} />
-                                <Tooltip formatter={(value: any) => [`${value} TND`, 'Revenu']} />
-                                <Line type="monotone" dataKey="amount" stroke="#3b82f6" strokeWidth={2} dot={{ fill: '#3b82f6', r: 3 }} />
-                            </LineChart>
+                <div className="rounded-2xl p-5 border" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                    <h3 className="text-base font-semibold text-white mb-5">Revenu mensuel</h3>
+                    <ResponsiveContainer width="100%" height={260}>
+                        <BarChart data={monthlyRevenue}>
+                            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                            <XAxis dataKey="name" stroke="#6a6a80" fontSize={12} tickLine={false} axisLine={false} />
+                            <YAxis stroke="#6a6a80" fontSize={12} tickLine={false} axisLine={false} />
+                            <Tooltip contentStyle={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f0f0f5' }} />
+                            <Bar dataKey="revenue" fill="#10b981" radius={[6, 6, 0, 0]} />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+
+                {/* Category Split */}
+                <div className="rounded-2xl p-5 border" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                    <h3 className="text-base font-semibold text-white mb-5">Répartition par catégorie</h3>
+                    <div className="flex items-center gap-6">
+                        <ResponsiveContainer width="50%" height={220}>
+                            <PieChart>
+                                <Pie data={categorySplit} cx="50%" cy="50%" innerRadius={55} outerRadius={85} paddingAngle={3} dataKey="value">
+                                    {categorySplit.map((entry, idx) => (<Cell key={idx} fill={entry.color} />))}
+                                </Pie>
+                                <Tooltip contentStyle={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f0f0f5' }} />
+                            </PieChart>
                         </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* Top Services */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="font-semibold text-slate-800 mb-4">Services les plus réservés</h3>
-                    <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data?.topServices || []} layout="vertical">
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                                <XAxis type="number" tick={{ fontSize: 11 }} />
-                                <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 11 }} />
-                                <Tooltip />
-                                <Bar dataKey="count" fill="#8b5cf6" radius={[0, 6, 6, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* Busy Days */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="font-semibold text-slate-800 mb-4">Jours les plus chargés</h3>
-                    <div className="h-64">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <BarChart data={data?.busyDays || []}>
-                                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
-                                <XAxis dataKey="day" tick={{ fontSize: 11 }} />
-                                <YAxis tick={{ fontSize: 11 }} />
-                                <Tooltip />
-                                <Bar dataKey="count" fill="#10b981" radius={[6, 6, 0, 0]} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
-
-                {/* Staff Performance */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="font-semibold text-slate-800 mb-4">Performance de l&apos;équipe</h3>
-                    <div className="space-y-3">
-                        {(data?.staffPerformance || []).map((s: any, i: number) => (
-                            <div key={s.name} className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: COLORS[i % COLORS.length] }}>
-                                    {i + 1}
+                        <div className="space-y-3">
+                            {categorySplit.map(cat => (
+                                <div key={cat.name} className="flex items-center gap-2.5">
+                                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: cat.color }} />
+                                    <span className="text-sm text-[#a0a0b8]">{cat.name}</span>
+                                    <span className="text-sm font-semibold text-white ml-auto">{cat.value}%</span>
                                 </div>
-                                <div className="flex-1">
-                                    <p className="text-sm font-medium">{s.name}</p>
-                                    <div className="w-full bg-slate-100 rounded-full h-2 mt-1">
-                                        <div className="h-2 rounded-full" style={{
-                                            width: `${Math.min(100, (s.bookings / Math.max(...(data?.staffPerformance || []).map((x: any) => x.bookings), 1)) * 100)}%`,
-                                            backgroundColor: COLORS[i % COLORS.length]
-                                        }} />
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-semibold">{s.bookings} rdv</p>
-                                    <p className="text-xs text-slate-500">{s.revenue} TND</p>
-                                </div>
-                            </div>
-                        ))}
-                        {(!data?.staffPerformance || data.staffPerformance.length === 0) && (
-                            <p className="text-center text-slate-400 py-4">Aucune donnée</p>
-                        )}
+                            ))}
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                {/* Top 3 Clients */}
-                <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
-                    <h3 className="font-semibold text-slate-800 mb-4">Top 3 Clients</h3>
-                    <div className="space-y-3">
-                        {(data?.topBookers || []).map((c: any, i: number) => {
-                            const medals = ['🥇', '🥈', '🥉']
-                            return (
-                                <div key={c.name + i} className="flex items-center gap-3 p-3 rounded-xl bg-slate-50">
-                                    <span className="text-2xl">{medals[i]}</span>
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-semibold text-slate-800 truncate">{c.name}</p>
-                                        {c.phone && <p className="text-xs text-slate-400">{c.phone}</p>}
-                                    </div>
-                                    <div className="text-right flex-shrink-0">
-                                        <p className="text-sm font-bold text-blue-600">{c.bookings} rdv</p>
-                                        <p className="text-xs text-slate-500">{c.revenue} TND</p>
-                                    </div>
-                                </div>
-                            )
-                        })}
-                        {(!data?.topBookers || data.topBookers.length === 0) && (
-                            <p className="text-center text-slate-400 py-4">Aucune donnée</p>
-                        )}
-                    </div>
-                </div>
+            {/* Daily Activity */}
+            <div className="rounded-2xl p-5 border" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                <h3 className="text-base font-semibold text-white mb-5">Activité quotidienne</h3>
+                <ResponsiveContainer width="100%" height={260}>
+                    <AreaChart data={dailyOrders}>
+                        <defs>
+                            <linearGradient id="colorViews" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#06b6d4" stopOpacity={0.3} /><stop offset="100%" stopColor="#06b6d4" stopOpacity={0} /></linearGradient>
+                            <linearGradient id="colorOrders" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#10b981" stopOpacity={0.3} /><stop offset="100%" stopColor="#10b981" stopOpacity={0} /></linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
+                        <XAxis dataKey="day" stroke="#6a6a80" fontSize={12} tickLine={false} axisLine={false} />
+                        <YAxis stroke="#6a6a80" fontSize={12} tickLine={false} axisLine={false} />
+                        <Tooltip contentStyle={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f0f0f5' }} />
+                        <Area type="monotone" dataKey="views" stroke="#06b6d4" strokeWidth={2} fill="url(#colorViews)" name="Vues" />
+                        <Area type="monotone" dataKey="orders" stroke="#10b981" strokeWidth={2} fill="url(#colorOrders)" name="Commandes" />
+                    </AreaChart>
+                </ResponsiveContainer>
             </div>
         </div>
     )

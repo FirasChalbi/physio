@@ -5,13 +5,13 @@ export default auth((req) => {
   const { pathname } = req.nextUrl
   const token = req.auth
 
-  // /admin/* — require admin or staff role
+  // /admin/* — require admin or merchant role
   if (pathname.startsWith("/admin")) {
     if (!token) {
       return NextResponse.redirect(new URL("/login", req.url))
     }
     const role = (token as any).user?.role
-    if (role !== "admin" && role !== "staff") {
+    if (role !== "admin" && role !== "merchant") {
       return NextResponse.redirect(new URL("/account", req.url))
     }
   }

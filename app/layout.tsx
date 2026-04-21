@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Providers } from "./providers";
+import BottomNav from "@/components/BottomNav";
 import "./globals.css";
 
 const inter = Inter({
@@ -9,8 +10,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Institut Physio — Réservation en ligne",
-  description: "Institut de beauté & bien-être à Sfax. Laser, Hydrafacial, Tesla Sculpt, HIFU, soins visage. Réservez en ligne.",
+  title: "LifeDeal Yvelines — Bons plans & offres locales",
+  description: "Découvrez les meilleures offres locales en Yvelines : restaurants, spa, beauté, artisans, plombiers et plus encore. Économisez jusqu'à -70% avec LifeDeal Yvelines.",
 };
 
 export default function RootLayout({
@@ -19,9 +20,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" className="dark">
       <body className={`${inter.variable} font-sans antialiased`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          {children}
+          <BottomNav />
+        </Providers>
       </body>
     </html>
   );

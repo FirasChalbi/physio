@@ -1,14 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: [
-    '@fullcalendar/core',
-    '@fullcalendar/daygrid',
-    '@fullcalendar/timegrid',
-    '@fullcalendar/list',
-    '@fullcalendar/interaction',
-    '@fullcalendar/react',
-  ],
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'images.unsplash.com' },
+      { protocol: 'https', hostname: 'images.pexels.com' },
+    ],
+  },
 };
 
 export default nextConfig;

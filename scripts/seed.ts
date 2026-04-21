@@ -21,400 +21,334 @@ async function seed() {
     const db = mongoose.connection.db!
 
     // Clear existing data
-    const collections = ['users', 'services', 'staffs', 'clients', 'products', 'bookings']
+    const collections = ['users', 'categories', 'merchants', 'offers', 'locations', 'orders', 'reviews', 'favorites', 'banners']
     for (const col of collections) {
         try { await db.dropCollection(col) } catch { }
     }
     console.log('🗑️  Cleared existing data')
 
-    // Create admin user
+    // ============================================================
+    // ADMIN USER
+    // ============================================================
     const hashedPassword = await bcrypt.hash('admin123', 12)
-    await db.collection('users').insertOne({
-        name: 'Admin Physio',
-        email: 'admin@physio.tn',
-        password: hashedPassword,
-        role: 'admin',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-    })
-    console.log('✅ Admin user created (admin@physio.tn / admin123)')
+    await db.collection('users').insertMany([
+        {
+            name: 'Admin DealFlow',
+            email: 'admin@dealflow.tn',
+            password: hashedPassword,
+            role: 'admin',
+            active: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            name: 'Fatma Ben Ali',
+            email: 'fatma@email.com',
+            password: await bcrypt.hash('client123', 12),
+            role: 'client',
+            phone: '+216 98 123 456',
+            active: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            name: 'Ahmed Merchant',
+            email: 'ahmed@restaurant.tn',
+            password: await bcrypt.hash('merchant123', 12),
+            role: 'merchant',
+            phone: '+216 55 789 012',
+            active: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            name: 'Salma Trabelsi',
+            email: 'salma@email.com',
+            role: 'client',
+            provider: 'google',
+            active: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+        {
+            name: 'Rania Gharbi',
+            email: 'rania@email.com',
+            role: 'client',
+            phone: '+216 22 345 678',
+            active: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        },
+    ])
+    console.log('✅ 5 users created (admin@dealflow.tn / admin123)')
 
     // ============================================================
-    // SERVICES — Real data from Institut Physio Fresha
+    // LOCATIONS
     // ============================================================
-    const services = await db.collection('services').insertMany([
-        // ─── LASER ─────────────────────────────────────────────
-        {
-            name: 'Laser Carbon', nameFr: 'Laser Carbone',
-            description: 'Carbon laser facial treatment', descriptionFr: 'Traitement laser carbone pour le visage',
-            category: 'Laser', duration: 60, price: 150, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Laser Pack', nameFr: 'Pack Laser',
-            description: 'Complete laser package: upper lip, underarms, intimate zone, carbon, full face',
-            descriptionFr: 'Laser moustache, aisselles, zone intime, carbone, visage',
-            category: 'Laser', duration: 60, price: 350, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: '3 Laser Underarms Sessions', nameFr: '03 Laser Aisselles',
-            description: '3 underarm laser sessions', descriptionFr: '03 séances laser aisselles',
-            category: 'Laser', duration: 15, price: 240, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Laser Hair Removal Promo', nameFr: 'Promo Laser Épilation Aisselles + Lèvre Supérieure',
-            description: 'Promotional laser hair removal for underarms and upper lip',
-            descriptionFr: 'Épilation laser définitive aisselles et lèvre supérieure',
-            category: 'Laser', duration: 30, price: 150, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Full Body Laser', nameFr: 'Laser Corps Complet',
-            description: 'Full body laser treatment - 600DT per session', descriptionFr: 'Laser corps complet 600dt par séance',
-            category: 'Laser', duration: 120, price: 900, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Full Legs Laser', nameFr: 'Laser Jambes Complètes',
-            description: 'Complete legs laser treatment', descriptionFr: 'Laser jambes complètes',
-            category: 'Laser', duration: 30, price: 250, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Half Legs Laser', nameFr: 'Laser ½ Jambes ou Cuisses',
-            description: 'Half legs or thighs laser', descriptionFr: 'Laser demi-jambes ou cuisses',
-            category: 'Laser', duration: 30, price: 150, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Forearm Laser', nameFr: 'Laser Avant-bras',
-            description: 'Forearm laser treatment', descriptionFr: 'Laser avant-bras',
-            category: 'Laser', duration: 20, price: 150, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Underarm Laser', nameFr: 'Laser Aisselles',
-            description: 'Underarm laser treatment', descriptionFr: 'Laser aisselles',
-            category: 'Laser', duration: 20, price: 100, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Bikini Laser', nameFr: 'Laser Maillot Intégral',
-            description: 'Full bikini laser treatment', descriptionFr: 'Laser maillot traditionnel à intégral',
-            category: 'Laser', duration: 30, price: 250, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Face Laser', nameFr: 'Laser Visage',
-            description: 'Full face laser treatment', descriptionFr: 'Laser visage',
-            category: 'Laser', duration: 15, price: 120, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Upper Lip + Chin Laser', nameFr: 'Laser Lèvre Supérieure + Menton',
-            description: 'Upper lip and chin laser', descriptionFr: 'Laser lèvre supérieure + menton',
-            category: 'Laser', duration: 15, price: 70, icon: 'zap', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
+    const locations = await db.collection('locations').insertMany([
+        { name: 'Tunis', slug: 'tunis', region: 'Grand Tunis', active: true, order: 1, createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Sfax', slug: 'sfax', region: 'Sud', active: true, order: 2, createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Sousse', slug: 'sousse', region: 'Sahel', active: true, order: 3, createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Hammamet', slug: 'hammamet', region: 'Cap Bon', active: true, order: 4, createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Djerba', slug: 'djerba', region: 'Sud', active: true, order: 5, createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Monastir', slug: 'monastir', region: 'Sahel', active: true, order: 6, createdAt: new Date(), updatedAt: new Date() },
+    ])
+    console.log(`✅ ${Object.keys(locations.insertedIds).length} locations created`)
 
-        // ─── SOINS VISAGE ──────────────────────────────────────
-        {
-            name: 'Glowy Face Pack', nameFr: 'Pack Glowy Face',
-            description: 'Hydrafacial 10in1 + free oxygenio or mesotherapy',
-            descriptionFr: 'Soin hydrafacial 10en1 + oxygénio ou mésothérapie gratuite',
-            category: 'Soins Visage', duration: 60, price: 150, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Hydrafacial 15 in 1', nameFr: 'Hydrafacial 15 en 1',
-            description: 'Ultimate multi-step skin treatment: deep cleansing, exfoliation, extraction, intense hydration, antioxidant protection',
-            descriptionFr: 'Traitement ultime multi-étapes : nettoyage en profondeur, exfoliation, extraction, hydratation intense, protection antioxydante',
-            category: 'Soins Visage', duration: 120, price: 350, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Anti-Aging Pack', nameFr: 'Pack Anti-Âge',
-            description: 'Age Reverse treatment with Protein Line + Mesotherapy + 3 RF sessions + 1 HIFU session',
-            descriptionFr: 'Soin Âge Reverse - Protéine Line + Mésothérapie + 3 séances radiofréquence + 1 séance HIFU',
-            category: 'Soins Visage', duration: 60, price: 450, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Hydrafacial + Skin Booster Pack', nameFr: 'Pack Hydrafacial + Skin Booster',
-            description: 'Deep cleansing, dermabrasion, scrubber, ultrasound, RF, meso cocktails, skin booster, peel off mask, LED mask',
-            descriptionFr: 'Nettoyage en profondeur + Dermabrasion + Scrubber + Ultrasons + Radiofréquence + Méso cocktails + Skin Booster + Masque Peel Off + Masque LED',
-            category: 'Soins Visage', duration: 60, price: 200, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Dermaplaning', nameFr: 'Dermaplaning Visage',
-            description: 'Facial dermaplaning treatment', descriptionFr: 'Dermaplaning visage',
-            category: 'Soins Visage', duration: 30, price: 25, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'HIFU Face', nameFr: 'Séance HIFU Visage',
-            description: 'HIFU facial session', descriptionFr: '01 séance HIFU visage',
-            category: 'Soins Visage', duration: 30, price: 350, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Facial Injection', nameFr: 'Injection Visage',
-            description: 'Facial injection treatment', descriptionFr: 'Injection visage',
-            category: 'Soins Visage', duration: 20, price: 200, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'PRP', nameFr: 'P.R.P',
-            description: 'PRP (Platelet-Rich Plasma) treatment', descriptionFr: 'Traitement P.R.P',
-            category: 'Soins Visage', duration: 30, price: 200, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Treatment Cure', nameFr: 'Cure Soin',
-            description: 'Complete treatment cure', descriptionFr: 'Cure de soins complète',
-            category: 'Soins Visage', duration: 60, price: 600, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Hydrafacial 7 in 1', nameFr: 'Hydra Facial 7 en 1',
-            description: '7-in-1 hydrafacial treatment', descriptionFr: 'Soin hydrafacial 7 en 1',
-            category: 'Soins Visage', duration: 60, price: 150, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Hydrafacial PRO 10 in 1', nameFr: 'Hydrafacial PRO 10 en 1',
-            description: '10-in-1 PRO hydrafacial treatment', descriptionFr: 'Soin Hydrafacial PRO 10 en 1',
-            category: 'Soins Visage', duration: 60, price: 200, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'RF Microneedling', nameFr: 'Radiofréquence Microneedling',
-            description: 'Radiofrequency microneedling session', descriptionFr: 'Séance de radiofréquence microneedling',
-            category: 'Soins Visage', duration: 25, price: 180, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Hydrafacial PRO + Oxygeneo', nameFr: 'Hydra Facial PRO + Oxygeneo',
-            description: 'Hydrafacial PRO combined with Oxygeneo treatment', descriptionFr: 'Soin Hydrafacial PRO combiné avec Oxygeneo',
-            category: 'Soins Visage', duration: 80, price: 380, icon: 'sparkles', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
+    // ============================================================
+    // CATEGORIES
+    // ============================================================
+    const categories = await db.collection('categories').insertMany([
+        { name: 'Restaurants', slug: 'restaurants', icon: 'UtensilsCrossed', order: 1, active: true, description: 'Les meilleurs restaurants et offres gastronomiques', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Hôtels', slug: 'hotels', icon: 'Building2', order: 2, active: true, description: 'Séjours et nuitées à prix réduits', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Spa', slug: 'spa', icon: 'Waves', order: 3, active: true, description: 'Détente, hammam et soins bien-être', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Beauté', slug: 'beaute', icon: 'Sparkles', order: 4, active: true, description: 'Coiffure, esthétique et soins beauté', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Sport', slug: 'sport', icon: 'Dumbbell', order: 5, active: true, description: 'Salles de sport, cours et activités sportives', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Services maison', slug: 'services-maison', icon: 'Home', order: 6, active: true, description: 'Plomberie, électricité, nettoyage et plus', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Transport', slug: 'transport', icon: 'Car', order: 7, active: true, description: 'Location de voitures, navettes et transport', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Événements', slug: 'evenements', icon: 'PartyPopper', order: 8, active: true, description: 'Spectacles, concerts et sorties', createdAt: new Date(), updatedAt: new Date() },
+        { name: 'Animaux', slug: 'animaux', icon: 'PawPrint', order: 9, active: true, description: 'Toilettage, vétérinaire et accessoires', createdAt: new Date(), updatedAt: new Date() },
+    ])
+    const catIds = Object.values(categories.insertedIds).map(id => id.toString())
+    console.log(`✅ ${catIds.length} categories created`)
 
-        // ─── MASSAGE & AMINCISSEMENT ────────────────────────────
+    // ============================================================
+    // MERCHANTS
+    // ============================================================
+    const merchants = await db.collection('merchants').insertMany([
         {
-            name: 'Summer Body Dream Pack', nameFr: 'Summer Body Dream Pack',
-            description: '3 injections, lymphatic drainage, 5 Tesla, maderotherapy, EMS, pressotherapy',
-            descriptionFr: '3 injections + drainage lymphatique + 5 Tesla + madérothérapie + EMS + pressothérapie',
-            category: 'Massage & Amincissement', duration: 60, price: 799, icon: 'heart', isActive: true,
+            name: 'Le Baroque Restaurant', slug: 'le-baroque', description: 'Restaurant gastronomique au cœur de Tunis, spécialisé en cuisine méditerranéenne fusion.',
+            city: 'Tunis', address: 'Avenue Habib Bourguiba, Tunis', phone: '+216 71 123 456', email: 'contact@lebaroque.tn',
+            logo: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=200&h=200&fit=crop',
+            coverImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800&h=400&fit=crop',
+            verified: true, active: true, rating: 4.7, reviewCount: 124,
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: 'Cellulite Promo Pack', nameFr: 'Pack Promo Cellulite',
-            description: 'Anti-cellulite promotional pack', descriptionFr: 'Pack promotionnel anti-cellulite',
-            category: 'Massage & Amincissement', duration: 60, price: 200, icon: 'heart', isActive: true,
+            name: 'Spa Royal Hammamet', slug: 'spa-royal-hammamet', description: 'Centre de bien-être 5 étoiles avec hammam traditionnel, piscine et soins premium.',
+            city: 'Hammamet', address: 'Zone Touristique Yasmine, Hammamet', phone: '+216 72 456 789', email: 'info@sparoyal.tn',
+            logo: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=200&h=200&fit=crop',
+            coverImage: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=800&h=400&fit=crop',
+            verified: true, active: true, rating: 4.9, reviewCount: 89,
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: 'Summer Body', nameFr: 'Summer Body',
-            description: '5 Madero, 5 dynamic, 10 manual massages, 1 injection, 10 EMS, 5 Tesla',
-            descriptionFr: '5 Madero + 5 dynamiques + 10 massages manuels + 1 injection + 10 EMS + 5 Tesla',
-            category: 'Massage & Amincissement', duration: 60, price: 600, icon: 'heart', isActive: true,
+            name: 'FitZone Sfax', slug: 'fitzone-sfax', description: 'Salle de sport moderne avec équipements dernière génération, coaching et cours collectifs.',
+            city: 'Sfax', address: 'Route de Tunis km 5, Sfax', phone: '+216 74 321 654', email: 'fitzone@sfax.tn',
+            logo: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=200&fit=crop',
+            coverImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=400&fit=crop',
+            verified: true, active: true, rating: 4.5, reviewCount: 67,
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: 'Lymphatic Drainage', nameFr: 'Drainage Lymphatique',
-            description: 'Lymphatic drainage session', descriptionFr: '01 séance de drainage lymphatique',
-            category: 'Massage & Amincissement', duration: 50, price: 30, icon: 'heart', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-
-        // ─── TESLA ──────────────────────────────────────────────
-        {
-            name: '1 Tesla Session', nameFr: '01 Séance Tesla',
-            description: 'Single Tesla Sculpt session', descriptionFr: '01 séance Tesla Sculpt',
-            category: 'Tesla Sculpt', duration: 30, price: 80, icon: 'dumbbell', isActive: true,
+            name: 'Hôtel Dar El Marsa', slug: 'dar-el-marsa', description: 'Hôtel boutique de charme à La Marsa avec vue sur mer, restaurant gastronomique et terrasse.',
+            city: 'Tunis', address: 'La Marsa, Tunis', phone: '+216 71 987 654', email: 'reservation@darelmarsa.tn',
+            logo: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=200&h=200&fit=crop',
+            coverImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=400&fit=crop',
+            verified: true, active: true, rating: 4.8, reviewCount: 156,
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: '4 Tesla Sessions', nameFr: '04 Séances Tesla',
-            description: '4 Tesla Sculpt sessions', descriptionFr: '04 séances Tesla Sculpt',
-            category: 'Tesla Sculpt', duration: 30, price: 300, icon: 'dumbbell', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: '5 Tesla Sessions', nameFr: '05 Séances Tesla',
-            description: '5 Tesla Sculpt sessions', descriptionFr: '05 séances Tesla Sculpt',
-            category: 'Tesla Sculpt', duration: 30, price: 350, icon: 'dumbbell', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: '10 Tesla Sessions', nameFr: '10 Séances Tesla',
-            description: '10 Tesla Sculpt sessions', descriptionFr: '10 séances Tesla Sculpt',
-            category: 'Tesla Sculpt', duration: 30, price: 600, icon: 'dumbbell', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: '15 Tesla Sessions', nameFr: '15 Séances Tesla',
-            description: '15 Tesla Sculpt sessions', descriptionFr: '15 séances Tesla Sculpt',
-            category: 'Tesla Sculpt', duration: 30, price: 800, icon: 'dumbbell', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-
-        // ─── HIFU ───────────────────────────────────────────────
-        {
-            name: 'HIFU Body Pack', nameFr: 'Pack HIFU Corps',
-            description: 'HIFU body treatment pack', descriptionFr: 'Pack HIFU corps',
-            category: 'HIFU', duration: 60, price: 400, icon: 'target', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'HIFU Complete Pack', nameFr: 'Pack HIFU Complet',
-            description: 'HIFU face + hydrafacial + HIFU body', descriptionFr: 'HIFU visage + hydrafacial + HIFU corps',
-            category: 'HIFU', duration: 60, price: 400, icon: 'target', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-
-        // ─── MÉDICAL ────────────────────────────────────────────
-        {
-            name: 'Botox', nameFr: 'Botox',
-            description: 'Botox injection treatment', descriptionFr: 'Traitement injection Botox',
-            category: 'Médical', duration: 60, price: 300, icon: 'syringe', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Medical Massage', nameFr: 'Massage Médical',
-            description: 'Therapeutic medical massage', descriptionFr: 'Massage médical thérapeutique',
-            category: 'Médical', duration: 60, price: 10, icon: 'heart', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Cupping Therapy', nameFr: 'Cupping Thérapie',
-            description: 'Therapeutic cupping session', descriptionFr: 'Séance de cupping thérapie',
-            category: 'Médical', duration: 60, price: 35, icon: 'heart', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-
-        // ─── PROMOTIONS ─────────────────────────────────────────
-        {
-            name: 'Body Boost Pack', nameFr: 'Body Boost - Hello Glow',
-            description: '5 Tesla Sculpt + 10 Madero + 10 Electro + 10 Dynamic sessions',
-            descriptionFr: '💪 5 séances Tesla Sculpt + 🌿 10 séances Madero + ⚡ 10 séances Electro + 💃 10 séances Dynamique',
-            category: 'Promotions', duration: 60, price: 399, icon: 'flame', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Trio Lisse - Laser Pack', nameFr: 'Trio Lisse - Épilation Laser',
-            description: 'Laser hair removal: half legs, underarms, upper lip',
-            descriptionFr: 'Épilation laser : demi-jambes + aisselles + moustache',
-            category: 'Promotions', duration: 60, price: 250, icon: 'flame', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Bye Bye Hair Pack', nameFr: 'Bye Bye Poils',
-            description: '5 upper lip laser + 5 underarm laser sessions',
-            descriptionFr: '5 séances laser moustache + 5 séances laser aisselles',
-            category: 'Promotions', duration: 60, price: 599, icon: 'flame', isActive: true,
-            createdAt: new Date(), updatedAt: new Date(),
-        },
-        {
-            name: 'Remodeling Pack', nameFr: 'Pack Remodelage',
-            description: 'Body assessment + 3 Tesla + 5 Madero + 3 RF + 5 manual massages + 10 electrostimulation',
-            descriptionFr: 'Bilan morphologique + 3 séances Tesla + 5 séances Madéro + 3 séances Radiofréquence + 5 massages manuels + 10 séances Électrostimulation',
-            category: 'Promotions', duration: 60, price: 499, icon: 'flame', isActive: true,
+            name: 'Beauté Plus Sousse', slug: 'beaute-plus-sousse', description: 'Institut de beauté premium, soins visage, manucure, pédicure et maquillage professionnel.',
+            city: 'Sousse', address: 'Rue de la République, Sousse', phone: '+216 73 111 222', email: 'contact@beauteplus.tn',
+            logo: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=200&h=200&fit=crop',
+            coverImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=800&h=400&fit=crop',
+            verified: false, active: true, rating: 4.3, reviewCount: 42,
             createdAt: new Date(), updatedAt: new Date(),
         },
     ])
-    console.log(`✅ ${Object.keys(services.insertedIds).length} services created`)
+    const merchantIds = Object.values(merchants.insertedIds).map(id => id.toString())
+    console.log(`✅ ${merchantIds.length} merchants created`)
 
     // ============================================================
-    // STAFF
+    // OFFERS
     // ============================================================
-    await db.collection('staffs').insertMany([
+    const offers = await db.collection('offers').insertMany([
         {
-            name: 'Dr. Physio', role: 'Médecin Esthétique', specialties: ['Botox', 'Injections', 'PRP'], avatar: '', services: [], isActive: true,
-            schedule: {
-                monday: { start: '09:00', end: '18:00', isOff: false },
-                tuesday: { start: '09:00', end: '18:00', isOff: false },
-                wednesday: { start: '09:00', end: '18:00', isOff: false },
-                thursday: { start: '09:00', end: '18:00', isOff: false },
-                friday: { start: '09:00', end: '18:00', isOff: false },
-                saturday: { start: '09:00', end: '14:00', isOff: false },
-                sunday: { start: '09:00', end: '14:00', isOff: true },
-            },
+            title: 'Menu Dégustation pour 2 personnes', slug: 'menu-degustation-baroque',
+            shortDescription: 'Entrée + Plat + Dessert pour 2 avec boisson incluse',
+            description: 'Découvrez un menu dégustation exceptionnel composé d\'une entrée au choix, d\'un plat signature du chef et d\'un dessert raffiné. Boissons soft incluses. Valable du lundi au jeudi.',
+            categoryId: catIds[0], merchantId: merchantIds[0], city: 'Tunis', address: 'Avenue Habib Bourguiba, Tunis',
+            coverImage: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&h=400&fit=crop',
+            galleryImages: ['https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600', 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600'],
+            originalPrice: 180, dealPrice: 99, discountPercent: 45, rating: 4.6, reviewCount: 34,
+            featured: true, status: 'active', tags: ['couple', 'gastronomie', 'dîner'],
+            soldCount: 156, viewCount: 2340,
+            startDate: new Date(), endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: 'Sarah', role: 'Esthéticienne Senior', specialties: ['Hydrafacial', 'Soins Visage', 'Dermaplaning'], avatar: '', services: [], isActive: true,
-            schedule: {
-                monday: { start: '09:00', end: '18:00', isOff: false },
-                tuesday: { start: '09:00', end: '18:00', isOff: false },
-                wednesday: { start: '09:00', end: '18:00', isOff: false },
-                thursday: { start: '09:00', end: '18:00', isOff: false },
-                friday: { start: '09:00', end: '18:00', isOff: false },
-                saturday: { start: '09:00', end: '14:00', isOff: false },
-                sunday: { start: '09:00', end: '14:00', isOff: true },
-            },
+            title: 'Journée Spa Complète + Hammam', slug: 'journee-spa-royal',
+            shortDescription: 'Accès spa, hammam, piscine + massage 30min',
+            description: 'Profitez d\'une journée de relaxation totale avec accès illimité au spa, hammam traditionnel, piscine chauffée et un massage relaxant de 30 minutes. Serviettes et peignoirs fournis.',
+            categoryId: catIds[2], merchantId: merchantIds[1], city: 'Hammamet', address: 'Zone Touristique Yasmine',
+            coverImage: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&h=400&fit=crop',
+            galleryImages: ['https://images.unsplash.com/photo-1540555700478-4be289fbec6e?w=600'],
+            originalPrice: 250, dealPrice: 129, discountPercent: 48, rating: 4.9, reviewCount: 67,
+            featured: true, status: 'active', tags: ['spa', 'hammam', 'détente', 'massage'],
+            soldCount: 234, viewCount: 4560,
+            startDate: new Date(), endDate: new Date(Date.now() + 45 * 24 * 60 * 60 * 1000),
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: 'Amira', role: 'Spécialiste Laser', specialties: ['Laser', 'Épilation', 'Carbone'], avatar: '', services: [], isActive: true,
-            schedule: {
-                monday: { start: '09:00', end: '18:00', isOff: false },
-                tuesday: { start: '09:00', end: '18:00', isOff: false },
-                wednesday: { start: '09:00', end: '18:00', isOff: true },
-                thursday: { start: '09:00', end: '18:00', isOff: false },
-                friday: { start: '09:00', end: '18:00', isOff: false },
-                saturday: { start: '09:00', end: '14:00', isOff: false },
-                sunday: { start: '09:00', end: '14:00', isOff: true },
-            },
+            title: 'Abonnement 3 mois Fitness', slug: 'abonnement-fitzone-3mois',
+            shortDescription: '3 mois d\'accès illimité + séance coaching offerte',
+            description: 'Abonnement fitness 3 mois avec accès illimité à toutes les machines, cours collectifs (Zumba, CrossFit, Yoga) et une séance de coaching personnalisée offerte.',
+            categoryId: catIds[4], merchantId: merchantIds[2], city: 'Sfax', address: 'Route de Tunis km 5',
+            coverImage: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&h=400&fit=crop',
+            originalPrice: 450, dealPrice: 249, discountPercent: 45, rating: 4.5, reviewCount: 28,
+            featured: true, status: 'active', tags: ['sport', 'fitness', 'musculation'],
+            soldCount: 89, viewCount: 1890,
+            startDate: new Date(), endDate: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
             createdAt: new Date(), updatedAt: new Date(),
         },
         {
-            name: 'Nadia', role: 'Masseuse & Tesla', specialties: ['Tesla Sculpt', 'Massage', 'Madéro', 'Drainage'], avatar: '', services: [], isActive: true,
-            schedule: {
-                monday: { start: '09:00', end: '18:00', isOff: false },
-                tuesday: { start: '09:00', end: '18:00', isOff: false },
-                wednesday: { start: '09:00', end: '18:00', isOff: false },
-                thursday: { start: '09:00', end: '18:00', isOff: false },
-                friday: { start: '09:00', end: '18:00', isOff: false },
-                saturday: { start: '09:00', end: '14:00', isOff: false },
-                sunday: { start: '09:00', end: '14:00', isOff: true },
-            },
+            title: 'Nuit + Petit-déjeuner vue mer', slug: 'nuit-dar-el-marsa',
+            shortDescription: '1 nuit en chambre double + petit-déjeuner buffet',
+            description: 'Offrez-vous une nuit de luxe dans notre chambre double avec vue sur la Méditerranée. Petit-déjeuner buffet inclus avec produits frais et locaux. Late checkout à 14h.',
+            categoryId: catIds[1], merchantId: merchantIds[3], city: 'Tunis', address: 'La Marsa',
+            coverImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop',
+            galleryImages: ['https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600'],
+            originalPrice: 350, dealPrice: 199, discountPercent: 43, rating: 4.8, reviewCount: 45,
+            featured: true, status: 'active', tags: ['hôtel', 'vue mer', 'romantique'],
+            soldCount: 112, viewCount: 3200,
+            startDate: new Date(), endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
             createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Soin Visage Complet + Manucure', slug: 'soin-visage-beaute-plus',
+            shortDescription: 'Nettoyage + soin hydratant + manucure semi-permanent',
+            description: 'Un soin visage complet incluant nettoyage en profondeur, gommage, masque hydratant et une manucure semi-permanent avec vernis au choix.',
+            categoryId: catIds[3], merchantId: merchantIds[4], city: 'Sousse', address: 'Rue de la République',
+            coverImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=400&fit=crop',
+            originalPrice: 120, dealPrice: 59, discountPercent: 51, rating: 4.3, reviewCount: 19,
+            featured: false, status: 'active', tags: ['beauté', 'soin visage', 'manucure'],
+            soldCount: 45, viewCount: 890,
+            startDate: new Date(), endDate: new Date(Date.now() + 20 * 24 * 60 * 60 * 1000),
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Brunch Weekend All-You-Can-Eat', slug: 'brunch-weekend-baroque',
+            shortDescription: 'Brunch à volonté chaque samedi et dimanche',
+            description: 'Brunch illimité avec viennoiseries, œufs Benedict, pancakes, fruits frais, jus naturels et boissons chaudes. Ambiance jazz live chaque dimanche.',
+            categoryId: catIds[0], merchantId: merchantIds[0], city: 'Tunis', address: 'Avenue Habib Bourguiba',
+            coverImage: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop',
+            originalPrice: 85, dealPrice: 49, discountPercent: 42, rating: 4.4, reviewCount: 56,
+            featured: false, status: 'active', tags: ['brunch', 'weekend', 'buffet'],
+            soldCount: 198, viewCount: 2100,
+            startDate: new Date(), endDate: new Date(Date.now() + 15 * 24 * 60 * 60 * 1000),
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Massage aux Huiles Essentielles 60min', slug: 'massage-huiles-spa-royal',
+            shortDescription: 'Massage relaxant corps complet aux huiles bio',
+            description: 'Un massage relaxant de 60 minutes aux huiles essentielles biologiques. Choix entre massage suédois, aux pierres chaudes ou aromathérapie. Thé et fruits offerts après le soin.',
+            categoryId: catIds[2], merchantId: merchantIds[1], city: 'Hammamet',
+            coverImage: 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=600&h=400&fit=crop',
+            originalPrice: 150, dealPrice: 79, discountPercent: 47, rating: 4.8, reviewCount: 38,
+            featured: false, status: 'active', tags: ['massage', 'relaxation', 'huiles essentielles'],
+            soldCount: 167, viewCount: 1950,
+            startDate: new Date(), endDate: new Date(Date.now() + 25 * 24 * 60 * 60 * 1000),
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Pack Épilation Laser 3 Zones', slug: 'epilation-laser-beaute-plus',
+            shortDescription: '3 zones au choix : aisselles, maillot, jambes',
+            description: 'Épilation laser définitive pour 3 zones au choix. Technologie de dernière génération, séance indolore et résultats dès la 2e séance.',
+            categoryId: catIds[3], merchantId: merchantIds[4], city: 'Sousse',
+            coverImage: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=600&h=400&fit=crop',
+            originalPrice: 300, dealPrice: 149, discountPercent: 50, rating: 4.1, reviewCount: 15,
+            featured: false, status: 'active', tags: ['laser', 'épilation', 'beauté'],
+            soldCount: 34, viewCount: 780,
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Séance CrossFit + Nutrition', slug: 'crossfit-nutrition-fitzone',
+            shortDescription: '10 séances CrossFit + plan nutritionnel personnalisé',
+            description: '10 séances de CrossFit encadrées par un coach certifié plus un plan nutritionnel personnalisé établi par notre diététicienne.',
+            categoryId: catIds[4], merchantId: merchantIds[2], city: 'Sfax',
+            coverImage: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600&h=400&fit=crop',
+            originalPrice: 200, dealPrice: 119, discountPercent: 41, rating: 4.6, reviewCount: 22,
+            featured: false, status: 'active', tags: ['crossfit', 'nutrition', 'coaching'],
+            soldCount: 56, viewCount: 1230,
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Suite Romantique + Dîner', slug: 'suite-romantique-dar-el-marsa',
+            shortDescription: 'Suite vue mer + dîner gastronomique pour 2',
+            description: 'Package romantique incluant une nuit en suite avec vue mer panoramique, dîner gastronomique pour 2 avec une bouteille de vin, petit-déjeuner en chambre et late checkout à 16h.',
+            categoryId: catIds[1], merchantId: merchantIds[3], city: 'Tunis',
+            coverImage: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&h=400&fit=crop',
+            originalPrice: 600, dealPrice: 349, discountPercent: 42, rating: 4.9, reviewCount: 31,
+            featured: true, status: 'active', tags: ['romantique', 'suite', 'dîner', 'vue mer'],
+            soldCount: 78, viewCount: 2800,
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Draft — Cours de Yoga en Plein Air', slug: 'yoga-plein-air',
+            shortDescription: '8 séances de yoga en plein air le matin',
+            description: 'Cours de yoga matinal en plein air, face à la mer. 8 séances de 90 minutes avec un professeur certifié.',
+            categoryId: catIds[4], merchantId: merchantIds[2], city: 'Sfax',
+            coverImage: 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=600&h=400&fit=crop',
+            originalPrice: 160, dealPrice: 89, discountPercent: 44, rating: 0, reviewCount: 0,
+            featured: false, status: 'draft', tags: ['yoga', 'plein air'],
+            soldCount: 0, viewCount: 0,
+            createdAt: new Date(), updatedAt: new Date(),
+        },
+        {
+            title: 'Archived — Pack Bien-être Été 2025', slug: 'bien-etre-ete-2025',
+            shortDescription: 'Pack spa + massage + hammam été',
+            description: 'Offre estivale 2025 expirée.',
+            categoryId: catIds[2], merchantId: merchantIds[1], city: 'Hammamet',
+            coverImage: 'https://images.unsplash.com/photo-1540555700478-4be289fbec6e?w=600&h=400&fit=crop',
+            originalPrice: 200, dealPrice: 99, discountPercent: 51, rating: 4.7, reviewCount: 89,
+            featured: false, status: 'archived', tags: ['été', 'spa'],
+            soldCount: 345, viewCount: 5600,
+            createdAt: new Date('2025-06-01'), updatedAt: new Date('2025-09-01'),
         },
     ])
-    console.log('✅ 4 staff members created')
+    console.log(`✅ ${Object.keys(offers.insertedIds).length} offers created`)
 
     // ============================================================
-    // PRODUCTS
+    // ORDERS
     // ============================================================
-    await db.collection('products').insertMany([
-        { name: 'Hyaluronic Acid Serum', nameFr: 'Sérum Acide Hyaluronique', description: 'Intense hydration serum', descriptionFr: 'Sérum hydratation intense', category: 'Visage', price: 45, stock: 20, isActive: true, createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Sunscreen SPF50', nameFr: 'Crème Solaire SPF50', description: 'High protection sunscreen', descriptionFr: 'Protection solaire haute protection', category: 'Visage', price: 35, stock: 30, isActive: true, createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Anti-Aging Cream', nameFr: 'Crème Anti-Âge', description: 'Premium anti-aging cream', descriptionFr: 'Crème anti-âge premium', category: 'Visage', price: 65, stock: 15, isActive: true, createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Body Firming Cream', nameFr: 'Crème Raffermissante Corps', description: 'Body firming and toning cream', descriptionFr: 'Crème raffermissante et tonifiante', category: 'Corps', price: 40, stock: 25, isActive: true, createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Post-Laser Soothing Gel', nameFr: 'Gel Apaisant Post-Laser', description: 'Soothing gel for after laser treatments', descriptionFr: 'Gel apaisant après traitements laser', category: 'Laser', price: 28, stock: 35, isActive: true, createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Vitamin C Serum', nameFr: 'Sérum Vitamine C', description: 'Brightening Vitamin C serum', descriptionFr: 'Sérum éclat à la vitamine C', category: 'Visage', price: 55, stock: 18, isActive: true, createdAt: new Date(), updatedAt: new Date() },
+    const offerIds = Object.values(offers.insertedIds).map(id => id.toString())
+    await db.collection('orders').insertMany([
+        { userId: 'user1', offerId: offerIds[0], merchantId: merchantIds[0], quantity: 1, unitPrice: 99, totalPrice: 99, status: 'confirmed', customerName: 'Fatma Ben Ali', customerEmail: 'fatma@email.com', createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user2', offerId: offerIds[1], merchantId: merchantIds[1], quantity: 2, unitPrice: 129, totalPrice: 258, status: 'paid', customerName: 'Salma Trabelsi', customerEmail: 'salma@email.com', createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user3', offerId: offerIds[3], merchantId: merchantIds[3], quantity: 1, unitPrice: 199, totalPrice: 199, status: 'pending', customerName: 'Rania Gharbi', customerEmail: 'rania@email.com', createdAt: new Date(), updatedAt: new Date() },
+        { userId: 'user1', offerId: offerIds[5], merchantId: merchantIds[0], quantity: 3, unitPrice: 49, totalPrice: 147, status: 'confirmed', customerName: 'Fatma Ben Ali', createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user2', offerId: offerIds[2], merchantId: merchantIds[2], quantity: 1, unitPrice: 249, totalPrice: 249, status: 'cancelled', customerName: 'Salma Trabelsi', createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user3', offerId: offerIds[6], merchantId: merchantIds[1], quantity: 1, unitPrice: 79, totalPrice: 79, status: 'confirmed', customerName: 'Rania Gharbi', createdAt: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user1', offerId: offerIds[4], merchantId: merchantIds[4], quantity: 1, unitPrice: 59, totalPrice: 59, status: 'paid', customerName: 'Fatma Ben Ali', createdAt: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
     ])
-    console.log('✅ 6 products created')
+    console.log('✅ 7 sample orders created')
 
     // ============================================================
-    // SAMPLE CLIENTS
+    // REVIEWS
     // ============================================================
-    await db.collection('clients').insertMany([
-        { name: 'Fatma Ben Ali', phone: '+216 98 123 456', email: 'fatma.ba@email.com', notes: 'Peau sensible, éviter produits agressifs', tags: ['VIP', 'Fidèle'], totalSpent: 1200, totalVisits: 12, lastVisit: new Date('2026-03-10'), createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Salma Trabelsi', phone: '+216 55 789 012', email: 'salma.t@email.com', notes: '', tags: ['Fidèle'], totalSpent: 650, totalVisits: 6, lastVisit: new Date('2026-03-05'), createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Rania Gharbi', phone: '+216 22 345 678', email: '', notes: 'Intéressée par pack laser complet', tags: ['Nouveau'], totalSpent: 150, totalVisits: 1, lastVisit: new Date('2026-03-11'), createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Ines Hammami', phone: '+216 97 654 321', email: 'ines.h@email.com', notes: 'Allergie latex', tags: ['Fidèle'], totalSpent: 890, totalVisits: 8, lastVisit: new Date('2026-02-20'), createdAt: new Date(), updatedAt: new Date() },
-        { name: 'Meriem Sfaxi', phone: '+216 50 111 222', email: '', notes: '', tags: [], totalSpent: 200, totalVisits: 2, lastVisit: new Date('2026-01-15'), createdAt: new Date(), updatedAt: new Date() },
+    await db.collection('reviews').insertMany([
+        { userId: 'user1', offerId: offerIds[0], merchantId: merchantIds[0], userName: 'Fatma B.', rating: 5, comment: 'Menu exceptionnel ! Le chef a été très attentif. Je recommande vivement.', approved: true, createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user2', offerId: offerIds[1], merchantId: merchantIds[1], userName: 'Salma T.', rating: 5, comment: 'Le spa est magnifique, le hammam est authentique. Personnel très professionnel.', approved: true, createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user3', offerId: offerIds[3], merchantId: merchantIds[3], userName: 'Rania G.', rating: 4, comment: 'Très bel hôtel avec une vue superbe. Petit-déjeuner varié. Seul bémol: le parking est petit.', approved: true, createdAt: new Date(), updatedAt: new Date() },
+        { userId: 'user1', offerId: offerIds[5], merchantId: merchantIds[0], userName: 'Fatma B.', rating: 4, comment: 'Brunch copieux et délicieux ! L\'ambiance jazz du dimanche est un vrai plus.', approved: true, createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
+        { userId: 'user2', offerId: offerIds[6], merchantId: merchantIds[1], userName: 'Salma T.', rating: 5, comment: 'Massage divin ! Les huiles étaient parfaites. Je reviendrai sans hésiter.', approved: true, createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), updatedAt: new Date() },
     ])
-    console.log('✅ 5 sample clients created')
+    console.log('✅ 5 reviews created')
 
-    console.log('\n🎉 Seed complete! Institut Physio data loaded successfully.')
-    console.log('📧 Admin login: admin@physio.tn / admin123')
+    // ============================================================
+    // BANNERS
+    // ============================================================
+    await db.collection('banners').insertMany([
+        { title: 'Jusqu\'à -50% sur les Spas', subtitle: 'Offres limitées sur les meilleurs spas de Tunisie', image: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=1200&h=400&fit=crop', link: '/categories/spa', position: 'hero', order: 1, active: true, createdAt: new Date(), updatedAt: new Date() },
+        { title: 'Nouveaux Restaurants', subtitle: 'Découvrez les dernières offres gastronomiques', image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1200&h=400&fit=crop', link: '/categories/restaurants', position: 'hero', order: 2, active: true, createdAt: new Date(), updatedAt: new Date() },
+        { title: 'Escapades Romantiques', subtitle: 'Hôtels & suites à prix réduits', image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=1200&h=400&fit=crop', link: '/categories/hotels', position: 'hero', order: 3, active: true, createdAt: new Date(), updatedAt: new Date() },
+    ])
+    console.log('✅ 3 banners created')
+
+    console.log('\n🎉 Seed complete! DealFlow data loaded successfully.')
+    console.log('📧 Admin login: admin@dealflow.tn / admin123')
+    console.log('📧 Merchant login: ahmed@restaurant.tn / merchant123')
     process.exit(0)
 }
 

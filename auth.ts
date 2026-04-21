@@ -65,6 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             image: user.image,
             provider: account.provider,
             role: "client",
+            active: true,
           })
         } else if (!existingUser.image && user.image) {
           existingUser.image = user.image

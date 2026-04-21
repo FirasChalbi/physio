@@ -1,491 +1,434 @@
-'use client'
+// app/page.tsx — Redesigned homepage matching the "Life" app mobile design
+"use client"
 
-import { useState, useEffect } from "react"
-import { Calendar, Sparkles, MapPin, Phone, Mail, Instagram, Facebook, Package, ArrowRight, ShoppingBag } from "lucide-react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
-import { Navbar } from "@/components/navbar"
-import { BottomMobileNav } from "@/components/bottom-mobile-nav"
-import { BeforeAfterSlider } from "@/components/before-after-slider"
-import InstagramSwiper from "@/components/instagram-swiper"
-import { TestimonialSlider } from "@/components/testimonial-slider"
+import { useSession } from "next-auth/react"
+import {
+    Search, MapPin, Star, Heart, Bell, Tag, ChevronRight,
+    User as UserIcon, BadgeCheck
+} from "lucide-react"
+import * as LucideIcons from "lucide-react"
+import NotificationDrawer from "@/components/NotificationDrawer"
+import Logo from "@/components/Logo"
 
-// Static fallback data for the design
-const servicesHighlights = [
-  {
-    category: "Signature",
-    title: "Soin Signature Physio",
-    features: [
-      "Diagnostic de peau personnalisé",
-      "Nettoyage profond Hydrafacial",
-      "Infusion de sérums spécifiques",
-      "Massage liftant manuel"
-    ],
-    image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    category: "Lifting",
-    title: "Rajeunissement & Anti-âge",
-    features: [
-      "HIFU 4D Rajeunissement global",
-      "Radiofréquence fractionnée",
-      "Stimulation du collagène",
-      "Ovale du visage redessiné"
-    ],
-    image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    category: "Remodelage",
-    title: "Tesla Sculpt & Silhouette",
-    features: [
-      "Renforcement musculaire intense",
-      "Élimination des graisses ciblées",
-      "Traitement non invasif (30 min)",
-      "Résultats visibles dès 4 séances"
-    ],
-    image: "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-  },
-  {
-    category: "Laser",
-    title: "Épilation Définitive",
-    features: [
-      "Technologie triple longueur d'onde",
-      "Soin indolore et ultra-rapide",
-      "Efficace sur tous les phototypes",
-      "Peau lisse et nette durablement"
-    ],
-    image: "https://images.unsplash.com/photo-1536924430914-91f9e2041b83?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-  }
-]
+type Category = { _id: string; name: string; slug: string; icon?: string }
+type Offer = {
+    _id: string; title: string; slug: string; shortDescription: string; coverImage: string;
+    originalPrice: number; dealPrice: number; discountPercent: number; rating?: number;
+    reviewCount?: number; city: string; merchantId: string; featured?: boolean; categoryId: string
+}
+type Merchant = {
+    _id: string; name: string; slug: string; logo?: string; city?: string;
+    verified: boolean; rating?: number; reviewCount?: number
+}
+
+const iconMap: Record<string, any> = {
+    UtensilsCrossed: LucideIcons.UtensilsCrossed, Building2: LucideIcons.Building2, Waves: LucideIcons.Waves,
+    Sparkles: LucideIcons.Sparkles, Dumbbell: LucideIcons.Dumbbell, Home: LucideIcons.Home,
+    Car: LucideIcons.Car, PartyPopper: LucideIcons.PartyPopper, PawPrint: LucideIcons.PawPrint,
+}
 
 export default function HomePage() {
-  const [products, setProducts] = useState<any[]>([])
+    const { data: session } = useSession()
+    const [categories, setCategories] = useState<Category[]>([])
+    const [offers, setOffers] = useState<Offer[]>([])
+    const [merchants, setMerchants] = useState<Merchant[]>([])
+    const [searchQuery, setSearchQuery] = useState("")
+    const [favorites, setFavorites] = useState<Set<string>>(new Set())
+    const [notifOpen, setNotifOpen] = useState(false)
 
-  useEffect(() => {
-    Promise.all([
-      fetch('/api/products').then(r => r.json()),
-      fetch('/api/staff').then(r => r.json()),
-    ]).then(([p]) => {
-      setProducts(Array.isArray(p) ? p.filter((x: any) => x.isActive) : [])
-    }).catch(console.error)
-  }, [])
+    useEffect(() => {
+        Promise.all([
+            fetch('/api/categories').then(r => r.json()),
+            fetch('/api/offers?status=active').then(r => r.json()),
+            fetch('/api/merchants').then(r => r.json()),
+        ]).then(([cats, offs, merch]) => {
+            setCategories(Array.isArray(cats) ? cats : [])
+            setOffers(Array.isArray(offs) ? offs : [])
+            setMerchants(Array.isArray(merch) ? merch : [])
+        }).catch(console.error)
 
-  return (
-    <div className="min-h-screen bg-white font-sans text-gray-900 pb-20 lg:pb-0 overflow-x-hidden">
-      <Navbar />
+        // Load favorites from localStorage
+        const favs: string[] = JSON.parse(localStorage.getItem('life_favorites') || '[]')
+        setFavorites(new Set(favs))
+    }, [])
 
-      {/* ── HERO ── Full-screen Pexels image background */}
-      <section
-        className="relative min-h-screen flex items-center justify-center overflow-hidden"
-        style={{
-          backgroundImage: `url('https://images.pexels.com/photos/6543666/pexels-photo-6543666.jpeg?_gl=1*64klfb*_ga*MTQ0NDU0NzUxMS4xNzczNDMzMzYy*_ga_8JE65Q40S6*czE3NzM0MzMzNjIkbzEkZzEkdDE3NzM0MzM3MTIkajU5JGwwJGgw')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center top',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-        {/* Overlay: dark-to-light so text is readable */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/75" />
-        {/* Soft pink tint */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#ff2c92]/10 via-transparent to-[#ff77b9]/10" />
+    const toggleFav = (slug: string) => {
+        const favs: string[] = JSON.parse(localStorage.getItem('life_favorites') || '[]')
+        let updated: string[]
+        if (favs.includes(slug)) {
+            updated = favs.filter(f => f !== slug)
+        } else {
+            updated = [...favs, slug]
+        }
+        localStorage.setItem('life_favorites', JSON.stringify(updated))
+        setFavorites(new Set(updated))
+    }
 
-        {/* Floating blobs */}
-        <div className="absolute top-1/4 left-[8%] w-48 h-48 rounded-full bg-[#ff2c92]/15 blur-3xl animate-pulse" />
-        <div className="absolute bottom-1/3 right-[10%] w-64 h-64 rounded-full bg-[#ff77b9]/15 blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+    const featuredOffers = offers.filter(o => o.featured)
+    const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
+    const getMerchantCity = (id: string) => merchants.find(m => m._id === id)?.city || ''
+    const userName = session?.user?.name?.split(' ')[0] || ''
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center pt-28 pb-16">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-md rounded-full border border-white/30 text-xs font-semibold uppercase tracking-widest text-white mb-8">
-            <Sparkles className="w-3.5 h-3.5 text-[#ff77b9]" />
-            Beauté & Bien-être Premium
-          </div>
+    return (
+        <div className="min-h-screen pb-24 md:pb-0" style={{ background: '#0a0a0f' }}>
 
-          {/* Heading */}
-          <h1
-            className="text-5xl md:text-6xl lg:text-8xl font-bold leading-[1.05] text-white mb-6"
-            style={{ fontFamily: 'Georgia, serif' }}
-          >
-            Sublimez Votre{' '}
-            <span
-              className="italic font-light"
-              style={{
-                background: 'linear-gradient(135deg, #ff2c92, #ff77b9)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
-              Beauté
-            </span>
-            <br />
-            Naturelle
-          </h1>
-
-          <p className="text-lg md:text-xl text-white/75 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Découvrez des soins de beauté d'exception — traitements laser avancés, protocoles anti-âge et rituels bien-être sur mesure à l'Institut Physio Sfax.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center">
-            <Link
-              href="/book"
-              className="w-full sm:w-auto px-8 py-4 rounded-full font-semibold text-white transition-all hover:scale-105 hover:shadow-xl hover:shadow-[#ff2c92]/30 flex items-center justify-center gap-2"
-              style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-            >
-              <Calendar className="w-5 h-5" />
-              Réserver une Séance
-              <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
-                <ArrowRight className="w-4 h-4" />
-              </div>
-            </Link>
-            <a
-              href="#services"
-              className="w-full sm:w-auto px-8 py-4 rounded-full font-semibold text-white border border-white/40 hover:border-[#ff77b9] hover:text-[#ff77b9] transition-all flex items-center justify-center gap-2 backdrop-blur-sm"
-            >
-              Découvrir nos soins
-            </a>
-          </div>
-
-          {/* Stats */}
-          <div className="mt-16 flex flex-wrap items-center justify-center gap-8 md:gap-16">
-            {[
-              { value: '10+', label: "Années d'expérience" },
-              { value: '5 000+', label: 'Clientes satisfaites' },
-              { value: '30+', label: 'Soins disponibles' },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div
-                  className="text-3xl md:text-4xl font-bold mb-1"
-                  style={{
-                    background: 'linear-gradient(135deg, #ff2c92, #ff77b9)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text',
-                  }}
-                >
-                  {stat.value}
+            {/* ═══════════ MOBILE HEADER ═══════════ */}
+            <header className="sticky top-0 z-50 px-4 pt-4 pb-3 md:hidden" style={{ background: '#0a0a0f' }}>
+                <div className="flex items-center justify-between mb-4">
+                    <Logo size="lg" />
+                    <button onClick={() => setNotifOpen(true)} className="relative p-2">
+                        <Bell className="w-5 h-5 text-[#8888a0]" />
+                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500" />
+                    </button>
                 </div>
-                <div className="text-sm text-white/55 uppercase tracking-wider">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+            </header>
 
-        {/* Bottom fade to white */}
-        <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-white/100 to-[#3e1a23]/2" />
-      </section>
+            {/* ═══════════ DESKTOP NAVBAR ═══════════ */}
+            <nav className="hidden md:block sticky top-0 z-50 border-b"
+                style={{ background: 'rgba(10, 10, 15, 0.9)', backdropFilter: 'blur(12px)', borderColor: 'rgba(255,255,255,0.06)' }}>
+                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
+                    <Logo size="lg" />
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl flex-1 max-w-xl mx-auto"
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <Search className="w-4 h-4 text-[#6a6a80]" />
+                        <input type="text" placeholder="Restaurant, boutique, salle de sport..."
+                            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                            className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full"
+                            onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Link href="/favoris" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
+                            <Heart className="w-4 h-4" /> Favoris
+                        </Link>
+                        <Link href="/admin" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
+                            <UserIcon className="w-4 h-4" /> Admin
+                        </Link>
+                    </div>
+                </div>
+            </nav>
 
-      {/* ── SERVICES ── White background */}
-      <section id="services" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16 space-y-4">
-            <div
-              className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full mb-4 text-white"
-              style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-            >
-              Nos Expertises
-            </div>
-            <h2
-              className="text-3xl lg:text-5xl font-bold text-gray-900"
-              style={{ fontFamily: 'Georgia, serif' }}
-            >
-              Soins & Protocoles
-            </h2>
-            <p className="text-gray-500 max-w-2xl mx-auto text-sm lg:text-base leading-relaxed">
-              L'Institut Physio lit avec finesse les flux et les équilibres du visage pour parfaire des lignes fermes et des textures claires et hydratées, dans un souci de détails minutieux.
-            </p>
-          </div>
-
-          <div className="flex md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 overflow-x-auto pb-8 snap-x snap-mandatory scrollbar-hide -mx-6 px-6 md:mx-0 md:px-0">
-            {servicesHighlights.map((service, idx) => (
-              <div
-                key={idx}
-                className="group bg-white border border-gray-100 rounded-2xl overflow-hidden min-w-[280px] snap-center flex-shrink-0 hover:border-[#ff2c92]/30 transition-all duration-300 shadow-lg hover:shadow-[#ff2c92]/10 hover:shadow-2xl"
-              >
-                <div className="h-64 relative overflow-hidden">
-                  <img
-                    src={service.image}
-                    alt={service.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-                  <div
-                    className="absolute top-4 left-4 text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full text-white"
-                    style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-                  >
-                    {service.category}
-                  </div>
+            <main className="max-w-7xl mx-auto">
+                {/* ═══════════ GREETING + SEARCH (Mobile) ═══════════ */}
+                <div className="px-4 mb-6 md:hidden">
+                    <p className="text-sm text-[#8888a0]">
+                        Bonjour {userName ? <span className="text-emerald-400 font-medium">{userName}</span> : <span className="text-emerald-400">Yvelines</span>}
+                    </p>
+                    <h1 className="text-xl font-bold text-white mt-0.5 mb-4">
+                        Que cherchez-vous<br />en Yvelines ?
+                    </h1>
+                    <div className="flex items-center gap-2 px-4 py-3 rounded-2xl"
+                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                        <Search className="w-4 h-4 text-[#6a6a80]" />
+                        <input type="text" placeholder="Restaurant, boutique, salle de sport..."
+                            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                            className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full"
+                            onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
+                    </div>
                 </div>
 
-                <div className="p-6 bg-white">
-                  <h3
-                    className="font-bold text-gray-900 text-base mb-4"
-                    style={{ fontFamily: 'Georgia, serif' }}
-                  >
-                    {service.title}
-                  </h3>
-                  <ul className="space-y-2.5">
-                    {service.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2.5 text-xs text-gray-500">
-                        <span
-                          className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5"
-                          style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-                        >
-                          <span className="w-1.5 h-1.5 bg-white rounded-full" />
-                        </span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
-          </div>
+                {/* ═══════════ DESKTOP HERO ═══════════ */}
+                <section className="hidden md:block py-16 px-4">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium mb-6"
+                            style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                            <LucideIcons.Percent className="w-3.5 h-3.5" />
+                            Jusqu'à -70% sur vos activités favorites
+                        </div>
+                        <h1 className="text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight">
+                            Les meilleures offres<br />
+                            <span style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                                près de chez vous
+                            </span>
+                        </h1>
+                        <p className="text-[#8888a0] text-lg max-w-2xl mx-auto">
+                            Plombiers, électriciens, restaurants, espace bien-être et plus — découvrez des deals exclusifs dans les Yvelines (78).
+                        </p>
+                    </div>
+                </section>
 
-          <div className="text-center mt-12">
-            <Link
-              href="/book"
-              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 text-white rounded-full text-sm font-semibold tracking-wider uppercase hover:opacity-90 transition-all hover:shadow-lg hover:shadow-[#ff2c92]/30"
-              style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-            >
-              Voir tous nos soins
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
+                {/* ═══════════ CATÉGORIES POPULAIRES ═══════════ */}
+                <section className="px-4 mb-8">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-base md:text-xl font-bold text-white">Catégories populaires</h2>
+                        <Link href="/offers" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                    </div>
 
+                    {/* Mobile: 4-column grid, Desktop: scrollable row */}
+                    <div className="grid grid-cols-4 gap-3 md:hidden">
+                        {categories.slice(0, 8).map(cat => {
+                            const IconComp = iconMap[cat.icon || ''] || Tag
+                            return (
+                                <Link key={cat._id} href={`/categories/${cat.slug}`}
+                                    className="flex flex-col items-center gap-2 py-3 rounded-2xl border transition-all active:scale-95"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                                        style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
+                                        <IconComp className="w-5 h-5 text-emerald-400" />
+                                    </div>
+                                    <span className="text-[10px] text-[#a0a0b8] text-center font-medium leading-tight">{cat.name}</span>
+                                </Link>
+                            )
+                        })}
+                    </div>
 
-      {/* ── PRODUCTS ── White */}
-      {products.length > 0 && (
-        <section id="products" className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex justify-between items-end mb-12">
-              <div className="space-y-3">
-                <div
-                  className="inline-block text-xs font-bold uppercase tracking-widest px-4 py-1.5 rounded-full text-white"
-                  style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-                >
-                  Boutique
-                </div>
-                <h2
-                  className="text-3xl lg:text-4xl font-bold text-gray-900"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  Nos Produits Premium
-                </h2>
-              </div>
-              <Link
-                href="/products"
-                className="hidden md:flex items-center gap-2 text-sm font-semibold text-[#ff2c92] hover:text-[#ff77b9] transition-colors"
-              >
-                Tout voir <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+                    {/* Desktop */}
+                    <div className="hidden md:flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                        {categories.map(cat => {
+                            const IconComp = iconMap[cat.icon || ''] || Tag
+                            return (
+                                <Link key={cat._id} href={`/categories/${cat.slug}`}
+                                    className="flex flex-col items-center gap-2.5 px-5 py-4 rounded-2xl border min-w-[100px] transition-all hover:border-emerald-500/30 group"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                                        style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
+                                        <IconComp className="w-5 h-5 text-emerald-400" />
+                                    </div>
+                                    <span className="text-xs text-[#a0a0b8] font-medium whitespace-nowrap group-hover:text-white transition-colors">{cat.name}</span>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </section>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products.slice(0, 8).map((p: any) => (
-                <Link key={p._id} href={`/products/${p.slug || p._id}`} className="group cursor-pointer">
-                  <div className="relative aspect-square bg-gray-50 rounded-2xl overflow-hidden mb-4 border border-gray-100 group-hover:border-[#ff2c92]/30 group-hover:shadow-xl group-hover:shadow-[#ff2c92]/10 transition-all duration-300">
-                    {p.image ? (
-                      <img
-                        src={p.image}
-                        alt={p.nameFr}
-                        className="w-full h-full object-contain p-6 group-hover:scale-105 transition-transform duration-500"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Package className="w-12 h-12 text-gray-300" />
-                      </div>
+                {/* ═══════════ RECOMMANDÉ POUR VOUS (Horizontal scroll on mobile) ═══════════ */}
+                {featuredOffers.length > 0 && (
+                    <section className="mb-8">
+                        <div className="flex items-center justify-between px-4 mb-4">
+                            <h2 className="text-base md:text-xl font-bold text-white">Recommandé pour vous</h2>
+                            <Link href="/offers?featured=1" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                        </div>
+
+                        {/* Mobile: horizontal scroll */}
+                        <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
+                            {featuredOffers.map(offer => (
+                                <Link key={offer._id} href={`/offers/${offer.slug}`}
+                                    className="flex-shrink-0 w-44 rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    <div className="relative h-32 overflow-hidden">
+                                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                                        <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                            className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center"
+                                            style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }}>
+                                            <Heart className={`w-3.5 h-3.5 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+                                        </button>
+                                        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
+                                            style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                    </div>
+                                    <div className="p-3">
+                                        <h3 className="text-xs font-semibold text-white mb-0.5 line-clamp-1">{getMerchantName(offer.merchantId) || offer.title}</h3>
+                                        <p className="text-[10px] text-[#6a6a80] mb-1.5">
+                                            {categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
+                                        </p>
+                                        <div className="flex items-center gap-1">
+                                            <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                            <span className="text-[11px] text-emerald-400 font-medium">
+                                                {offer.rating ? offer.rating.toFixed(1) : '—'}
+                                            </span>
+                                            <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+
+                        {/* Desktop: grid */}
+                        <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4">
+                            {featuredOffers.map(offer => (
+                                <Link key={offer._id} href={`/offers/${offer.slug}`}
+                                    className="deal-card rounded-2xl overflow-hidden border"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    <div className="relative h-40 overflow-hidden">
+                                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                                        <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                            className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm"
+                                            style={{ background: favorites.has(offer.slug) ? 'rgba(239, 68, 68, 0.9)' : 'rgba(0,0,0,0.4)' }}>
+                                            <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-white fill-white' : 'text-white'}`} />
+                                        </button>
+                                        <span className="absolute top-2.5 left-2.5 discount-badge px-2 py-0.5 rounded-lg text-xs font-bold text-white">-{offer.discountPercent}%</span>
+                                        <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1"><MapPin className="w-3 h-3 text-white/70" /><span className="text-[11px] text-white/80">{offer.city}</span></div>
+                                    </div>
+                                    <div className="p-3.5">
+                                        <p className="text-[10px] text-emerald-400 font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
+                                        <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2">{offer.title}</h3>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-baseline gap-1.5">
+                                                <span className="text-base font-bold text-emerald-400">{offer.dealPrice} DT</span>
+                                                <span className="text-[11px] text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                                            </div>
+                                            {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
+                                        </div>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* ═══════════ TOUTES LES OFFRES ═══════════ */}
+                <section className="px-4 mb-8">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-base md:text-xl font-bold text-white">🔥 Toutes les offres</h2>
+                    </div>
+
+                    {/* Mobile: vertical list cards */}
+                    <div className="space-y-3 md:hidden">
+                        {offers.map(offer => (
+                            <Link key={offer._id} href={`/offers/${offer.slug}`}
+                                className="flex gap-3 rounded-2xl border p-3 active:scale-[0.98] transition-transform"
+                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
+                                    <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                                    <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
+                                        style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                </div>
+                                <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
+                                    <div>
+                                        <p className="text-[10px] text-emerald-400 font-medium">{getMerchantName(offer.merchantId)}</p>
+                                        <h3 className="text-sm font-semibold text-white line-clamp-2 mt-0.5">{offer.title}</h3>
+                                    </div>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-baseline gap-1.5">
+                                            <span className="text-base font-bold text-emerald-400">{offer.dealPrice} DT</span>
+                                            <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                                        </div>
+                                        <div className="flex items-center gap-1">
+                                            <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                            <span className="text-[11px] text-white">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                    className="self-start p-1.5 mt-0.5">
+                                    <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-[#6a6a80]'}`} />
+                                </button>
+                            </Link>
+                        ))}
+                    </div>
+
+                    {/* Desktop: grid */}
+                    <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-4">
+                        {offers.map(offer => (
+                            <Link key={offer._id} href={`/offers/${offer.slug}`}
+                                className="deal-card rounded-2xl overflow-hidden border"
+                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                <div className="relative h-44 overflow-hidden">
+                                    <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                                    <span className="absolute top-3 left-3 discount-badge px-2.5 py-1 rounded-lg text-xs font-bold text-white">-{offer.discountPercent}%</span>
+                                    <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                        className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm"
+                                        style={{ background: favorites.has(offer.slug) ? 'rgba(239, 68, 68, 0.9)' : 'rgba(0,0,0,0.4)' }}>
+                                        <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-white fill-white' : 'text-white'}`} />
+                                    </button>
+                                    <div className="absolute bottom-3 left-3 flex items-center gap-1"><MapPin className="w-3 h-3 text-white/70" /><span className="text-xs text-white/80">{offer.city}</span></div>
+                                </div>
+                                <div className="p-4">
+                                    <p className="text-[11px] text-emerald-400 font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
+                                    <h3 className="text-sm font-semibold text-white mb-1.5 line-clamp-2">{offer.title}</h3>
+                                    <p className="text-xs text-[#6a6a80] mb-3 line-clamp-1">{offer.shortDescription}</p>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-baseline gap-2">
+                                            <span className="text-lg font-bold text-emerald-400">{offer.dealPrice} DT</span>
+                                            <span className="text-xs text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                                        </div>
+                                        {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
+                                    </div>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+
+                    {offers.length === 0 && (
+                        <div className="text-center py-16"><LucideIcons.ShoppingBag className="w-12 h-12 text-[#333] mx-auto mb-4" /><p className="text-[#6a6a80]">Aucune offre disponible</p></div>
                     )}
-                    <div className="absolute top-3 right-3 w-9 h-9 rounded-full flex items-center justify-center opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all shadow-lg"
-                      style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}>
-                      <ShoppingBag className="w-4 h-4 text-white" />
+                </section>
+
+                {/* ═══════════ MARCHANDS POPULAIRES ═══════════ */}
+                {merchants.length > 0 && (
+                    <section className="px-4 mb-8">
+                        <div className="flex items-center justify-between mb-4">
+                            <h2 className="text-base md:text-xl font-bold text-white">🏪 Marchands populaires</h2>
+                            <Link href="/merchants" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                        </div>
+
+                        {/* Mobile: horizontal scroll */}
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide md:hidden">
+                            {merchants.filter(m => m.active !== false).slice(0, 6).map(m => (
+                                <Link key={m._id} href={`/merchants/${m.slug}`}
+                                    className="flex-shrink-0 w-28 rounded-2xl border p-3 text-center active:scale-95 transition-transform"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    {m.logo ? <img src={m.logo} alt="" className="w-12 h-12 rounded-xl object-cover mx-auto mb-2" /> :
+                                        <div className="w-12 h-12 rounded-xl mx-auto mb-2 flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.1)' }}>
+                                            <LucideIcons.Store className="w-5 h-5 text-violet-400" />
+                                        </div>}
+                                    <h3 className="text-[11px] font-semibold text-white mb-0.5 truncate">{m.name}</h3>
+                                    <div className="flex items-center justify-center gap-0.5">
+                                        <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                        <span className="text-[10px] text-[#8888a0]">{m.rating?.toFixed(1) || '—'}</span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+
+                        {/* Desktop: grid */}
+                        <div className="hidden md:grid grid-cols-3 lg:grid-cols-5 gap-4">
+                            {merchants.filter(m => m.active !== false).slice(0, 5).map(m => (
+                                <Link key={m._id} href={`/merchants/${m.slug}`}
+                                    className="rounded-2xl border p-4 text-center transition-all hover:border-emerald-500/30 group"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    {m.logo ? <img src={m.logo} alt="" className="w-14 h-14 rounded-xl object-cover mx-auto mb-3 group-hover:scale-110 transition-transform" /> :
+                                        <div className="w-14 h-14 rounded-xl mx-auto mb-3 flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.1)' }}>
+                                            <LucideIcons.Store className="w-6 h-6 text-violet-400" />
+                                        </div>}
+                                    <h3 className="text-sm font-semibold text-white mb-0.5 truncate">{m.name}</h3>
+                                    <div className="flex items-center justify-center gap-1">
+                                        {m.verified && <BadgeCheck className="w-3.5 h-3.5 text-cyan-400" />}
+                                        <Star className="w-3 h-3 text-amber-400 fill-amber-400" />
+                                        <span className="text-xs text-[#8888a0]">{m.rating?.toFixed(1) || '—'}</span>
+                                    </div>
+                                    <p className="text-xs text-[#6a6a80] mt-1">{m.city}</p>
+                                </Link>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* ═══════════ DESKTOP FOOTER ═══════════ */}
+                <footer className="hidden md:block border-t py-12 mt-8" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                    <div className="max-w-7xl mx-auto px-4">
+                        <div className="grid grid-cols-4 gap-8 mb-8">
+                            <div>
+                                <div className="flex items-center gap-1.5 mb-4">
+                                    <Logo size="sm" />
+                                </div>
+                                <p className="text-xs text-[#6a6a80] leading-relaxed">Les meilleures offres locales en Yvelines (78).</p>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Catégories</h4>
+                                <ul className="space-y-2">{categories.slice(0, 5).map(c => <li key={c._id}><Link href={`/categories/${c.slug}`} className="text-xs text-[#6a6a80] hover:text-white transition-colors">{c.name}</Link></li>)}</ul>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Entreprise</h4>
+                                <ul className="space-y-2"><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">À propos</Link></li><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">Contact</Link></li></ul>
+                            </div>
+                            <div>
+                                <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Légal</h4>
+                                <ul className="space-y-2"><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">Conditions</Link></li><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">Confidentialité</Link></li></ul>
+                            </div>
+                        </div>
+                        <div className="border-t pt-6 text-center" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                            <p className="text-xs text-[#6a6a80]">© {new Date().getFullYear()} LifeDeal Yvelines. Tous droits réservés.</p>
+                        </div>
                     </div>
-                  </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wider mb-1 block" style={{ color: '#ff2c92' }}>
-                    {p.category}
-                  </span>
-                  <h3 className="font-semibold text-gray-900 text-sm">{p.nameFr}</h3>
-                  <p
-                    className="text-sm font-bold mt-1"
-                    style={{
-                      background: 'linear-gradient(135deg, #ff2c92, #ff77b9)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
-                  >
-                    {p.price} TND
-                  </p>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-{/* ── AVANT / APRÈS ── */}
-<section className="py-24" style={{ background: '#f5ede6' }}>
-  <div className="max-w-5xl mx-auto px-6">
+                </footer>
+            </main>
 
-    {/* Title — matches Image 2 exactly */}
-    <div className="text-center mb-12">
-      <h2 className="text-4xl lg:text-5xl leading-tight font-extrabold" style={{ fontFamily: 'Georgia, serif' }}>
-        <span className="text-gray-900">Avant</span>
-        <span className="text-gray-900 font-normal"> &amp; </span>
-        <span style={{ color: '#ff2c92' }}>Après</span>
-      </h2>
-      <p className="text-gray-500 max-w-xl mx-auto mt-4 text-sm leading-relaxed">
-        Des résultats réels et tangibles grâce à des protocoles de soins adaptés et maîtrisés par notre équipe d'experts.
-      </p>
-    </div>
-
-    {/* 2 sliders on desktop, 1 on mobile */}
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-9">
-      <BeforeAfterSlider
-        beforeImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-          afterImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-          beforeLabel="AVANT"
-        afterLabel="APRÈS"
-        beforeClass="filter contrast-110 saturate-50 brightness-90"
-        afterClass="filter brightness-105 saturate-125 contrast-95"
-      />
-
-      {/* Hidden on mobile, visible on md+ */}
-      <div className="hidden md:block">
-        <BeforeAfterSlider
-          beforeImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-          afterImage="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=90"
-          beforeLabel="AVANT"
-          afterLabel="APRÈS"
-          beforeClass="filter contrast-125 saturate-40 brightness-85 sepia-[0.2]"
-          afterClass="filter brightness-108 saturate-120"
-        />
-      </div>
-    </div>
-  </div>
-</section>
-
-      {/* ── INSTAGRAM SWIPER ── */}
-      <section className="py-24 bg-white overflow-hidden">
-        <InstagramSwiper />
-      </section>
-
-
-
-      {/* ── TESTIMONIALS ── */}
-      <TestimonialSlider />
-
-      {/* ── FOOTER ── Dark footer (contrast needed) */}
-      <footer id="contact" className="bg-gray-950 text-white pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-6 space-y-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-            {/* Brand */}
-            <div className="space-y-6">
-              <div>
-                <span
-                  className="text-2xl font-bold tracking-widest uppercase text-white"
-                  style={{ fontFamily: 'Georgia, serif' }}
-                >
-                  Institut Physio
-                </span>
-                <div
-                  className="h-0.5 w-12 mt-2 rounded-full"
-                  style={{ background: 'linear-gradient(135deg, #ff2c92, #ff77b9)' }}
-                />
-              </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Le paradis du bien-être et de la beauté professionnelle. Des thérapies uniques conçues pour sublimer votre peau et votre corps.
-              </p>
-              <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-[#ff2c92] hover:bg-[#ff2c92]/10 transition-all">
-                  <Facebook className="w-4 h-4" />
-                </a>
-                <a href="#" className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center hover:border-[#ff2c92] hover:bg-[#ff2c92]/10 transition-all">
-                  <Instagram className="w-4 h-4" />
-                </a>
-              </div>
-            </div>
-
-            {/* Hours */}
-            <div className="space-y-6">
-              <h3 className="text-base font-semibold tracking-wider text-white" style={{ fontFamily: 'Georgia, serif' }}>
-                Horaires
-              </h3>
-              <ul className="space-y-4 text-sm text-gray-400">
-                <li className="flex justify-between border-b border-white/5 pb-2">
-                  <span>Lundi – Vendredi</span>
-                  <span className="text-white">09:00 – 18:00</span>
-                </li>
-                <li className="flex justify-between border-b border-white/5 pb-2">
-                  <span>Samedi</span>
-                  <span className="text-white">10:00 – 16:00</span>
-                </li>
-                <li className="flex justify-between pb-2">
-                  <span>Dimanche</span>
-                  <span style={{ color: '#ff2c92' }}>Fermé</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact */}
-            <div className="space-y-6 lg:col-span-2">
-              <h3 className="text-base font-semibold tracking-wider text-white" style={{ fontFamily: 'Georgia, serif' }}>
-                Contact
-              </h3>
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <a href="tel:74633703" className="flex items-center gap-4 text-gray-400 hover:text-white transition-colors group">
-                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#ff2c92]/20 transition-colors">
-                      <Phone className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Téléphone</div>
-                      <div className="font-medium">74 633 703</div>
-                    </div>
-                  </a>
-                  <a href="mailto:contact@institutphysio.tn" className="flex items-center gap-4 text-gray-400 hover:text-white transition-colors group">
-                    <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-[#ff2c92]/20 transition-colors">
-                      <Mail className="w-4 h-4" />
-                    </div>
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Email</div>
-                      <div className="font-medium">contact@institutphysio.tn</div>
-                    </div>
-                  </a>
-                </div>
-                <div className="flex items-start gap-4 text-gray-400">
-                  <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <div className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Adresse</div>
-                    <div className="font-medium leading-relaxed text-sm">
-                      Route El Ain, km 2<br />
-                      Immeuble Khadija,<br />
-                      Sfax, Tunisie
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500 uppercase tracking-widest">
-            <p>© {new Date().getFullYear()} Institut Physio. Tous droits réservés.</p>
-            <div className="flex gap-6">
-              <Link href="#" className="hover:text-[#ff77b9] transition-colors">Politique de Confidentialité</Link>
-              <Link href="#" className="hover:text-[#ff77b9] transition-colors">Conditions d'Utilisation</Link>
-            </div>
-          </div>
+            {/* Notification Drawer */}
+            <NotificationDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
         </div>
-      </footer>
-
-      <BottomMobileNav />
-
-      <style>{`
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-      `}</style>
-    </div>
-  )
+    )
 }
