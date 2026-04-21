@@ -7,7 +7,7 @@ import Link from "next/link"
 import { Search, MapPin, Star, Heart, ArrowLeft, Tag, Filter } from "lucide-react"
 import Logo from "@/components/Logo"
 
-type Offer = { _id: string; title: string; slug: string; shortDescription: string; coverImage: string; originalPrice: number; dealPrice: number; discountPercent: number; rating?: number; reviewCount?: number; city: string; merchantId: string }
+type Offer = { _id: string; title: string; slug: string; shortDescription: string; coverImage: string; originalPrice: number; dealPrice: number; discountPercent: number; rating?: number; reviewCount?: number; city: string; merchantId: string; categoryId?: string }
 type Category = { _id: string; name: string; slug: string; description?: string }
 type Merchant = { _id: string; name: string }
 
