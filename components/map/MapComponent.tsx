@@ -13,6 +13,7 @@ type Merchant = {
   categories?: string[]; city?: string; municipality?: string; full_address?: string
   address?: string; phone?: string; average_rating?: string; review_count?: string
   images?: string[]; logo?: string; opening_hours?: Record<string, string>
+  google_maps_url?: string
 }
 
 /* ─── Custom dark marker ─────────────────────────────────── */

@@ -83,7 +83,7 @@ const MERCHANTS = [
       { reviewer_name: "Isabelle Leclerc", reviewer_photo: "https://i.pravatar.cc/36?img=3", rating: "5", date: "il y a 3 mois", text: "Excellent service, toujours disponible en urgence. Prix correct pour Versailles." }
     ],
     website: "https://plomberie-versailles.fr",
-    city: "Versailles", municipality: "Versailles 78000",
+    city: "Versailles",
     verified: true, active: true, rating: 4.7, reviewCount: 47
   },
   {

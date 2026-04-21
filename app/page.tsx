@@ -20,7 +20,7 @@ type Offer = {
 }
 type Merchant = {
     _id: string; name: string; slug: string; logo?: string; city?: string;
-    verified: boolean; rating?: number; reviewCount?: number
+    verified?: boolean; rating?: number; reviewCount?: number; active?: boolean
 }
 
 const iconMap: Record<string, any> = {
