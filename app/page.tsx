@@ -346,7 +346,7 @@ export default function HomePage() {
                         {/* Featured promo card */}
                         <Link href="/offers?sort=discount" className="shrink-0 w-56 md:w-auto rounded-2xl relative overflow-hidden group active:scale-[0.98] transition-transform md:col-span-1 flex flex-col justify-end h-64 md:h-auto"
                             style={{ background: '#12121a' }}>
-                            <img src={popularOffers[0]?.coverImage || ''} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <img src={popularOffers[0]?.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
                             <div className="relative z-10 p-4 flex flex-col justify-end h-full">
                                 <h3 className="text-lg font-bold text-white mb-1 leading-tight">Jusqu'à -70%</h3>

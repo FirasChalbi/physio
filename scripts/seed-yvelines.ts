@@ -9,6 +9,7 @@ import { getMerchantModel } from '../lib/models/Merchant'
 import { getCategoryModel } from '../lib/models/Category'
 import { getLocationModel } from '../lib/models/Location'
 import { getOfferModel } from '../lib/models/Offer'
+import bcrypt from 'bcryptjs'
 
 const MONGODB_URI = process.env.MONGODB_URI!
 
@@ -512,6 +513,23 @@ async function main() {
   console.log('🔌 Connecting to MongoDB…')
   await mongoose.connect(MONGODB_URI)
   console.log('✅ Connected!')
+
+  // ── Admin User ──
+  const hashedPassword = await bcrypt.hash('admin123', 12)
+  await mongoose.connection.db!.collection('users').updateOne(
+    { email: 'admin@lifeapp.fr' },
+    { $setOnInsert: {
+        name: 'Admin LifeApp',
+        email: 'admin@lifeapp.fr',
+        password: hashedPassword,
+        role: 'admin',
+        active: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }},
+    { upsert: true }
+  )
+  console.log('✅ Admin user ready (admin@lifeapp.fr / admin123)')
 
   // ── Categories ──
   const Category = getCategoryModel()
