@@ -3,8 +3,6 @@ import Credentials from "next-auth/providers/credentials"
 import Google from "next-auth/providers/google"
 import Facebook from "next-auth/providers/facebook"
 import bcrypt from "bcryptjs"
-import connectDB from "@/lib/mongodb"
-import { getUserModel } from "@/lib/models/User"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
@@ -27,6 +25,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null
 
+        const { default: connectDB } = await import("@/lib/mongodb")
+        const { getUserModel } = await import("@/lib/models/User")
         await connectDB()
         const User = getUserModel()
 
@@ -55,6 +55,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google" || account?.provider === "facebook") {
+        const { default: connectDB } = await import("@/lib/mongodb")
+        const { getUserModel } = await import("@/lib/models/User")
         await connectDB()
         const User = getUserModel()
 
