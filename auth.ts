@@ -5,10 +5,10 @@ import Facebook from "next-auth/providers/facebook"
 import bcrypt from "bcryptjs"
 import connectDB from "@/lib/mongodb"
 import { getUserModel } from "@/lib/models/User"
+import { authConfig } from "./auth.config"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
-  trustHost: true,
-  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
+  ...authConfig,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -49,10 +49,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-  session: {
-    strategy: "jwt",
-  },
   callbacks: {
+    ...authConfig.callbacks,
     async signIn({ user, account }) {
       if (account?.provider === "google" || account?.provider === "facebook") {
         await connectDB()
@@ -80,24 +78,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return true
     },
-    async jwt({ token, user }) {
-      if (user) {
-        token.role = (user as any).role
-        token.id = (user as any).id || user.id
-        token.image = user.image
-      }
-      return token
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        ;(session.user as any).role = token.role
-        ;(session.user as any).id = token.id
-        session.user.image = token.image as string
-      }
-      return session
-    },
-  },
-  pages: {
-    signIn: "/login",
   },
 })
