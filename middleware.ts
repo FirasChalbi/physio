@@ -5,14 +5,21 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
 
   // Only protect /admin/* and /account/*
-  if (
-    !pathname.startsWith("/admin") &&
-    !pathname.startsWith("/account")
-  ) {
+  if (!pathname.startsWith("/admin") && !pathname.startsWith("/account")) {
     return NextResponse.next()
   }
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
+  const secret = process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET
+
+  // If secret is missing, let the page handle auth (fail safely)
+  if (!secret) {
+    if (pathname.startsWith("/admin")) {
+      return NextResponse.redirect(new URL("/login", req.url))
+    }
+    return NextResponse.next()
+  }
+
+  const token = await getToken({ req, secret })
 
   // /admin/* — require admin or merchant role
   if (pathname.startsWith("/admin")) {

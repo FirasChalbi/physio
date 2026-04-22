@@ -44,9 +44,7 @@ export default function LoginPage() {
             <div className="w-full max-w-md relative z-10">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <Link href="/">
-                        <Logo size="lg" className="justify-center" />
-                    </Link>
+                    <Logo size="lg" className="justify-center" />
                     <p className="text-[#6a6a80] mt-3 text-sm">Connectez-vous à votre compte</p>
                 </div>
 

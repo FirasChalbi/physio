@@ -27,6 +27,7 @@ const iconMap: Record<string, any> = {
     UtensilsCrossed: LucideIcons.UtensilsCrossed, Building2: LucideIcons.Building2, Waves: LucideIcons.Waves,
     Sparkles: LucideIcons.Sparkles, Dumbbell: LucideIcons.Dumbbell, Home: LucideIcons.Home,
     Car: LucideIcons.Car, PartyPopper: LucideIcons.PartyPopper, PawPrint: LucideIcons.PawPrint,
+    Wrench: LucideIcons.Wrench, Zap: LucideIcons.Zap, Store: LucideIcons.Store, Tag: LucideIcons.Tag,
 }
 
 export default function HomePage() {
@@ -155,37 +156,23 @@ export default function HomePage() {
                         <Link href="/offers" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
                     </div>
 
-                    {/* Mobile: 4-column grid, Desktop: scrollable row */}
-                    <div className="grid grid-cols-4 gap-3 md:hidden">
-                        {categories.slice(0, 8).map(cat => {
+                    {/* Single horizontal scroll — all screen sizes */}
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+                        {categories.slice(0, 10).map(cat => {
                             const IconComp = iconMap[cat.icon || ''] || Tag
                             return (
                                 <Link key={cat._id} href={`/categories/${cat.slug}`}
-                                    className="flex flex-col items-center gap-2 py-3 rounded-2xl border transition-all active:scale-95"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                                    <div className="w-11 h-11 rounded-xl flex items-center justify-center"
-                                        style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
-                                        <IconComp className="w-5 h-5 text-emerald-400" />
-                                    </div>
-                                    <span className="text-[10px] text-[#a0a0b8] text-center font-medium leading-tight">{cat.name}</span>
-                                </Link>
-                            )
-                        })}
-                    </div>
-
-                    {/* Desktop */}
-                    <div className="hidden md:flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                        {categories.map(cat => {
-                            const IconComp = iconMap[cat.icon || ''] || Tag
-                            return (
-                                <Link key={cat._id} href={`/categories/${cat.slug}`}
-                                    className="flex flex-col items-center gap-2.5 px-5 py-4 rounded-2xl border min-w-[100px] transition-all hover:border-emerald-500/30 group"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                                    <div className="w-12 h-12 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
-                                        style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
-                                        <IconComp className="w-5 h-5 text-emerald-400" />
-                                    </div>
-                                    <span className="text-xs text-[#a0a0b8] font-medium whitespace-nowrap group-hover:text-white transition-colors">{cat.name}</span>
+                                    className="flex-shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl transition-all active:scale-95 group"
+                                    style={{
+                                        background: 'linear-gradient(145deg, #161620, #111118)',
+                                        border: '1px solid rgba(255,255,255,0.07)',
+                                        boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(16,185,129,0.18)',
+                                        minWidth: '76px',
+                                    }}>
+                                    <IconComp className="w-6 h-6 text-emerald-400 transition-transform group-hover:scale-110" />
+                                    <span className="text-[10px] text-[#c0c0d0] font-medium text-center leading-tight whitespace-nowrap group-hover:text-white transition-colors">
+                                        {cat.name}
+                                    </span>
                                 </Link>
                             )
                         })}
