@@ -9,9 +9,9 @@ interface LogoProps {
 
 export default function Logo({ size = "md", href = "/", className = "" }: LogoProps) {
   const sizes = {
-    sm: { icon: "w-5 h-4", life: "text-sm", yvelines: "text-[9px]" },
-    md: { icon: "w-6 h-6", life: "text-lg", yvelines: "text-[10px]" },
-    lg: { icon: "w-8 h-8", life: "text-xl", yvelines: "text-[11px]" },
+    sm: { icon: "w-4 h-4", life: "text-sm", yvelines: "text-[9px]" },
+    md: { icon: "w-4 h-4", life: "text-lg", yvelines: "text-[10px]" },
+    lg: { icon: "w-4 h-7", life: "text-xl", yvelines: "text-[11px]" },
   }
   const s = sizes[size]
 
@@ -20,7 +20,7 @@ export default function Logo({ size = "md", href = "/", className = "" }: LogoPr
       <img 
         src="/logo-icon.png" 
         alt="Life Icon" 
-        className={`${s.icon} object-contain flex-shrink-0`}
+        className={`${s.icon} object-contain flex-shrink-0 mb-1`}
       />
       <span className="flex items-baseline gap-0.5 tracking-tight">
         <span className={`${s.life} font-bold text-white`}>Life</span>
