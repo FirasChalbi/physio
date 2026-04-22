@@ -496,10 +496,7 @@ export default function HomePage() {
                     </section>
                 )}
 
-                {/* ═══════════ LES MEILLEURS SPAS & RESTAURANTS ═══════════ */}
-                <HorizontalSection title="Les meilleurs spas & restaurants" href="/offers?category=spa-restau" offers={spaRestoHotelOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
-
-                {/* ═══════════ BANNER PROMO ═══════════ */}
+                     {/* ═══════════ BANNER PROMO ═══════════ */}
                 {popularOffers.length > 0 && (
                     <section className="px-4 mb-8">
                         <Link href="/offers?sort=popular" className="block relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-46 md:h-64"
@@ -514,6 +511,9 @@ export default function HomePage() {
                         </Link>
                     </section>
                 )}
+
+                {/* ═══════════ LES MEILLEURS SPAS & RESTAURANTS ═══════════ */}
+                <HorizontalSection title="Les meilleurs spas & restaurants" href="/offers?category=spa-restau" offers={spaRestoHotelOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
 
                 {/* ═══════════ TOUTES LES NOUVEAUTÉS ═══════════ */}
                 <HorizontalSection title="Toutes les nouveautés" href="/offers?sort=new" offers={newOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
