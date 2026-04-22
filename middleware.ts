@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
 
   const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
 
-  const token = await getToken({ req, secret, cookieName: "authjs.session-token" })
+  const token = await getToken({ req, secret })
 
   // /admin/* — require admin or merchant role
   if (pathname.startsWith("/admin")) {

@@ -19,8 +19,14 @@ export default function LoginPage() {
 
     useEffect(() => {
         if (status === "authenticated" && session?.user) {
-            const role = (session.user as any).role
-            window.location.href = role === "admin" || role === "merchant" ? "/admin" : "/account"
+            // Prevent redirect loop: only redirect once per session
+            if (!sessionStorage.getItem("loginRedirectAttempted")) {
+                sessionStorage.setItem("loginRedirectAttempted", "1")
+                const role = (session.user as any).role
+                window.location.href = role === "admin" || role === "merchant" ? "/admin" : "/account"
+            }
+        } else if (status === "unauthenticated") {
+            sessionStorage.removeItem("loginRedirectAttempted")
         }
     }, [status, session])
 
