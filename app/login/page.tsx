@@ -1,8 +1,8 @@
 // app/login/page.tsx
 "use client"
 
-import { useState } from "react"
-import { signIn } from "next-auth/react"
+import { useState, useEffect } from "react"
+import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react"
@@ -10,11 +10,19 @@ import Logo from "@/components/Logo"
 
 export default function LoginPage() {
     const router = useRouter()
+    const { data: session, status } = useSession()
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false)
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (status === "authenticated" && session?.user) {
+            const role = (session.user as any).role
+            window.location.href = role === "admin" || role === "merchant" ? "/admin" : "/account"
+        }
+    }, [status, session])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -31,7 +39,7 @@ export default function LoginPage() {
             setError("Email ou mot de passe incorrect")
             setLoading(false)
         } else {
-            router.push("/admin")
+            window.location.href = "/admin"
         }
     }
 

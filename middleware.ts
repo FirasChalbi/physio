@@ -1,21 +1,24 @@
-import { auth } from "@/auth"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
+import { getToken } from "next-auth/jwt"
 
-export default auth((req) => {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const session = req.auth
 
   // Only protect /admin/* and /account/*
   if (!pathname.startsWith("/admin") && !pathname.startsWith("/account")) {
     return NextResponse.next()
   }
 
+  const secret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET
+
+  const token = await getToken({ req, secret, cookieName: "authjs.session-token" })
+
   // /admin/* — require admin or merchant role
   if (pathname.startsWith("/admin")) {
-    if (!session?.user) {
+    if (!token) {
       return NextResponse.redirect(new URL("/login", req.url))
     }
-    const role = (session.user as any).role
+    const role = (token as any).role
     if (role !== "admin" && role !== "merchant") {
       return NextResponse.redirect(new URL("/account", req.url))
     }
@@ -23,13 +26,13 @@ export default auth((req) => {
 
   // /account — require login
   if (pathname.startsWith("/account")) {
-    if (!session?.user) {
+    if (!token) {
       return NextResponse.redirect(new URL("/login", req.url))
     }
   }
 
   return NextResponse.next()
-})
+}
 
 export const config = {
   matcher: ["/admin/:path*", "/account/:path*"],
