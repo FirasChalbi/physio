@@ -30,8 +30,8 @@ const iconMap: Record<string, any> = {
     Wrench: LucideIcons.Wrench, Zap: LucideIcons.Zap, Store: LucideIcons.Store, Tag: LucideIcons.Tag,
 }
 
-function HorizontalSection({ title, href, offers, categories, merchants, favorites, toggleFav }: {
-    title: string; href: string; offers: Offer[]; categories: Category[]; merchants: Merchant[]; favorites: Set<string>; toggleFav: (slug: string) => void;
+function HorizontalSection({ title, href, offers, categories, merchants, favorites, toggleFav, saveViewed }: {
+    title: string; href: string; offers: Offer[]; categories: Category[]; merchants: Merchant[]; favorites: Set<string>; toggleFav: (slug: string) => void; saveViewed?: (slug: string) => void;
 }) {
     if (offers.length === 0) return null
     const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
@@ -46,7 +46,8 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="shrink-0 w-44 rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                        onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-32 overflow-hidden">
                             <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -78,7 +79,8 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                        onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -117,6 +119,7 @@ export default function HomePage() {
     const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [notifOpen, setNotifOpen] = useState(false)
     const [placeholderIdx, setPlaceholderIdx] = useState(0)
+    const [recentlyViewed, setRecentlyViewed] = useState<string[]>([])
     const scrollRef1 = useRef<HTMLDivElement>(null)
     const scrollRef2 = useRef<HTMLDivElement>(null)
 
@@ -165,6 +168,9 @@ export default function HomePage() {
         // Load favorites from localStorage
         const favs: string[] = JSON.parse(localStorage.getItem('life_favorites') || '[]')
         setFavorites(new Set(favs))
+
+        const recent: string[] = JSON.parse(localStorage.getItem('life_recent') || '[]')
+        setRecentlyViewed(recent)
     }, [])
 
     const toggleFav = (slug: string) => {
@@ -179,6 +185,13 @@ export default function HomePage() {
         setFavorites(new Set(updated))
     }
 
+    const saveViewed = (slug: string) => {
+        const existing: string[] = JSON.parse(localStorage.getItem('life_recent') || '[]')
+        const updated = [slug, ...existing.filter(s => s !== slug)].slice(0, 10)
+        localStorage.setItem('life_recent', JSON.stringify(updated))
+        setRecentlyViewed(updated)
+    }
+
     const featuredOffers = offers.filter(o => o.featured)
     const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
     const getMerchantCity = (id: string) => merchants.find(m => m._id === id)?.city || ''
@@ -191,6 +204,9 @@ export default function HomePage() {
         return cat && /spa|restau|restaurant|hôtel|hotel|héberg|bien-être|wellness/i.test(cat.name)
     }).slice(0, 8)
     const newOffers = [...offers].reverse().slice(0, 8)
+    const recentOffers = recentlyViewed
+        .map(slug => offers.find(o => o.slug === slug))
+        .filter((o): o is Offer => !!o)
 
     return (
         <div className="min-h-screen pb-24 md:pb-0" style={{ background: '#0a0a0f' }}>
@@ -323,48 +339,68 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {/* ═══════════ PROMO BANNERS ═══════════ */}
+                {/* ═══════════ NOS RECOMMANDATIONS ═══════════ */}
                 <section className="px-4 mb-8">
                     <h2 className="text-base md:text-xl font-bold text-white mb-4">Nos recommandations</h2>
-                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3">
-                        <Link href="/offers?sort=discount" className="shrink-0 w-64 md:w-auto rounded-2xl p-4 relative overflow-hidden group active:scale-[0.98] transition-transform"
-                            style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
-                            <div className="relative z-10">
-                                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3"><LucideIcons.Percent className="w-5 h-5 text-white" /></div>
-                                <h3 className="text-sm font-bold text-white mb-1">Jusqu'à -70%*</h3>
-                                <p className="text-[11px] text-white/80 mb-3">Les réductions les plus savoureuses sur toute la carte.</p>
-                                <span className="text-[11px] font-semibold text-white flex items-center gap-1">Voir les offres <ChevronRight className="w-3 h-3" /></span>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-4">
+                        {/* Featured promo card */}
+                        <Link href="/offers?sort=discount" className="shrink-0 w-56 md:w-auto rounded-2xl relative overflow-hidden group active:scale-[0.98] transition-transform md:col-span-1 flex flex-col justify-end h-64 md:h-auto"
+                            style={{ background: '#12121a' }}>
+                            <img src={popularOffers[0]?.coverImage || ''} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
+                            <div className="relative z-10 p-4 flex flex-col justify-end h-full">
+                                <h3 className="text-lg font-bold text-white mb-1 leading-tight">Jusqu'à -70%</h3>
+                                <p className="text-xs text-white/70 mb-3">Promos et offres spéciales.</p>
+                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-1">Voir plus <ChevronRight className="w-4 h-4" /></span>
                             </div>
-                            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
                         </Link>
-                        <Link href="/offers?featured=1" className="shrink-0 w-64 md:w-auto rounded-2xl p-4 relative overflow-hidden group active:scale-[0.98] transition-transform"
-                            style={{ background: 'linear-gradient(135deg, #7c3aed, #4c1d95)' }}>
-                            <div className="relative z-10">
-                                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3"><LucideIcons.Crown className="w-5 h-5 text-white" /></div>
-                                <h3 className="text-sm font-bold text-white mb-1">Sélection premium</h3>
-                                <p className="text-[11px] text-white/80 mb-3">Découvrez nos établissements distingués et coup de cœur.</p>
-                                <span className="text-[11px] font-semibold text-white flex items-center gap-1">Voir les offres <ChevronRight className="w-3 h-3" /></span>
-                            </div>
-                            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
-                        </Link>
-                        <Link href="/offers" className="shrink-0 w-64 md:w-auto rounded-2xl p-4 relative overflow-hidden group active:scale-[0.98] transition-transform"
-                            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
-                            <div className="relative z-10">
-                                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3"><LucideIcons.Gift className="w-5 h-5 text-white" /></div>
-                                <h3 className="text-sm font-bold text-white mb-1">Fidélité récompensée</h3>
-                                <p className="text-[11px] text-white/80 mb-3">Profitez d'avantages exclusifs et récompenses fidélité.</p>
-                                <span className="text-[11px] font-semibold text-white flex items-center gap-1">Voir les offres <ChevronRight className="w-3 h-3" /></span>
-                            </div>
-                            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
-                        </Link>
+                        {/* Offer cards */}
+                        {(featuredOffers.length > 0 ? featuredOffers : popularOffers).slice(0, 3).map(offer => {
+                            const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
+                            return (
+                                <Link key={offer._id} href={`/offers/${offer.slug}`}
+                                    className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
+                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                                    onClick={() => saveViewed(offer.slug)}>
+                                    <div className="relative h-40 overflow-hidden">
+                                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                                        <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                            className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
+                                            style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
+                                            <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+                                        </button>
+                                        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
+                                            style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                    </div>
+                                    <div className="p-3.5">
+                                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                                        <p className="text-[11px] text-[#6a6a80] mb-2">
+                                            {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
+                                        </p>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-baseline gap-1.5">
+                                                <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                                <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
+                                            </div>
+                                            <div className="flex items-center gap-1">
+                                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                                <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                                <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </Link>
+                            )
+                        })}
                     </div>
                 </section>
 
                 {/* ═══════════ LES PLUS POPULAIRES ═══════════ */}
-                <HorizontalSection title="Les plus populaires" href="/offers?sort=popular" offers={popularOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+                <HorizontalSection title="Les plus populaires" href="/offers?sort=popular" offers={popularOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
 
                 {/* ═══════════ LES MIEUX NOTÉS ═══════════ */}
-                <HorizontalSection title="Les mieux notés" href="/offers?sort=rating" offers={bestRatedOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+                <HorizontalSection title="Les mieux notés" href="/offers?sort=rating" offers={bestRatedOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
 
                 {/* ═══════════ RECOMMANDÉ POUR VOUS (Horizontal scroll on mobile) ═══════════ */}
                 {featuredOffers.length > 0 && (
@@ -443,10 +479,30 @@ export default function HomePage() {
                 )}
 
                 {/* ═══════════ LES MEILLEURS SPAS & RESTAURANTS ═══════════ */}
-                <HorizontalSection title="Les meilleurs spas & restaurants" href="/offers?category=spa-restau" offers={spaRestoHotelOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+                <HorizontalSection title="Les meilleurs spas & restaurants" href="/offers?category=spa-restau" offers={spaRestoHotelOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
+
+                {/* ═══════════ BANNER PROMO ═══════════ */}
+                {popularOffers.length > 0 && (
+                    <section className="px-4 mb-8">
+                        <Link href="/offers?sort=popular" className="block relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-46 md:h-64"
+                            style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            <img src={popularOffers[0]?.coverImage || ''} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent" />
+                            <div className="relative z-10 p-6 md:p-8 flex flex-col justify-end h-full">
+                                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">Découvrez nos meilleures offres</h3>
+                                <p className="text-sm text-white/70 mb-4">Les deals les plus populaires de votre région.</p>
+                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-1">Voir plus <ChevronRight className="w-4 h-4" /></span>
+                            </div>
+                        </Link>
+                    </section>
+                )}
 
                 {/* ═══════════ TOUTES LES NOUVEAUTÉS ═══════════ */}
-                <HorizontalSection title="Toutes les nouveautés" href="/offers?sort=new" offers={newOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+                <HorizontalSection title="Toutes les nouveautés" href="/offers?sort=new" offers={newOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
+
+                {recentOffers.length > 0 && (
+                    <HorizontalSection title="Récemment consultées" href="/offers" offers={recentOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
+                )}
 
                 {/* ═══════════ TOUTES LES OFFRES ═══════════ */}
                 <section className="px-4 mb-8">
