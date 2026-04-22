@@ -251,9 +251,27 @@ export default function HomePage() {
                         <Link href="/favoris" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
                             <Heart className="w-4 h-4" /> Favoris
                         </Link>
-                        <Link href="/admin" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
-                            <UserIcon className="w-4 h-4" /> Admin
-                        </Link>
+                        {session ? (
+                            (() => {
+                                const role = (session.user as any)?.role
+                                if (role === "admin" || role === "merchant") {
+                                    return (
+                                        <Link href="/admin" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
+                                            <UserIcon className="w-4 h-4" /> Admin
+                                        </Link>
+                                    )
+                                }
+                                return (
+                                    <Link href="/account" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
+                                        <UserIcon className="w-4 h-4" /> Mon compte
+                                    </Link>
+                                )
+                            })()
+                        ) : (
+                            <Link href="/login" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
+                                <UserIcon className="w-4 h-4" /> Se connecter
+                            </Link>
+                        )}
                     </div>
                 </div>
             </nav>
