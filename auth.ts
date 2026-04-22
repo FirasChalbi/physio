@@ -7,6 +7,7 @@ import connectDB from "@/lib/mongodb"
 import { getUserModel } from "@/lib/models/User"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
