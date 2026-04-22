@@ -1,7 +1,7 @@
 // app/page.tsx — Redesigned homepage matching the "Life" app mobile design
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
 import {
@@ -116,6 +116,40 @@ export default function HomePage() {
     const [searchQuery, setSearchQuery] = useState("")
     const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [notifOpen, setNotifOpen] = useState(false)
+    const [placeholderIdx, setPlaceholderIdx] = useState(0)
+    const scrollRef1 = useRef<HTMLDivElement>(null)
+    const scrollRef2 = useRef<HTMLDivElement>(null)
+
+    const defaultPlaceholders = ['un restaurant', 'un spa', 'un hôtel', 'une boutique', 'un coiffeur', 'un plombier']
+    const dynamicPlaceholders = categories.length > 0
+        ? categories.slice(0, 6).map(c => {
+            const first = c.name.charAt(0).toLowerCase()
+            const vowels = 'aeiouyéèêà'
+            const article = vowels.includes(first) ? 'une ' : 'un '
+            return article + c.name.toLowerCase()
+          })
+        : defaultPlaceholders
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setPlaceholderIdx(prev => {
+                const next = prev + 1
+                if (next >= dynamicPlaceholders.length) {
+                    [scrollRef1, scrollRef2].forEach(ref => {
+                        if (ref.current) ref.current.style.transition = 'none'
+                    })
+                    setTimeout(() => {
+                        [scrollRef1, scrollRef2].forEach(ref => {
+                            if (ref.current) ref.current.style.transition = ''
+                        })
+                    }, 60)
+                    return 0
+                }
+                return next
+            })
+        }, 2000)
+        return () => clearInterval(interval)
+    }, [dynamicPlaceholders.length])
 
     useEffect(() => {
         Promise.all([
@@ -177,13 +211,25 @@ export default function HomePage() {
                 style={{ background: 'rgba(10, 10, 15, 0.9)', backdropFilter: 'blur(12px)', borderColor: 'rgba(255,255,255,0.06)' }}>
                 <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
                     <Logo size="lg" />
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl flex-1 max-w-xl mx-auto"
+                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl flex-1 max-w-xl mx-auto relative overflow-hidden"
                         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <Search className="w-4 h-4 text-[#6a6a80]" />
-                        <input type="text" placeholder="Restaurant, boutique, salle de sport..."
+                        <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
+                        <input type="text"
                             value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                            className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full"
+                            className="bg-transparent text-sm text-white outline-none w-full"
                             onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
+                        {!searchQuery && (
+                            <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
+                                <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
+                                <div className="relative h-5 overflow-hidden">
+                                    <div ref={scrollRef1} className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
+                                        {dynamicPlaceholders.map((p, i) => (
+                                            <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                     <div className="flex items-center gap-3">
                         <Link href="/favoris" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
@@ -205,13 +251,25 @@ export default function HomePage() {
                     <h1 className="text-xl font-bold text-white mt-0.5 mb-4">
                         Que cherchez-vous<br />en Yvelines ?
                     </h1>
-                    <div className="flex items-center gap-2 px-4 py-3 rounded-2xl"
+                    <div className="flex items-center gap-2 px-4 py-3 rounded-2xl relative overflow-hidden"
                         style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <Search className="w-4 h-4 text-[#6a6a80]" />
-                        <input type="text" placeholder="Restaurant, boutique, salle de sport..."
+                        <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
+                        <input type="text"
                             value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                            className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full"
+                            className="bg-transparent text-sm text-white outline-none w-full"
                             onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
+                        {!searchQuery && (
+                            <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
+                                <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
+                                <div className="relative h-5 overflow-hidden">
+                                    <div ref={scrollRef2} className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
+                                        {dynamicPlaceholders.map((p, i) => (
+                                            <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                     </div>
                 </div>
 
