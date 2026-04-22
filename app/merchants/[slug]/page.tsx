@@ -350,8 +350,8 @@ export default function MerchantPage() {
                 <div className="p-3">
                   <h3 className="text-xs font-semibold text-white mb-1 line-clamp-2">{offer.title}</h3>
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} DT</span>
-                    <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                    <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                   </div>
                 </div>
               </Link>

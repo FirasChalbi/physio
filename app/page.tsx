@@ -30,6 +30,84 @@ const iconMap: Record<string, any> = {
     Wrench: LucideIcons.Wrench, Zap: LucideIcons.Zap, Store: LucideIcons.Store, Tag: LucideIcons.Tag,
 }
 
+function HorizontalSection({ title, href, offers, categories, merchants, favorites, toggleFav }: {
+    title: string; href: string; offers: Offer[]; categories: Category[]; merchants: Merchant[]; favorites: Set<string>; toggleFav: (slug: string) => void;
+}) {
+    if (offers.length === 0) return null
+    const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
+
+    return (
+        <section className="mb-8">
+            <div className="flex items-center justify-between px-4 mb-4">
+                <h2 className="text-base md:text-xl font-bold text-white">{title}</h2>
+                <Link href={href} className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+            </div>
+            <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
+                {offers.map(offer => (
+                    <Link key={offer._id} href={`/offers/${offer.slug}`}
+                        className="shrink-0 w-44 rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform"
+                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        <div className="relative h-32 overflow-hidden">
+                            <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                            <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center"
+                                style={{ background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)' }}>
+                                <Heart className={`w-3.5 h-3.5 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
+                            </button>
+                            <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
+                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                        </div>
+                        <div className="p-3">
+                            <h3 className="text-xs font-semibold text-white mb-0.5 line-clamp-1">{getMerchantName(offer.merchantId) || offer.title}</h3>
+                            <p className="text-[10px] text-[#6a6a80] mb-1.5">
+                                {categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
+                            </p>
+                            <div className="flex items-center gap-1">
+                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                <span className="text-[11px] text-emerald-400 font-medium">
+                                    {offer.rating ? offer.rating.toFixed(1) : '—'}
+                                </span>
+                                <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
+                            </div>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+            <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4">
+                {offers.map(offer => (
+                    <Link key={offer._id} href={`/offers/${offer.slug}`}
+                        className="deal-card rounded-2xl overflow-hidden border"
+                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        <div className="relative h-40 overflow-hidden">
+                            <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
+                            <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
+                                className="absolute top-2.5 right-2.5 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm"
+                                style={{ background: favorites.has(offer.slug) ? 'rgba(239, 68, 68, 0.9)' : 'rgba(0,0,0,0.4)' }}>
+                                <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-white fill-white' : 'text-white'}`} />
+                            </button>
+                            <span className="absolute top-2.5 left-2.5 discount-badge px-2 py-0.5 rounded-lg text-xs font-bold text-white">-{offer.discountPercent}%</span>
+                            <div className="absolute bottom-2.5 left-2.5 flex items-center gap-1"><MapPin className="w-3 h-3 text-white/70" /><span className="text-[11px] text-white/80">{offer.city}</span></div>
+                        </div>
+                        <div className="p-3.5">
+                            <p className="text-[10px] text-emerald-400 font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
+                            <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2">{offer.title}</h3>
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-baseline gap-1.5">
+                                    <span className="text-base font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                    <span className="text-[11px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
+                                </div>
+                                {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
+                            </div>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+        </section>
+    )
+}
+
 export default function HomePage() {
     const { data: session } = useSession()
     const [categories, setCategories] = useState<Category[]>([])
@@ -71,6 +149,14 @@ export default function HomePage() {
     const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
     const getMerchantCity = (id: string) => merchants.find(m => m._id === id)?.city || ''
     const userName = session?.user?.name?.split(' ')[0] || ''
+
+    const popularOffers = [...offers].sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0)).slice(0, 8)
+    const bestRatedOffers = [...offers].filter(o => (o.rating || 0) >= 4).sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 8)
+    const spaRestoHotelOffers = offers.filter(o => {
+        const cat = categories.find(c => c._id === o.categoryId)
+        return cat && /spa|restau|restaurant|hôtel|hotel|héberg|bien-être|wellness/i.test(cat.name)
+    }).slice(0, 8)
+    const newOffers = [...offers].reverse().slice(0, 8)
 
     return (
         <div className="min-h-screen pb-24 md:pb-0" style={{ background: '#0a0a0f' }}>
@@ -162,7 +248,7 @@ export default function HomePage() {
                             const IconComp = iconMap[cat.icon || ''] || Tag
                             return (
                                 <Link key={cat._id} href={`/categories/${cat.slug}`}
-                                    className="flex-shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl transition-all active:scale-95 group"
+                                    className="shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl transition-all active:scale-95 group"
                                     style={{
                                         background: 'linear-gradient(145deg, #161620, #111118)',
                                         border: '1px solid rgba(255,255,255,0.07)',
@@ -179,6 +265,49 @@ export default function HomePage() {
                     </div>
                 </section>
 
+                {/* ═══════════ PROMO BANNERS ═══════════ */}
+                <section className="px-4 mb-8">
+                    <h2 className="text-base md:text-xl font-bold text-white mb-4">Nos recommandations</h2>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-3">
+                        <Link href="/offers?sort=discount" className="shrink-0 w-64 md:w-auto rounded-2xl p-4 relative overflow-hidden group active:scale-[0.98] transition-transform"
+                            style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                            <div className="relative z-10">
+                                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3"><LucideIcons.Percent className="w-5 h-5 text-white" /></div>
+                                <h3 className="text-sm font-bold text-white mb-1">Jusqu'à -70%*</h3>
+                                <p className="text-[11px] text-white/80 mb-3">Les réductions les plus savoureuses sur toute la carte.</p>
+                                <span className="text-[11px] font-semibold text-white flex items-center gap-1">Voir les offres <ChevronRight className="w-3 h-3" /></span>
+                            </div>
+                            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
+                        </Link>
+                        <Link href="/offers?featured=1" className="shrink-0 w-64 md:w-auto rounded-2xl p-4 relative overflow-hidden group active:scale-[0.98] transition-transform"
+                            style={{ background: 'linear-gradient(135deg, #7c3aed, #4c1d95)' }}>
+                            <div className="relative z-10">
+                                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3"><LucideIcons.Crown className="w-5 h-5 text-white" /></div>
+                                <h3 className="text-sm font-bold text-white mb-1">Sélection premium</h3>
+                                <p className="text-[11px] text-white/80 mb-3">Découvrez nos établissements distingués et coup de cœur.</p>
+                                <span className="text-[11px] font-semibold text-white flex items-center gap-1">Voir les offres <ChevronRight className="w-3 h-3" /></span>
+                            </div>
+                            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
+                        </Link>
+                        <Link href="/offers" className="shrink-0 w-64 md:w-auto rounded-2xl p-4 relative overflow-hidden group active:scale-[0.98] transition-transform"
+                            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
+                            <div className="relative z-10">
+                                <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-3"><LucideIcons.Gift className="w-5 h-5 text-white" /></div>
+                                <h3 className="text-sm font-bold text-white mb-1">Fidélité récompensée</h3>
+                                <p className="text-[11px] text-white/80 mb-3">Profitez d'avantages exclusifs et récompenses fidélité.</p>
+                                <span className="text-[11px] font-semibold text-white flex items-center gap-1">Voir les offres <ChevronRight className="w-3 h-3" /></span>
+                            </div>
+                            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-full bg-white/10" />
+                        </Link>
+                    </div>
+                </section>
+
+                {/* ═══════════ LES PLUS POPULAIRES ═══════════ */}
+                <HorizontalSection title="Les plus populaires" href="/offers?sort=popular" offers={popularOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+
+                {/* ═══════════ LES MIEUX NOTÉS ═══════════ */}
+                <HorizontalSection title="Les mieux notés" href="/offers?sort=rating" offers={bestRatedOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+
                 {/* ═══════════ RECOMMANDÉ POUR VOUS (Horizontal scroll on mobile) ═══════════ */}
                 {featuredOffers.length > 0 && (
                     <section className="mb-8">
@@ -191,7 +320,7 @@ export default function HomePage() {
                         <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
                             {featuredOffers.map(offer => (
                                 <Link key={offer._id} href={`/offers/${offer.slug}`}
-                                    className="flex-shrink-0 w-44 rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform"
+                                    className="shrink-0 w-44 rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform"
                                     style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-32 overflow-hidden">
                                         <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
@@ -243,8 +372,8 @@ export default function HomePage() {
                                         <h3 className="text-sm font-semibold text-white mb-2 line-clamp-2">{offer.title}</h3>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-baseline gap-1.5">
-                                                <span className="text-base font-bold text-emerald-400">{offer.dealPrice} DT</span>
-                                                <span className="text-[11px] text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                                                <span className="text-base font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                                <span className="text-[11px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                             </div>
                                             {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3 h-3 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
                                         </div>
@@ -254,6 +383,12 @@ export default function HomePage() {
                         </div>
                     </section>
                 )}
+
+                {/* ═══════════ LES MEILLEURS SPAS & RESTAURANTS ═══════════ */}
+                <HorizontalSection title="Les meilleurs spas & restaurants" href="/offers?category=spa-restau" offers={spaRestoHotelOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
+
+                {/* ═══════════ TOUTES LES NOUVEAUTÉS ═══════════ */}
+                <HorizontalSection title="Toutes les nouveautés" href="/offers?sort=new" offers={newOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} />
 
                 {/* ═══════════ TOUTES LES OFFRES ═══════════ */}
                 <section className="px-4 mb-8">
@@ -267,7 +402,7 @@ export default function HomePage() {
                             <Link key={offer._id} href={`/offers/${offer.slug}`}
                                 className="flex gap-3 rounded-2xl border p-3 active:scale-[0.98] transition-transform"
                                 style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                                <div className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
+                                <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 relative">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
                                         style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
@@ -279,8 +414,8 @@ export default function HomePage() {
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-1.5">
-                                            <span className="text-base font-bold text-emerald-400">{offer.dealPrice} DT</span>
-                                            <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                                            <span className="text-base font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                            <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
@@ -319,8 +454,8 @@ export default function HomePage() {
                                     <p className="text-xs text-[#6a6a80] mb-3 line-clamp-1">{offer.shortDescription}</p>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-lg font-bold text-emerald-400">{offer.dealPrice} DT</span>
-                                            <span className="text-xs text-[#6a6a80] line-through">{offer.originalPrice} DT</span>
+                                            <span className="text-lg font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                            <span className="text-xs text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                         </div>
                                         {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
                                     </div>
@@ -346,7 +481,7 @@ export default function HomePage() {
                         <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide md:hidden">
                             {merchants.filter(m => m.active !== false).slice(0, 6).map(m => (
                                 <Link key={m._id} href={`/merchants/${m.slug}`}
-                                    className="flex-shrink-0 w-28 rounded-2xl border p-3 text-center active:scale-95 transition-transform"
+                                    className="shrink-0 w-28 rounded-2xl border p-3 text-center active:scale-95 transition-transform"
                                     style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     {m.logo ? <img src={m.logo} alt="" className="w-12 h-12 rounded-xl object-cover mx-auto mb-2" /> :
                                         <div className="w-12 h-12 rounded-xl mx-auto mb-2 flex items-center justify-center" style={{ background: 'rgba(139,92,246,0.1)' }}>

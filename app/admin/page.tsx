@@ -49,7 +49,7 @@ export default function AdminDashboard() {
         { label: "Marchands", value: "5", change: "+1", trend: "up", icon: Store, color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.15)' },
         { label: "Utilisateurs", value: "5", change: "+2", trend: "up", icon: Users, color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)' },
         { label: "Commandes", value: "7", change: "+4", trend: "up", icon: ShoppingCart, color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.15)' },
-        { label: "Revenue", value: "1,091 DT", change: "+18%", trend: "up", icon: DollarSign, color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)' },
+        { label: "Revenue", value: "1,091 €", change: "+18%", trend: "up", icon: DollarSign, color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)' },
     ]
 
     return (
@@ -112,7 +112,7 @@ export default function AdminDashboard() {
                     <div className="flex items-center justify-between mb-6">
                         <div>
                             <h2 className="text-base font-semibold text-white">Revenus de la semaine</h2>
-                            <p className="text-sm text-[#6a6a80] mt-0.5">15,200 DT total</p>
+                            <p className="text-sm text-[#6a6a80] mt-0.5">15,200 € total</p>
                         </div>
                         <div className="flex items-center gap-1.5 text-xs font-medium text-emerald-400 px-2.5 py-1 rounded-lg" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
                             <TrendingUp className="w-3.5 h-3.5" />
@@ -200,7 +200,7 @@ export default function AdminDashboard() {
                                             </div>
                                         </td>
                                         <td className="py-3.5 px-5 text-sm text-[#a0a0b8] max-w-[200px] truncate">{order.offer}</td>
-                                        <td className="py-3.5 px-5 text-sm font-semibold text-white">{order.amount} DT</td>
+                                        <td className="py-3.5 px-5 text-sm font-semibold text-white">{order.amount} €</td>
                                         <td className="py-3.5 px-5">
                                             <span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={{ background: status.bg, color: status.text }}>
                                                 {status.label}

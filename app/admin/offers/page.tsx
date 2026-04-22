@@ -145,8 +145,8 @@ export default function OffersPage() {
                                         <td className="py-3.5 px-5 text-sm text-[#a0a0b8] hidden md:table-cell">{offer.city}</td>
                                         <td className="py-3.5 px-5">
                                             <div>
-                                                <span className="text-sm font-semibold text-emerald-400">{offer.dealPrice} DT</span>
-                                                <span className="text-xs text-[#6a6a80] line-through ml-1.5">{offer.originalPrice} DT</span>
+                                                <span className="text-sm font-semibold text-emerald-400">{offer.dealPrice} €</span>
+                                                <span className="text-xs text-[#6a6a80] line-through ml-1.5">{offer.originalPrice} €</span>
                                             </div>
                                         </td>
                                         <td className="py-3.5 px-5 hidden lg:table-cell">

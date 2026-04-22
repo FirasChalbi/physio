@@ -188,7 +188,7 @@ export default function OfferDetailPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-emerald-400 font-semibold mb-0.5">Offre exclusive</p>
-                        <p className="text-sm text-white font-medium">-{offer.discountPercent}% · {offer.dealPrice} DT au lieu de {offer.originalPrice} DT</p>
+                        <p className="text-sm text-white font-medium">-{offer.discountPercent}% · {offer.dealPrice} € au lieu de {offer.originalPrice} €</p>
                         {endDateStr && <p className="text-xs text-[#6a6a80] mt-0.5">Valable jusqu'au {endDateStr}</p>}
                     </div>
                     <ChevronRight className="w-5 h-5 text-[#6a6a80] flex-shrink-0" />

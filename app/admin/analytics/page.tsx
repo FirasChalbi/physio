@@ -26,7 +26,7 @@ const dailyOrders = [
 const kpis = [
     { label: 'Vues totales', value: '24,860', change: '+18%', icon: Eye, color: '#06b6d4' },
     { label: 'Commandes', value: '153', change: '+24%', icon: ShoppingCart, color: '#10b981' },
-    { label: 'Revenu total', value: '44,000 DT', change: '+15%', icon: DollarSign, color: '#8b5cf6' },
+    { label: 'Revenu total', value: '44,000 €', change: '+15%', icon: DollarSign, color: '#8b5cf6' },
     { label: 'Taux conversion', value: '6.2%', change: '+0.8%', icon: TrendingUp, color: '#f59e0b' },
 ]
 

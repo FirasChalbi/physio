@@ -26,7 +26,7 @@ export default function OrdersPage() {
     return (
         <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div><h1 className="text-2xl font-bold text-white">Commandes</h1><p className="text-sm text-[#6a6a80] mt-1">{orders.length} commandes — {totalRevenue} DT de revenu</p></div>
+                <div><h1 className="text-2xl font-bold text-white">Commandes</h1><p className="text-sm text-[#6a6a80] mt-1">{orders.length} commandes — {totalRevenue} € de revenu</p></div>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl flex-1 max-w-sm" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><Search className="w-4 h-4 text-[#6a6a80]" /><input type="text" placeholder="Rechercher par client..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full" /></div>
@@ -49,7 +49,7 @@ export default function OrdersPage() {
                                     <td className="py-3.5 px-5"><div className="flex items-center gap-2.5"><div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>{(o.customerName || '?')[0]}</div><span className="text-sm font-medium text-white">{o.customerName || 'N/A'}</span></div></td>
                                     <td className="py-3.5 px-5 text-sm text-[#8888a0] hidden md:table-cell">{o.customerEmail || '—'}</td>
                                     <td className="py-3.5 px-5 text-sm text-[#a0a0b8]">{o.quantity}</td>
-                                    <td className="py-3.5 px-5 text-sm font-semibold text-white">{o.totalPrice} DT</td>
+                                    <td className="py-3.5 px-5 text-sm font-semibold text-white">{o.totalPrice} €</td>
                                     <td className="py-3.5 px-5"><span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={{ background: st.bg, color: st.text }}>{st.label}</span></td>
                                     <td className="py-3.5 px-5 text-sm text-[#6a6a80] hidden md:table-cell">{o.createdAt ? new Date(o.createdAt).toLocaleDateString('fr-TN') : '—'}</td>
                                 </tr>
