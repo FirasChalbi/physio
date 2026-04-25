@@ -323,11 +323,149 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
     )
 }
 
+/* ─── Skeleton components ─────────────────────────────────── */
+const skelBase = "rounded-lg animate-pulse"
+const skelBg = { background: 'rgba(255,255,255,0.06)' }
+
+function SkeletonOfferCard({ wide }: { wide?: boolean }) {
+    return (
+        <div className={`shrink-0 ${wide ? 'w-64' : 'w-64'} md:w-auto rounded-2xl overflow-hidden border`}
+            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className={`h-40 ${skelBase}`} style={skelBg} />
+            <div className="p-3.5 space-y-2.5">
+                <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
+                <div className={`h-3 w-1/2 ${skelBase}`} style={skelBg} />
+                <div className="flex items-center justify-between">
+                    <div className={`h-3 w-16 ${skelBase}`} style={skelBg} />
+                    <div className={`h-3 w-10 ${skelBase}`} style={skelBg} />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function SkeletonMerchantCard() {
+    return (
+        <div className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border"
+            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className={`h-40 ${skelBase}`} style={skelBg} />
+            <div className="p-3.5 space-y-2.5">
+                <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
+                <div className={`h-3 w-1/2 ${skelBase}`} style={skelBg} />
+                <div className="flex items-center justify-between">
+                    <div className={`h-5 w-20 ${skelBase} rounded-md`} style={skelBg} />
+                    <div className={`h-3 w-10 ${skelBase}`} style={skelBg} />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function SkeletonCategory() {
+    return (
+        <div className="shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl"
+            style={{ background: 'linear-gradient(145deg, #161620, #111118)', border: '1px solid rgba(255,255,255,0.07)', minWidth: '76px' }}>
+            <div className={`w-6 h-6 ${skelBase} rounded-full`} style={skelBg} />
+            <div className={`h-2.5 w-12 ${skelBase}`} style={skelBg} />
+        </div>
+    )
+}
+
+function SkeletonFamilyCard() {
+    return (
+        <div className="shrink-0 w-40 md:w-auto rounded-2xl overflow-hidden border"
+            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className={`h-28 ${skelBase}`} style={skelBg} />
+            <div className="p-2.5 space-y-2">
+                <div className={`h-3 w-3/4 ${skelBase}`} style={skelBg} />
+                <div className="flex items-center justify-between">
+                    <div className={`h-3 w-10 ${skelBase}`} style={skelBg} />
+                    <div className={`h-3 w-6 ${skelBase}`} style={skelBg} />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function SkeletonCityCard() {
+    return (
+        <div className="relative rounded-2xl overflow-hidden h-28 md:h-36"
+            style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+            <div className={`absolute inset-0 ${skelBase}`} style={skelBg} />
+            <div className="relative z-10 p-4 flex flex-col justify-end h-full space-y-1.5">
+                <div className={`h-2.5 w-16 ${skelBase}`} style={skelBg} />
+                <div className={`h-4 w-20 ${skelBase}`} style={skelBg} />
+            </div>
+        </div>
+    )
+}
+
+function SkeletonListCard() {
+    return (
+        <div className="flex gap-3 rounded-2xl border p-3"
+            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className={`w-24 h-24 rounded-xl shrink-0 ${skelBase}`} style={skelBg} />
+            <div className="flex-1 space-y-2 py-0.5">
+                <div className={`h-2.5 w-20 ${skelBase}`} style={skelBg} />
+                <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
+                <div className="flex items-center justify-between">
+                    <div className={`h-4 w-14 ${skelBase}`} style={skelBg} />
+                    <div className={`h-3 w-8 ${skelBase}`} style={skelBg} />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function SkeletonDesktopGridCard() {
+    return (
+        <div className="rounded-2xl overflow-hidden border"
+            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className={`h-44 ${skelBase}`} style={skelBg} />
+            <div className="p-4 space-y-2.5">
+                <div className={`h-2.5 w-20 ${skelBase}`} style={skelBg} />
+                <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
+                <div className={`h-3 w-full ${skelBase}`} style={skelBg} />
+                <div className="flex items-center justify-between">
+                    <div className={`h-4 w-16 ${skelBase}`} style={skelBg} />
+                    <div className={`h-3 w-10 ${skelBase}`} style={skelBg} />
+                </div>
+            </div>
+        </div>
+    )
+}
+
+function SkeletonSection({ title, children }: { title: string; children: ReactNode }) {
+    return (
+        <section className="mb-8">
+            <div className="flex items-center justify-between px-4 mb-4">
+                <div className={`h-5 w-32 ${skelBase}`} style={skelBg} />
+                <div className={`h-3.5 w-16 ${skelBase}`} style={skelBg} />
+            </div>
+            {children}
+        </section>
+    )
+}
+
+function SkeletonHorizontalCards({ count = 4, CardComp }: { count?: number; CardComp: () => JSX.Element }) {
+    return (
+        <>
+            <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
+                {Array.from({ length: count }).map((_, i) => <CardComp key={i} />)}
+            </div>
+            <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 px-4">
+                {Array.from({ length: count }).map((_, i) => <CardComp key={i} />)}
+            </div>
+        </>
+    )
+}
+
 export default function HomePage() {
     const { data: session } = useSession()
     const [categories, setCategories] = useState<Category[]>([])
     const [offers, setOffers] = useState<Offer[]>([])
     const [merchants, setMerchants] = useState<Merchant[]>([])
+    const [loading, setLoading] = useState(true)
     const [searchQuery, setSearchQuery] = useState("")
     const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [notifOpen, setNotifOpen] = useState(false)
@@ -383,7 +521,8 @@ export default function HomePage() {
             setOffers(Array.isArray(offs) ? offs : [])
             setMerchants(Array.isArray(merch) ? merch : [])
             setFamilyActivities(Array.isArray(fa) ? fa : [])
-        }).catch(console.error)
+            setLoading(false)
+        }).catch(() => setLoading(false))
 
         // Load favorites from localStorage
         const favs: string[] = JSON.parse(localStorage.getItem('life_favorites') || '[]')
@@ -545,7 +684,100 @@ export default function HomePage() {
             </nav>
 
             <main className="max-w-7xl mx-auto">
-                {/* ═══════════ GREETING + SEARCH (Mobile) ═══════════ */}
+                {loading ? (
+                    <>
+                        {/* Skeleton: Categories */}
+                        <section className="px-4 mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className={`h-5 w-36 ${skelBase}`} style={skelBg} />
+                                <div className={`h-3.5 w-16 ${skelBase}`} style={skelBg} />
+                            </div>
+                            <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+                                {Array.from({ length: 8 }).map((_, i) => <SkeletonCategory key={i} />)}
+                            </div>
+                        </section>
+
+                        {/* Skeleton: Merchant sections */}
+                        <SkeletonSection title="rec">
+                            <SkeletonHorizontalCards count={4} CardComp={SkeletonMerchantCard} />
+                        </SkeletonSection>
+                        <SkeletonSection title="pop">
+                            <SkeletonHorizontalCards count={4} CardComp={SkeletonMerchantCard} />
+                        </SkeletonSection>
+                        <SkeletonSection title="rated">
+                            <SkeletonHorizontalCards count={4} CardComp={SkeletonMerchantCard} />
+                        </SkeletonSection>
+
+                        {/* Skeleton: Featured offers */}
+                        <SkeletonSection title="feat">
+                            <SkeletonHorizontalCards count={4} CardComp={SkeletonOfferCard} />
+                        </SkeletonSection>
+
+                        {/* Skeleton: City cards */}
+                        <section className="px-4 mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className={`h-5 w-36 ${skelBase}`} style={skelBg} />
+                            </div>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                {Array.from({ length: 4 }).map((_, i) => <SkeletonCityCard key={i} />)}
+                            </div>
+                        </section>
+
+                        {/* Skeleton: Category cards */}
+                        <section className="px-4 mb-8">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                {Array.from({ length: 2 }).map((_, i) => (
+                                    <div key={i} className="relative rounded-2xl overflow-hidden h-32 md:h-40"
+                                        style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                        <div className={`absolute inset-0 ${skelBase}`} style={skelBg} />
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Skeleton: Family activities */}
+                        <section className="px-4 mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className={`h-5 w-40 ${skelBase}`} style={skelBg} />
+                                <div className={`h-3.5 w-16 ${skelBase}`} style={skelBg} />
+                            </div>
+                            <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-5 gap-3">
+                                {Array.from({ length: 5 }).map((_, i) => <SkeletonFamilyCard key={i} />)}
+                            </div>
+                        </section>
+
+                        {/* Skeleton: More merchant sections */}
+                        <SkeletonSection title="beauty">
+                            <SkeletonHorizontalCards count={4} CardComp={SkeletonMerchantCard} />
+                        </SkeletonSection>
+                        <SkeletonSection title="resto">
+                            <SkeletonHorizontalCards count={4} CardComp={SkeletonMerchantCard} />
+                        </SkeletonSection>
+
+                        {/* Skeleton: All offers */}
+                        <section className="px-4 mb-8">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className={`h-5 w-36 ${skelBase}`} style={skelBg} />
+                                <div className={`h-3 w-20 ${skelBase}`} style={skelBg} />
+                            </div>
+                            <div className="mb-4 space-y-2">
+                                <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                                    {Array.from({ length: 5 }).map((_, i) => <div key={i} className={`shrink-0 h-7 w-20 ${skelBase} rounded-full`} style={skelBg} />)}
+                                </div>
+                                <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                                    {Array.from({ length: 5 }).map((_, i) => <div key={i} className={`shrink-0 h-7 w-24 ${skelBase} rounded-full`} style={skelBg} />)}
+                                </div>
+                            </div>
+                            <div className="space-y-3 md:hidden">
+                                {Array.from({ length: 4 }).map((_, i) => <SkeletonListCard key={i} />)}
+                            </div>
+                            <div className="hidden md:grid grid-cols-3 lg:grid-cols-4 gap-4">
+                                {Array.from({ length: 4 }).map((_, i) => <SkeletonDesktopGridCard key={i} />)}
+                            </div>
+                        </section>
+                    </>
+                ) : (
+                <>
                 <div className="px-4 mb-6 md:hidden">
                     <p className="text-sm text-[#8888a0]">
                         Bonjour {userName ? <span className="text-emerald-400 font-medium">{userName}</span> : <span className="text-emerald-400">Yvelines</span>}
@@ -1142,6 +1374,8 @@ export default function HomePage() {
                         </div>
                     </div>
                 </footer>
+                </>
+                )}
             </main>
 
             {/* Notification Drawer */}
