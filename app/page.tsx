@@ -327,9 +327,9 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
 const skelBase = "rounded-lg animate-pulse"
 const skelBg = { background: 'rgba(255,255,255,0.06)' }
 
-function SkeletonOfferCard({ wide }: { wide?: boolean }) {
+function SkeletonOfferCard() {
     return (
-        <div className={`shrink-0 ${wide ? 'w-64' : 'w-64'} md:w-auto rounded-2xl overflow-hidden border`}
+        <div className={`shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border`}
             style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className={`h-40 ${skelBase}`} style={skelBg} />
             <div className="p-3.5 space-y-2.5">
