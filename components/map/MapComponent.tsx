@@ -105,6 +105,18 @@ function MapController({ userLocation }: { userLocation: { lat: number; lng: num
   return null
 }
 
+function FocusController({ focusLocation }: { focusLocation: { lat: number; lng: number; name?: string } | null }) {
+  const map = useMap()
+  const [focused, setFocused] = useState(false)
+  useEffect(() => {
+    if (focusLocation && !focused) {
+      map.flyTo([focusLocation.lat, focusLocation.lng], 16, { duration: 1.5 })
+      setFocused(true)
+    }
+  }, [map, focusLocation, focused])
+  return null
+}
+
 function ClickHandler({ active, onPick }: { active: boolean; onPick: (ll: L.LatLng) => void }) {
   useMapEvents({ click: (e) => { if (active) onPick(e.latlng) } })
   return null
@@ -120,7 +132,7 @@ function ZoomControls() {
 }
 
 /* ─── Main Component ─────────────────────────────────────── */
-export default function MapComponent() {
+export default function MapComponent({ focusLocation }: { focusLocation?: { lat: number; lng: number; name?: string } | null }) {
   const router = useRouter()
   const [merchants, setMerchants] = useState<Merchant[]>([])
   const [filtered, setFiltered] = useState<Merchant[]>([])
@@ -534,6 +546,7 @@ export default function MapComponent() {
         zoomAnimation
       >
         <MapController userLocation={userLocation} />
+        <FocusController focusLocation={focusLocation ?? null} />
         <ZoomControls />
         <ClickHandler active={manualMode} onPick={handleMapClick} />
 
@@ -557,6 +570,43 @@ export default function MapComponent() {
               center={[userLocation.lat, userLocation.lng]}
               radius={500}
               pathOptions={{ fillColor: "#10b981", fillOpacity: 0.08, color: "#10b981", weight: 1.5, dashArray: "4 4" }}
+            />
+          </>
+        )}
+
+        {/* Focused merchant marker (from merchant page navigation) */}
+        {focusLocation && (
+          <>
+            <Marker
+              position={[focusLocation.lat, focusLocation.lng]}
+              icon={L.divIcon({
+                html: `<div style="
+                  width:44px;height:44px;border-radius:50%;
+                  background:linear-gradient(135deg,#10b981,#059669);
+                  display:flex;align-items:center;justify-content:center;
+                  color:#fff;box-shadow:0 0 0 6px rgba(16,185,129,0.25),0 4px 16px rgba(16,185,129,0.5);
+                  border:3px solid rgba(255,255,255,0.4);
+                  animation:pulse-pin 1.5s ease-out infinite;
+                "><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div>`,
+                className: "",
+                iconSize: [44, 44],
+                iconAnchor: [22, 22],
+                popupAnchor: [0, -24],
+              })}
+            >
+              <Popup className="dark-popup">
+                <div style={{ background: "#0e0e16", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", minWidth: "180px" }}>
+                  <div style={{ padding: "10px 12px" }}>
+                    <p style={{ fontWeight: 700, fontSize: "14px", color: "#fff", marginBottom: "4px" }}>{focusLocation.name || "Emplacement"}</p>
+                    <p style={{ fontSize: "11px", color: "#10b981" }}>{focusLocation.lat.toFixed(4)}, {focusLocation.lng.toFixed(4)}</p>
+                  </div>
+                </div>
+              </Popup>
+            </Marker>
+            <Circle
+              center={[focusLocation.lat, focusLocation.lng]}
+              radius={200}
+              pathOptions={{ fillColor: "#10b981", fillOpacity: 0.12, color: "#10b981", weight: 2, dashArray: "6 4" }}
             />
           </>
         )}
@@ -704,6 +754,11 @@ export default function MapComponent() {
           font-size: 10px !important;
         }
         .leaflet-control-attribution a { color: #10b981 !important; }
+        @keyframes pulse-pin {
+          0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4), 0 4px 16px rgba(16,185,129,0.5); }
+          70% { box-shadow: 0 0 0 12px rgba(16,185,129,0), 0 4px 16px rgba(16,185,129,0.5); }
+          100% { box-shadow: 0 0 0 0 rgba(16,185,129,0), 0 4px 16px rgba(16,185,129,0.5); }
+        }
       `}</style>
     </div>
   )

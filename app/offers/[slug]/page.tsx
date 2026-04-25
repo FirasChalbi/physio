@@ -160,23 +160,17 @@ export default function OfferDetailPage() {
                         Réserver maintenant
                         <ChevronRight className="w-4 h-4" />
                     </button>
-                    <a
-                        href={
-                            merchant?.google_maps_url
-                                ? merchant.google_maps_url
-                                : (merchant?.latitude && merchant?.longitude)
-                                    ? `https://www.google.com/maps/dir/?api=1&destination=${merchant.latitude},${merchant.longitude}`
-                                    : (merchant?.full_address || merchant?.address)
-                                        ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(merchant?.full_address || merchant?.address || offer.city)}`
-                                        : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(offer.city)}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <button
+                        onClick={() => {
+                            const lat = merchant?.latitude ? parseFloat(merchant.latitude.replace(',', '.')) : 0
+                            const lng = merchant?.longitude ? parseFloat(merchant.longitude.replace(',', '.')) : 0
+                            if (lat && lng) router.push(`/map?lat=${lat}&lng=${lng}&name=${encodeURIComponent(merchant?.name || offer.title)}`)
+                        }}
                         className="px-6 py-3.5 rounded-xl text-sm font-medium text-[#a0a0b8] flex items-center gap-2 border"
                         style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
                         <Navigation className="w-4 h-4" />
                         Itinéraire
-                    </a>
+                    </button>
                 </div>
 
                 {/* ═══════════ EXCLUSIVE OFFER BANNER ═══════════ */}
@@ -291,14 +285,20 @@ export default function OfferDetailPage() {
                     <h2 className="text-lg font-bold text-white mb-4">Informations</h2>
                     <div className="space-y-0">
                         {/* Address */}
-                        <div className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                        <button
+                            onClick={() => {
+                                const lat = merchant?.latitude ? parseFloat(merchant.latitude.replace(',', '.')) : 0
+                                const lng = merchant?.longitude ? parseFloat(merchant.longitude.replace(',', '.')) : 0
+                                if (lat && lng) router.push(`/map?lat=${lat}&lng=${lng}&name=${encodeURIComponent(merchant?.name || offer.title)}`)
+                            }}
+                            className="w-full flex items-center gap-4 py-4 border-b text-left" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                             <MapPin className="w-5 h-5 text-emerald-400 flex-shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
                                 <p className="text-sm text-white">{offer.address || offer.city}{merchant?.address ? `, ${merchant.address}` : ''}</p>
                             </div>
                             <ChevronRight className="w-4 h-4 text-[#333]" />
-                        </div>
+                        </button>
 
                         {/* Hours */}
                         <div className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>

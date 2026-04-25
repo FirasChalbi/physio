@@ -190,6 +190,12 @@ export default function MerchantPage() {
   )
 
   const mapsUrl = buildMapsUrl(merchant)
+  const mapPageUrl = (() => {
+    const lat = toNum(merchant.latitude)
+    const lng = toNum(merchant.longitude)
+    if (lat && lng) return `/map?lat=${lat}&lng=${lng}&name=${encodeURIComponent(merchant.name)}`
+    return null
+  })()
   const numRating = toNum(merchant.average_rating) || (merchant.rating ? merchant.rating : 0)
   const reviewCount = merchant.review_count || String(merchant.reviewCount || merchant.user_reviews?.length || 0)
   const isResto = isRestaurant(merchant.categories)
@@ -303,12 +309,12 @@ export default function MerchantPage() {
             </a>
           )}
 
-          {mapsUrl && (
-            <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
+          {mapPageUrl && (
+            <button onClick={() => router.push(mapPageUrl)}
               className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
               style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
               <Navigation className="w-4 h-4" />
-            </a>
+            </button>
           )}
         </div>
       </div>
@@ -500,10 +506,10 @@ export default function MerchantPage() {
                 <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
                 <p className="text-sm text-white">{displayAddress}</p>
               </div>
-              {mapsUrl && (
-                <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
+              {mapPageUrl && (
+                <button onClick={() => router.push(mapPageUrl)} className="flex items-center justify-center">
                   <ChevronRight className="w-4 h-4 text-[#333]" />
-                </a>
+                </button>
               )}
             </div>
           )}
@@ -565,14 +571,14 @@ export default function MerchantPage() {
       )}
 
       {/* ══ ITINÉRAIRE CTA ══ */}
-      {mapsUrl && (
+      {mapPageUrl && (
         <div className="px-4 mb-8">
-          <a href={mapsUrl} target="_blank" rel="noopener noreferrer"
+          <button onClick={() => router.push(mapPageUrl)}
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-sm font-semibold border transition-all"
             style={{ borderColor: "rgba(16,185,129,0.2)", color: "#10b981", background: "rgba(16,185,129,0.06)" }}>
             <Navigation className="w-4 h-4" />
             Obtenir l'itinéraire
-          </a>
+          </button>
         </div>
       )}
 

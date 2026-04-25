@@ -1,7 +1,9 @@
 // app/map/page.tsx — Dark-mode map of all merchants
 "use client"
 
+import React from "react"
 import dynamic from "next/dynamic"
+import { useSearchParams } from "next/navigation"
 import Logo from "@/components/Logo"
 
 const MapComponent = dynamic(
@@ -15,9 +17,17 @@ const MapComponent = dynamic(
       </div>
     ),
   }
-)
+) as React.ComponentType<{ focusLocation?: { lat: number; lng: number; name?: string } | null }>
 
 export default function MapPage() {
+  const searchParams = useSearchParams()
+  const focusLat = searchParams.get("lat")
+  const focusLng = searchParams.get("lng")
+  const focusName = searchParams.get("name")
+  const focusLocation = focusLat && focusLng
+    ? { lat: parseFloat(focusLat), lng: parseFloat(focusLng), name: focusName || undefined }
+    : null
+
   return (
     <div className="fixed inset-0 flex flex-col" style={{ background: "#0a0a0f" }}>
       {/* Header bar */}
@@ -36,7 +46,7 @@ export default function MapPage() {
 
       {/* Map fills remaining height (bottom nav is fixed, so pb accounted for) */}
       <div className="flex-1 relative pb-16 md:pb-0">
-        <MapComponent />
+        <MapComponent focusLocation={focusLocation} />
       </div>
     </div>
   )
