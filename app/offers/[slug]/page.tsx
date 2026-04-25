@@ -341,8 +341,9 @@ export default function OfferDetailPage() {
             <ReservationModal
                 open={showReservation}
                 onClose={() => setShowReservation(false)}
-                offer={offer}
+                offers={[offer]}
                 merchantName={merchant?.name || offer.title}
+                merchantId={offer.merchantId}
             />
         </div>
     )

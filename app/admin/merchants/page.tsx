@@ -4,9 +4,12 @@
 import { useEffect, useState } from "react"
 import { Plus, Search, Edit2, Trash2, Store, BadgeCheck, MapPin } from "lucide-react"
 
+type MenuItem = { name: string; price: number; description?: string; category?: string; image?: string }
+type ServiceItem = { name: string; price: number; duration?: string; description?: string; image?: string }
 type Merchant = {
     _id: string; name: string; slug: string; logo?: string; city?: string; phone?: string;
-    email?: string; verified: boolean; active: boolean; rating?: number; reviewCount?: number
+    email?: string; verified: boolean; active: boolean; rating?: number; reviewCount?: number;
+    menu?: MenuItem[]; services?: ServiceItem[]
 }
 
 export default function MerchantsPage() {
@@ -15,7 +18,10 @@ export default function MerchantsPage() {
     const [search, setSearch] = useState("")
     const [showForm, setShowForm] = useState(false)
     const [editing, setEditing] = useState<Merchant | null>(null)
-    const [form, setForm] = useState({ name: '', slug: '', logo: '', city: '', phone: '', email: '', description: '', verified: false, active: true })
+    const [form, setForm] = useState({
+        name: '', slug: '', logo: '', city: '', phone: '', email: '', description: '', verified: false, active: true,
+        menu: [] as MenuItem[], services: [] as ServiceItem[]
+    })
 
     useEffect(() => {
         fetch('/api/merchants').then(r => r.json()).then(data => {
@@ -24,8 +30,8 @@ export default function MerchantsPage() {
         }).catch(() => setLoading(false))
     }, [])
 
-    const openCreate = () => { setEditing(null); setForm({ name: '', slug: '', logo: '', city: '', phone: '', email: '', description: '', verified: false, active: true }); setShowForm(true) }
-    const openEdit = (m: Merchant) => { setEditing(m); setForm({ name: m.name, slug: m.slug, logo: m.logo || '', city: m.city || '', phone: m.phone || '', email: m.email || '', description: '', verified: m.verified, active: m.active }); setShowForm(true) }
+    const openCreate = () => { setEditing(null); setForm({ name: '', slug: '', logo: '', city: '', phone: '', email: '', description: '', verified: false, active: true, menu: [], services: [] }); setShowForm(true) }
+    const openEdit = (m: Merchant) => { setEditing(m); setForm({ name: m.name, slug: m.slug, logo: m.logo || '', city: m.city || '', phone: m.phone || '', email: m.email || '', description: '', verified: m.verified, active: m.active, menu: m.menu || [], services: m.services || [] }); setShowForm(true) }
 
     const save = async () => {
         const method = editing ? 'PUT' : 'POST'
@@ -120,7 +126,7 @@ export default function MerchantsPage() {
 
             {showForm && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
-                    <div className="w-full max-w-lg rounded-2xl p-6 border" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.08)' }} onClick={e => e.stopPropagation()}>
+                    <div className="w-full max-w-lg rounded-2xl p-6 border max-h-[90vh] overflow-y-auto" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.08)' }} onClick={e => e.stopPropagation()}>
                         <h2 className="text-lg font-semibold text-white mb-5">{editing ? 'Modifier' : 'Ajouter'} un marchand</h2>
                         <div className="space-y-4">
                             <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Nom</label><input value={form.name} onChange={e => setForm({ ...form, name: e.target.value, slug: e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, '-') })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
@@ -133,6 +139,42 @@ export default function MerchantsPage() {
                             <div className="flex gap-4">
                                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.verified} onChange={e => setForm({ ...form, verified: e.target.checked })} className="rounded accent-cyan-500" /><span className="text-sm text-[#a0a0b8]">Vérifié</span></label>
                                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.active} onChange={e => setForm({ ...form, active: e.target.checked })} className="rounded accent-emerald-500" /><span className="text-sm text-[#a0a0b8]">Actif</span></label>
+                            </div>
+
+                            {/* ── Menu items ── */}
+                            <div>
+                                <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Menu ({form.menu.length})</label>
+                                <div className="space-y-2">
+                                    {form.menu.map((item, i) => (
+                                        <div key={i} className="flex items-center gap-2 p-2 rounded-lg border" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                                            <div className="flex-1 grid grid-cols-3 gap-2">
+                                                <input value={item.name} placeholder="Nom" onChange={e => { const updated = [...form.menu]; updated[i] = { ...item, name: e.target.value }; setForm({ ...form, menu: updated }) }} className="input-dark w-full px-2 py-1.5 rounded-lg text-xs text-white" />
+                                                <input type="number" value={item.price} placeholder="Prix" onChange={e => { const updated = [...form.menu]; updated[i] = { ...item, price: Number(e.target.value) }; setForm({ ...form, menu: updated }) }} className="input-dark w-full px-2 py-1.5 rounded-lg text-xs text-white" />
+                                                <input value={item.category || ''} placeholder="Catégorie" onChange={e => { const updated = [...form.menu]; updated[i] = { ...item, category: e.target.value }; setForm({ ...form, menu: updated }) }} className="input-dark w-full px-2 py-1.5 rounded-lg text-xs text-white" />
+                                            </div>
+                                            <button onClick={() => setForm({ ...form, menu: form.menu.filter((_, idx) => idx !== i) })} className="p-1 rounded hover:bg-red-500/10 text-red-400"><Trash2 className="w-3 h-3" /></button>
+                                        </div>
+                                    ))}
+                                    <button onClick={() => setForm({ ...form, menu: [...form.menu, { name: '', price: 0, description: '', category: '' }] })} className="w-full py-2 rounded-lg text-xs font-medium text-emerald-400 border border-dashed hover:bg-white/5 transition-colors" style={{ borderColor: 'rgba(16,185,129,0.2)' }}>+ Ajouter un plat</button>
+                                </div>
+                            </div>
+
+                            {/* ── Service items ── */}
+                            <div>
+                                <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Services ({form.services.length})</label>
+                                <div className="space-y-2">
+                                    {form.services.map((svc, i) => (
+                                        <div key={i} className="flex items-center gap-2 p-2 rounded-lg border" style={{ borderColor: 'rgba(255,255,255,0.06)', background: 'rgba(255,255,255,0.02)' }}>
+                                            <div className="flex-1 grid grid-cols-3 gap-2">
+                                                <input value={svc.name} placeholder="Nom" onChange={e => { const updated = [...form.services]; updated[i] = { ...svc, name: e.target.value }; setForm({ ...form, services: updated }) }} className="input-dark w-full px-2 py-1.5 rounded-lg text-xs text-white" />
+                                                <input type="number" value={svc.price} placeholder="Prix" onChange={e => { const updated = [...form.services]; updated[i] = { ...svc, price: Number(e.target.value) }; setForm({ ...form, services: updated }) }} className="input-dark w-full px-2 py-1.5 rounded-lg text-xs text-white" />
+                                                <input value={svc.duration || ''} placeholder="Durée" onChange={e => { const updated = [...form.services]; updated[i] = { ...svc, duration: e.target.value }; setForm({ ...form, services: updated }) }} className="input-dark w-full px-2 py-1.5 rounded-lg text-xs text-white" />
+                                            </div>
+                                            <button onClick={() => setForm({ ...form, services: form.services.filter((_, idx) => idx !== i) })} className="p-1 rounded hover:bg-red-500/10 text-red-400"><Trash2 className="w-3 h-3" /></button>
+                                        </div>
+                                    ))}
+                                    <button onClick={() => setForm({ ...form, services: [...form.services, { name: '', price: 0, description: '', duration: '' }] })} className="w-full py-2 rounded-lg text-xs font-medium text-violet-400 border border-dashed hover:bg-white/5 transition-colors" style={{ borderColor: 'rgba(139,92,246,0.2)' }}>+ Ajouter un service</button>
+                                </div>
                             </div>
                         </div>
                         <div className="flex gap-3 mt-6">

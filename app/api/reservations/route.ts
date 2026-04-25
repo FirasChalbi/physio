@@ -27,15 +27,15 @@ export async function POST(req: NextRequest) {
     await connectDB()
     const Reservation = getReservationModel()
     const body = await req.json()
-    const { offerId, offerTitle, offerImage, merchantId, merchantName, name, phone, date, time, userId, sessionId } = body
+    const { offerId, offerTitle, offerImage, merchantId, merchantName, name, phone, date, time, userId, sessionId, selectedItems, totalPrice } = body
 
-    if (!offerId || !name || !phone || !date || !time) {
+    if (!merchantId || !name || !phone || !date || !time) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
     const reservation = await Reservation.create({
       offerId, offerTitle, offerImage, merchantId, merchantName,
-      name, phone, date, time, userId, sessionId, status: 'pending'
+      name, phone, date, time, userId, sessionId, selectedItems, totalPrice, status: 'pending'
     })
 
     return NextResponse.json(reservation, { status: 201 })

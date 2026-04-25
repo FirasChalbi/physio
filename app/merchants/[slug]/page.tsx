@@ -7,9 +7,10 @@ import Link from "next/link"
 import {
   MapPin, Star, Heart, ArrowLeft, BadgeCheck, Phone, Mail,
   Globe, Store, Clock, ChevronRight, Navigation, Share2,
-  ExternalLink, Utensils, Calendar
+  ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
+import MenuServiceDrawer from "@/components/MenuServiceDrawer"
 
 /* ─── Types ──────────────────────────────────────────── */
 type MerchantReview = {
@@ -20,6 +21,12 @@ type MerchantReview = {
   text: string
 }
 
+type MenuItem = {
+  name: string; price: number; description?: string; category?: string; image?: string
+}
+type ServiceItem = {
+  name: string; price: number; duration?: string; description?: string; image?: string
+}
 type Merchant = {
   _id: string; name: string; slug: string; logo?: string; coverImage?: string
   description?: string; about?: string; city?: string; address?: string
@@ -31,6 +38,7 @@ type Merchant = {
   categories?: string[]; opening_hours?: Record<string, string>
   images?: string[]; user_reviews?: MerchantReview[]
   social_media?: Record<string, string>
+  menu?: MenuItem[]; services?: ServiceItem[]
 }
 
 type Offer = {
@@ -47,10 +55,15 @@ const DAY_ORDER = ["lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi", 
 const TODAY_KEY = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"][new Date().getDay()]
 
 const RESTAURANT_CATEGORIES = ["Restaurant", "Café", "Pizzeria", "Boulangerie", "Pâtisserie", "Fast Food", "Restauration"]
+const BEAUTY_CATEGORIES = ["Institut de beauté", "Spa", "Massage", "Épilation", "Soins visage", "Coiffure", "Esthétique", "Bien-être", "Onglerie", "Manucure"]
 
 function isRestaurant(categories?: string[]) {
   if (!categories) return false
   return categories.some(c => RESTAURANT_CATEGORIES.some(r => c.toLowerCase().includes(r.toLowerCase())))
+}
+function isBeautySpa(categories?: string[]) {
+  if (!categories) return false
+  return categories.some(c => BEAUTY_CATEGORIES.some(r => c.toLowerCase().includes(r.toLowerCase())))
 }
 
 function toNum(v?: string) {
@@ -91,7 +104,7 @@ function HoursCard({ hours }: { hours: Record<string, string> }) {
         className="w-full flex items-center gap-4 px-5 py-4"
         onClick={() => setExpanded(e => !e)}
       >
-        <Clock className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+        <Clock className="w-5 h-5 text-emerald-400 shrink-0" />
         <div className="flex-1 text-left">
           <p className="text-xs text-[#6a6a80]">Horaires aujourd'hui</p>
           <p className="text-sm font-semibold" style={{ color: isOpen ? "#10b981" : "#ef4444" }}>
@@ -99,7 +112,7 @@ function HoursCard({ hours }: { hours: Record<string, string> }) {
           </p>
         </div>
         <ChevronRight
-          className="w-4 h-4 text-[#333] transition-transform flex-shrink-0"
+          className="w-4 h-4 text-[#333] transition-transform shrink-0"
           style={{ transform: expanded ? "rotate(90deg)" : "rotate(0deg)" }}
         />
       </button>
@@ -138,8 +151,9 @@ export default function MerchantPage() {
   const [offers, setOffers] = useState<Offer[]>([])
   const [loading, setLoading] = useState(true)
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
-  const [heroImg, setHeroImg] = useState(0)
   const [showReservation, setShowReservation] = useState(false)
+  const [activeTab, setActiveTab] = useState<"menu" | "services" | "offres">("menu")
+  const [drawerType, setDrawerType] = useState<"menu" | "services" | null>(null)
 
   useEffect(() => {
     Promise.all([
@@ -175,7 +189,6 @@ export default function MerchantPage() {
     </div>
   )
 
-  const allImages = [...(merchant.images || []), ...(merchant.coverImage ? [merchant.coverImage] : [])]
   const mapsUrl = buildMapsUrl(merchant)
   const numRating = toNum(merchant.average_rating) || (merchant.rating ? merchant.rating : 0)
   const reviewCount = merchant.review_count || String(merchant.reviewCount || merchant.user_reviews?.length || 0)
@@ -188,26 +201,14 @@ export default function MerchantPage() {
 
       {/* ══ HERO GALLERY ══ */}
       <div className="relative h-64 md:h-80 overflow-hidden bg-[#12121a]">
-        {allImages.length > 0 ? (
+        {merchant.coverImage ? (
           <>
             <img
-              src={allImages[heroImg]}
+              src={merchant.coverImage}
               alt={merchant.name}
               className="w-full h-full object-cover"
-              style={{ transition: "opacity 0.3s" }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-black/20 to-black/30" />
-
-            {/* Image dots */}
-            {allImages.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                {allImages.map((_, i) => (
-                  <button key={i} onClick={() => setHeroImg(i)}
-                    className="rounded-full transition-all"
-                    style={{ width: i === heroImg ? 20 : 6, height: 6, background: i === heroImg ? "#10b981" : "rgba(255,255,255,0.4)" }} />
-                ))}
-              </div>
-            )}
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, #1a1a2e, #12121a)" }}>
@@ -238,10 +239,10 @@ export default function MerchantPage() {
         {/* Logo + name row */}
         <div className="flex items-end gap-3 mb-4">
           {merchant.logo ? (
-            <img src={merchant.logo} alt="" className="w-16 h-16 rounded-2xl object-cover border-4 shadow-lg flex-shrink-0"
+            <img src={merchant.logo} alt="" className="w-16 h-16 rounded-2xl object-cover border-4 shadow-lg shrink-0"
               style={{ borderColor: "#0a0a0f" }} />
           ) : (
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-4 flex-shrink-0"
+            <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-4 shrink-0"
               style={{ borderColor: "#0a0a0f", background: "rgba(139,92,246,0.12)" }}>
               {isResto ? <Utensils className="w-7 h-7 text-violet-400" /> : <Store className="w-7 h-7 text-violet-400" />}
             </div>
@@ -249,7 +250,7 @@ export default function MerchantPage() {
           <div className="pb-1 flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-xl font-bold text-white leading-tight">{merchant.name}</h1>
-              {merchant.verified && <BadgeCheck className="w-5 h-5 text-cyan-400 flex-shrink-0" />}
+              {merchant.verified && <BadgeCheck className="w-5 h-5 text-cyan-400 shrink-0" />}
             </div>
             {/* Categories */}
             {merchant.categories && merchant.categories.length > 0 && (
@@ -284,13 +285,15 @@ export default function MerchantPage() {
 
         {/* Action buttons */}
         <div className="flex gap-2">
-          <button
-            onClick={() => setShowReservation(true)}
-            className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-            style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
-            <Calendar className="w-4 h-4" />
-            Réserver
-          </button>
+          {(offers.length > 0 || (merchant.menu && merchant.menu.length > 0) || (merchant.services && merchant.services.length > 0)) && (
+            <button
+              onClick={() => setShowReservation(true)}
+              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
+              style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+              <Calendar className="w-4 h-4" />
+              Réserver
+            </button>
+          )}
 
           {merchant.phone && (
             <a href={`tel:${merchant.phone}`}
@@ -323,71 +326,104 @@ export default function MerchantPage() {
         </section>
       )}
 
-      {/* ══ OFFERS ══ */}
-      {offers.length > 0 && (
-        <section className="mb-6">
-          <div className="flex items-center justify-between px-4 mb-3">
-            <h2 className="text-base font-bold text-white">
-              Offres & deals <span className="text-[#6a6a80] font-normal text-sm">({offers.length})</span>
-            </h2>
-          </div>
-          <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
-            {offers.map(offer => (
-              <Link key={offer._id} href={`/offers/${offer.slug}`}
-                className="flex-shrink-0 w-48 rounded-2xl overflow-hidden border block"
-                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
-                <div className="relative h-32 overflow-hidden">
-                  <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 discount-badge px-2 py-0.5 rounded-lg text-[10px] font-bold text-white">
-                    -{offer.discountPercent}%
-                  </span>
-                  <button onClick={e => { e.preventDefault(); toggleFav(offer._id) }}
-                    className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-sm"
-                    style={{ background: favorites.has(offer._id) ? "rgba(239,68,68,0.9)" : "rgba(0,0,0,0.4)" }}>
-                    <Heart className={`w-3.5 h-3.5 ${favorites.has(offer._id) ? "text-white fill-white" : "text-white"}`} />
-                  </button>
-                </div>
-                <div className="p-3">
-                  <h3 className="text-xs font-semibold text-white mb-1 line-clamp-2">{offer.title}</h3>
-                  <div className="flex items-baseline gap-1.5">
-                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
-                    <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
+      {/* ══ CATEGORY BUTTONS — Menu / Services / Offres ══ */}
+      {(() => {
+        const hasMenu = merchant.menu && merchant.menu.length > 0
+        const hasServices = merchant.services && merchant.services.length > 0
+        const hasOffers = offers.length > 0
+        if (!hasMenu && !hasServices && !hasOffers) return null
+
+        return (
+          <section className="px-4 mb-6">
+            <h2 className="text-base font-bold text-white mb-3">Découvrir</h2>
+            <div className="grid gap-3" style={{ gridTemplateColumns: (hasMenu && hasServices) ? "1fr 1fr" : "1fr" }}>
+              {hasMenu && (
+                <button
+                  onClick={() => setDrawerType("menu")}
+                  className="relative overflow-hidden rounded-2xl p-4 text-left border transition-all active:scale-[0.97]"
+                  style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.03))", borderColor: "rgba(16,185,129,0.2)" }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(16,185,129,0.15)" }}>
+                      <Utensils className="w-4 h-4 text-emerald-400" />
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-emerald-400/50 ml-auto" />
                   </div>
+                  <h3 className="text-sm font-bold text-white">Menu</h3>
+                  <p className="text-[10px] text-[#6a6a80] mt-0.5">{merchant.menu!.length} articles</p>
+                </button>
+              )}
+              {hasServices && (
+                <button
+                  onClick={() => setDrawerType("services")}
+                  className="relative overflow-hidden rounded-2xl p-4 text-left border transition-all active:scale-[0.97]"
+                  style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.03))", borderColor: "rgba(139,92,246,0.2)" }}
+                >
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(139,92,246,0.15)" }}>
+                      <Sparkles className="w-4 h-4 text-violet-400" />
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-violet-400/50 ml-auto" />
+                  </div>
+                  <h3 className="text-sm font-bold text-white">Services</h3>
+                  <p className="text-[10px] text-[#6a6a80] mt-0.5">{merchant.services!.length} prestations</p>
+                </button>
+              )}
+            </div>
+
+            {/* Offers horizontal scroll */}
+            {hasOffers && (
+              <div className="mt-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Tag className="w-4 h-4 text-emerald-400" />
+                  <h3 className="text-sm font-bold text-white">Offres</h3>
+                  <span className="text-[10px] text-[#6a6a80]">({offers.length})</span>
                 </div>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
-
-      {offers.length === 0 && (
-        <section className="px-4 mb-6">
-          <h2 className="text-base font-bold text-white mb-3">Offres & deals</h2>
-          <div className="rounded-2xl p-6 border text-center" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
-            <p className="text-[#6a6a80] text-sm">Aucune offre active pour le moment</p>
-          </div>
-        </section>
-      )}
-
-      {/* ══ MENU (restaurants only) ══ */}
-      {isResto && (
-        <section className="px-4 mb-6">
-          <h2 className="text-base font-bold text-white mb-3">Menu</h2>
-          <div className="rounded-2xl p-5 border flex items-center gap-4" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-              style={{ background: "rgba(139,92,246,0.12)" }}>
-              <Utensils className="w-6 h-6 text-violet-400" />
-            </div>
-            <div>
-              <p className="text-sm text-white font-medium mb-0.5">Menu disponible en boutique</p>
-              <p className="text-xs text-[#6a6a80]">Consultez le menu complet sur place ou via le lien ci-dessous</p>
-            </div>
-            {(merchant.website || merchant.domain) && (
-              <a href={merchant.website || `https://${merchant.domain}`} target="_blank" rel="noopener noreferrer"
-                className="ml-auto flex-shrink-0">
-                <ExternalLink className="w-4 h-4 text-emerald-400" />
-              </a>
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                  {offers.map(offer => (
+                    <Link key={offer._id} href={`/offers/${offer.slug}`}
+                      className="shrink-0 w-48 rounded-2xl overflow-hidden border block transition-all hover:border-emerald-500/20"
+                      style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                      <div className="relative h-32 overflow-hidden">
+                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
+                        <span className="absolute top-2 left-2 discount-badge px-2 py-0.5 rounded-lg text-[10px] font-bold text-white">
+                          -{offer.discountPercent}%
+                        </span>
+                        <button onClick={e => { e.preventDefault(); toggleFav(offer._id) }}
+                          className="absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center backdrop-blur-sm"
+                          style={{ background: favorites.has(offer._id) ? "rgba(239,68,68,0.9)" : "rgba(0,0,0,0.4)" }}>
+                          <Heart className={`w-3.5 h-3.5 ${favorites.has(offer._id) ? "text-white fill-white" : "text-white"}`} />
+                        </button>
+                      </div>
+                      <div className="p-3">
+                        <h3 className="text-xs font-semibold text-white mb-1 line-clamp-2">{offer.title}</h3>
+                        <div className="flex items-baseline gap-1.5">
+                          <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                          <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             )}
+          </section>
+        )
+      })()}
+
+      {/* ══ PHOTOS ══ */}
+      {merchant.images && merchant.images.length > 0 && (
+        <section className="px-4 mb-6">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base font-bold text-white">Photos</h2>
+            {merchant.images.length > 3 && <span className="text-sm text-emerald-400 font-medium">Voir tout</span>}
+          </div>
+          <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
+            {merchant.images.map((img, i) => (
+              <div key={i} className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden shrink-0">
+                <img src={img} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
           </div>
         </section>
       )}
@@ -403,7 +439,7 @@ export default function MerchantPage() {
           <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
             {/* Summary card */}
             {numRating > 0 && (
-              <div className="flex-shrink-0 w-28 rounded-2xl p-4 flex flex-col items-center justify-center border"
+              <div className="shrink-0 w-28 rounded-2xl p-4 flex flex-col items-center justify-center border"
                 style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
                 <span className="text-3xl font-bold text-white mb-1">
                   {typeof numRating === "number" ? numRating.toFixed(1) : numRating}
@@ -415,13 +451,13 @@ export default function MerchantPage() {
 
             {/* Review cards */}
             {merchant.user_reviews.map((rev, i) => (
-              <div key={i} className="flex-shrink-0 w-64 rounded-2xl p-4 border"
+              <div key={i} className="shrink-0 w-64 rounded-2xl p-4 border"
                 style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center gap-2.5 mb-3">
                   {rev.reviewer_photo ? (
-                    <img src={rev.reviewer_photo} alt="" className="w-8 h-8 rounded-full object-cover flex-shrink-0" />
+                    <img src={rev.reviewer_photo} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
                   ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white flex-shrink-0"
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
                       style={{ background: "linear-gradient(135deg,#10b981,#06b6d4)" }}>
                       {rev.reviewer_name[0]}
                     </div>
@@ -430,7 +466,7 @@ export default function MerchantPage() {
                     <p className="text-sm font-medium text-white truncate">{rev.reviewer_name}</p>
                     <p className="text-[10px] text-[#6a6a80]">{rev.date}</p>
                   </div>
-                  <div className="flex gap-0.5 flex-shrink-0">
+                  <div className="flex gap-0.5 shrink-0">
                     {Array.from({ length: 5 }).map((_, si) => (
                       <Star key={si} className={`w-3 h-3 ${si < parseInt(rev.rating) ? "text-amber-400 fill-amber-400" : "text-[#333]"}`} />
                     ))}
@@ -459,7 +495,7 @@ export default function MerchantPage() {
           {/* Address row */}
           {displayAddress && (
             <div className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-              <MapPin className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
               <div className="flex-1">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
                 <p className="text-sm text-white">{displayAddress}</p>
@@ -475,7 +511,7 @@ export default function MerchantPage() {
           {/* Phone */}
           {merchant.phone && (
             <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-              <Phone className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <Phone className="w-5 h-5 text-emerald-400 shrink-0" />
               <div className="flex-1">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Téléphone</p>
                 <p className="text-sm text-white">{merchant.phone}</p>
@@ -487,7 +523,7 @@ export default function MerchantPage() {
           {/* Email */}
           {merchant.email && (
             <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-              <Mail className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <Mail className="w-5 h-5 text-emerald-400 shrink-0" />
               <div className="flex-1">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
                 <p className="text-sm text-white">{merchant.email}</p>
@@ -500,7 +536,7 @@ export default function MerchantPage() {
           {(merchant.website || merchant.domain) && (
             <a href={merchant.website || `https://${merchant.domain}`} target="_blank" rel="noopener noreferrer"
               className="flex items-center gap-4 px-5 py-4">
-              <Globe className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+              <Globe className="w-5 h-5 text-emerald-400 shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Site web</p>
                 <p className="text-sm text-white truncate">{merchant.website || merchant.domain}</p>
@@ -540,13 +576,26 @@ export default function MerchantPage() {
         </div>
       )}
 
+      {/* ══ MENU/SERVICE DRAWER ══ */}
+      <MenuServiceDrawer
+        open={drawerType !== null}
+        onClose={() => setDrawerType(null)}
+        type={drawerType || "menu"}
+        menu={merchant.menu}
+        services={merchant.services}
+        merchantName={merchant.name}
+      />
+
       {/* ══ RESERVATION MODAL ══ */}
-      {showReservation && offers.length > 0 && (
+      {showReservation && (offers.length > 0 || (merchant.menu && merchant.menu.length > 0) || (merchant.services && merchant.services.length > 0)) && (
         <ReservationModal
           open={showReservation}
           onClose={() => setShowReservation(false)}
-          offer={offers[0]}
+          offers={offers}
           merchantName={merchant.name}
+          merchantId={merchant._id}
+          menu={merchant.menu}
+          services={merchant.services}
         />
       )}
     </div>

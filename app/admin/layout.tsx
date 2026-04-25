@@ -8,7 +8,7 @@ import {
     LayoutDashboard, Tag, Gift, Store, MapPin,
     Users, ShoppingCart, Star, Image, BarChart3,
     LogOut, Menu, X, ChevronLeft, Search, Bell,
-    ExternalLink
+    ExternalLink, Tent
 } from "lucide-react"
 import { useState } from "react"
 import Logo from "@/components/Logo"
@@ -18,6 +18,7 @@ const navItems = [
     { href: "/admin/categories", label: "Catégories", icon: Tag },
     { href: "/admin/offers", label: "Offres", icon: Gift },
     { href: "/admin/merchants", label: "Marchands", icon: Store },
+    { href: "/admin/family-activities", label: "Activités famille", icon: Tent },
     { href: "/admin/locations", label: "Villes", icon: MapPin },
     { href: "/admin/users", label: "Utilisateurs", icon: Users },
     { href: "/admin/orders", label: "Commandes", icon: ShoppingCart },

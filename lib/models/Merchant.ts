@@ -10,6 +10,22 @@ export interface IMerchantReview {
   text: string
 }
 
+export interface IMenuItem {
+  name: string
+  price: number
+  description?: string
+  category?: string
+  image?: string
+}
+
+export interface IServiceItem {
+  name: string
+  price: number
+  duration?: string
+  description?: string
+  image?: string
+}
+
 export interface IMerchant {
   _id?: string
   name: string
@@ -47,6 +63,10 @@ export interface IMerchant {
   search_job?: string
   search_state?: string
 
+  /* ─── Menu & Services ─── */
+  menu?: IMenuItem[]
+  services?: IServiceItem[]
+
   createdAt?: Date
   updatedAt?: Date
 }
@@ -58,6 +78,22 @@ const MerchantReviewSchema = new Schema({
   rating: { type: String },
   date: { type: String },
   text: { type: String },
+}, { _id: false })
+
+const MenuItemSchema = new Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String },
+  category: { type: String },
+  image: { type: String },
+}, { _id: false })
+
+const ServiceItemSchema = new Schema({
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  duration: { type: String },
+  description: { type: String },
+  image: { type: String },
 }, { _id: false })
 
 const MerchantSchema = new Schema<IMerchant>({
@@ -95,6 +131,10 @@ const MerchantSchema = new Schema<IMerchant>({
   social_media: { type: Schema.Types.Mixed },
   search_job: { type: String },
   search_state: { type: String },
+
+  /* Menu & Services */
+  menu: [MenuItemSchema],
+  services: [ServiceItemSchema],
 }, { timestamps: true })
 
 MerchantSchema.index({ slug: 1 })

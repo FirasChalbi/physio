@@ -9,6 +9,7 @@ import { getMerchantModel } from '../lib/models/Merchant'
 import { getCategoryModel } from '../lib/models/Category'
 import { getLocationModel } from '../lib/models/Location'
 import { getOfferModel } from '../lib/models/Offer'
+import { getFamilyActivityModel } from '../lib/models/FamilyActivity'
 import bcrypt from 'bcryptjs'
 
 const MONGODB_URI = process.env.MONGODB_URI!
@@ -25,6 +26,7 @@ const CATEGORIES = [
   { name: 'Boulangerie', slug: 'boulangerie', icon: 'UtensilsCrossed' },
   { name: 'Sport & Fitness', slug: 'sport-fitness', icon: 'Dumbbell' },
   { name: 'Serrurerie', slug: 'serrurerie', icon: 'Home' },
+  { name: 'Famille & Loisirs', slug: 'famille-loisirs', icon: 'Tent' },
 ]
 
 /* ─────────────────────────────────────────────────────────────
@@ -159,6 +161,18 @@ const MERCHANTS = [
       { reviewer_name: "Nathalie Petit", reviewer_photo: "https://i.pravatar.cc/36?img=9", rating: "4", date: "il y a 1 mois", text: "Très bonne cuisine, portions généreuses. Réservation indispensable le week-end." },
       { reviewer_name: "Julien Chevalier", reviewer_photo: "https://i.pravatar.cc/36?img=10", rating: "5", date: "il y a 2 mois", text: "Le meilleur restaurant de Versailles selon moi. Rapport qualité-prix imbattable." }
     ],
+    menu: [
+      { name: "Foie gras maison et chutney de figues", price: 18, description: "Foie gras de canard mi-cuit, chutney de figues fraîches, pain grillé", category: "Entrées" },
+      { name: "Velouté de saison du marché", price: 14, description: "Velouté de légumes frais selon arrivage, crème fraîche", category: "Entrées" },
+      { name: "Filet de sole meunière", price: 28, description: "Filet de sole poêlé au beurre noisette, pommes vapeur, persil", category: "Plats" },
+      { name: "Bœuf bourguignon traditionnel", price: 26, description: "Joue de bœuf mijotée au vin de Bourgogne, carottes, champignons", category: "Plats" },
+      { name: "Coq au vin", price: 24, description: "Poulet fermier au vin rouge, lardons, champignons de Paris", category: "Plats" },
+      { name: "Tarte Tatin maison", price: 12, description: "Tarte aux pommes caramélisées, crème fraîche épaisse", category: "Desserts" },
+      { name: "Crème brûlée à la vanille", price: 11, description: "Crème onctueuse à la vanille de Madagascar, caramel craquant", category: "Desserts" },
+      { name: "Fromage affiné du moment", price: 10, description: "Sélection de fromages affinés, confiture de cerises noires", category: "Desserts" },
+      { name: "Menu Découverte 3 plats", price: 38, description: "Entrée + plat + dessert du chef, vin compris (mardi-venredi midi)", category: "Menus" },
+      { name: "Menu Dégustation 5 plats", price: 55, description: "Parcours gastronomique complet avec accords mets-vins", category: "Menus" },
+    ],
     website: "https://bistrotduroi.fr",
     city: "Versailles", verified: true, active: true, rating: 4.8, reviewCount: 128
   },
@@ -195,6 +209,17 @@ const MERCHANTS = [
       { reviewer_name: "Sandrine Duval", reviewer_photo: "https://i.pravatar.cc/36?img=11", rating: "5", date: "il y a 4 jours", text: "Soin du visage absolument divin ! Les esthéticiennes sont très professionnelles. Je reviens toutes les 3 semaines." },
       { reviewer_name: "Céline Aubry", reviewer_photo: "https://i.pravatar.cc/36?img=12", rating: "5", date: "il y a 2 semaines", text: "Massage aux pierres chaudes incroyable. On repart complètement relaxée. Cadre magnifique." },
       { reviewer_name: "Laura Martinez", reviewer_photo: "https://i.pravatar.cc/36?img=13", rating: "5", date: "il y a 1 mois", text: "Le meilleur institut de la région ! Épilation rapide et pas douloureuse. Personnel adorable." }
+    ],
+    services: [
+      { name: "Soin Visage Hydratation Intense", price: 75, duration: "60 min", description: "Soin complet du visage avec nettoyage, gommage, masque et hydratation profonde Clarins" },
+      { name: "Soin Visage Anti-Âge Lifting", price: 95, duration: "75 min", description: "Soin lifting aux actifs concentrés, massage remodelant Darphin, résultat visible immédiat" },
+      { name: "Massage Décontractant Dos", price: 55, duration: "30 min", description: "Massage ciblé du dos et nuque, huiles essentielles détendantes" },
+      { name: "Massage Aux Pierres Chaudes", price: 85, duration: "60 min", description: "Massage complet aux pierres volcaniques chaudes, relaxation profonde garantie" },
+      { name: "Épilation Jambes Complètes", price: 35, duration: "30 min", description: "Épilation à la cire tiède, résultat longue durée, peau douce" },
+      { name: "Manucure Beauté", price: 30, duration: "30 min", description: "Soin des mains, limage, cuticules, pose de vernis classique" },
+      { name: "Pédicure Beauté", price: 35, duration: "40 min", description: "Soin complet des pieds, gommage, soin cuticules, vernis" },
+      { name: "Forfait Mariée", price: 250, duration: "3h", description: "Essai visage + jour J : maquillage, coiffure, soin complet, ongles" },
+      { name: "Pack Détente Absolue", price: 130, duration: "90 min", description: "Soin visage + massage dos + manucure, accueil thé et champagne" },
     ],
     website: "https://beaute-poissy.fr",
     city: "Poissy", verified: true, active: true, rating: 4.9, reviewCount: 89
@@ -413,6 +438,14 @@ const MERCHANTS = [
       { reviewer_name: "Dominique Perrin", reviewer_photo: "https://i.pravatar.cc/36?img=28", rating: "5", date: "il y a 2 semaines", text: "Dîner mémorable. Le risotto aux truffes et le filet mignon fondaient dans la bouche. Service aux petits soins." },
       { reviewer_name: "Véronique Lamy", reviewer_photo: "https://i.pravatar.cc/36?img=29", rating: "4", date: "il y a 1 mois", text: "Belle découverte. Cuisine inventive et produits de qualité. Un peu bruyant le samedi soir." }
     ],
+    menu: [
+      { name: "Carpaccio de Saint-Jacques", price: 16, description: "Saint-Jacques finement tranchées, huile de truffe, roquette, copeaux de parmesan", category: "Entrées" },
+      { name: "Risotto aux truffes noires", price: 22, description: "Risotto crémeux aux truffes du Périgord, parmesan 24 mois", category: "Entrées" },
+      { name: "Filet mignon de veau", price: 32, description: "Filet mignon de veau laqué au jus réduit, purée de céleri, haricots verts", category: "Plats" },
+      { name: "Dos de cabillaud rôti", price: 28, description: "Cabillaud en croûte d'herbes, émulsion de safran, légumes de saison", category: "Plats" },
+      { name: "Fondant au chocolat noir", price: 13, description: "Chocolat Valrhona 70%, cœur coulant, glace vanille maison", category: "Desserts" },
+      { name: "Menu Déjeuner 2 plats", price: 28, description: "2 plats au choix + café. Produits frais du marché. Verre de vin compris", category: "Menus" },
+    ],
     website: "https://latabledesmantes.fr",
     city: "Mantes-la-Jolie", verified: true, active: true, rating: 4.6, reviewCount: 59
   }
@@ -507,6 +540,152 @@ function makeOffers(merchantIds: Record<string, string>, categoryIds: Record<str
 }
 
 /* ─────────────────────────────────────────────────────────────
+   FAMILY ACTIVITIES — standalone data for TOP 10 section
+───────────────────────────────────────────────────────────── */
+const FAMILY_ACTIVITIES = [
+  {
+    name: "Parc Animalier de Thoiry",
+    slug: "parc-animalier-thoiry",
+    description: "Safari et parc animalier avec plus de 700 animaux en semi-liberté. Labyrinthe végétal, château et jardins. Parfait pour une journée en famille !",
+    image: "https://images.unsplash.com/photo-1474511320723-9a5680356743?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1474511320723-9a5680356743?w=800&q=80", "https://images.unsplash.com/photo-1570219461389-36cce29baa8e?w=800&q=80"],
+    city: "Thoiry",
+    address: "Rue du Pavillon de Montreuil, 78770 Thoiry",
+    category: "Parc animalier",
+    rating: 4.6, reviewCount: 1240,
+    latitude: "48.8647", longitude: "1.8023",
+    opening_hours: { lundi: "Fermé", mardi: "10:00–17:00", mercredi: "10:00–17:00", jeudi: "10:00–17:00", vendredi: "10:00–17:00", samedi: "09:30–18:00", dimanche: "09:30–18:00" },
+    price: 29, active: true
+  },
+  {
+    name: "France Miniature",
+    slug: "france-miniature",
+    description: "Parc de loisirs avec plus de 150 maquettes de monuments français au 1/30e. Parcours interactif, jeux et animations pour enfants.",
+    image: "https://images.unsplash.com/photo-1565608377585-02dd794c066f?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1565608377585-02dd794c066f?w=800&q=80"],
+    city: "Élancourt",
+    address: "Boulevard André Malraux, 78950 Élancourt",
+    category: "Parc de loisirs",
+    rating: 4.3, reviewCount: 890,
+    latitude: "48.7753", longitude: "2.0692",
+    opening_hours: { lundi: "Fermé", mardi: "10:00–18:00", mercredi: "10:00–18:00", jeudi: "10:00–18:00", vendredi: "10:00–18:00", samedi: "10:00–19:00", dimanche: "10:00–19:00" },
+    price: 24, active: true
+  },
+  {
+    name: "Accrobranche Chien Vert",
+    slug: "accrobranche-chien-vert",
+    description: "Parcours acrobatiques en hauteur pour tous les âges (dès 3 ans). Tyroliennes, ponts de singes, filets. 12 parcours adaptés.",
+    image: "https://images.unsplash.com/photo-1529156032033-7c3f8fdd6d6a?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1529156032033-7c3f8fdd6d6a?w=800&q=80"],
+    city: "Saint-Germain-en-Laye",
+    address: "Forêt de Saint-Germain-en-Laye, 78100",
+    category: "Accrobranche",
+    rating: 4.5, reviewCount: 567,
+    latitude: "48.8955", longitude: "2.0905",
+    opening_hours: { lundi: "Fermé", mardi: "10:00–18:00", mercredi: "10:00–18:00", jeudi: "10:00–18:00", vendredi: "10:00–18:00", samedi: "09:30–19:00", dimanche: "09:30–19:00" },
+    price: 22, active: true
+  },
+  {
+    name: "Base de Loisirs de Saint-Quentin",
+    slug: "base-loisirs-saint-quentin",
+    description: "Base de loisirs avec plan d'eau, baignade surveillée, pédalos, mini-golf, aires de jeux, VTT et pique-nique. Idéal en été !",
+    image: "https://images.unsplash.com/photo-1544551760-1b1f9b9bbd5d?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1544551760-1b1f9b9bbd5d?w=800&q=80"],
+    city: "Trappes",
+    address: "Base de Loisirs, 78190 Trappes",
+    category: "Base de loisirs",
+    rating: 4.1, reviewCount: 432,
+    latitude: "48.7742", longitude: "2.0055",
+    opening_hours: { lundi: "09:00–19:00", mardi: "09:00–19:00", mercredi: "09:00–19:00", jeudi: "09:00–19:00", vendredi: "09:00–19:00", samedi: "08:00–20:00", dimanche: "08:00–20:00" },
+    price: 5, active: true
+  },
+  {
+    name: "Ferme du Prieuré",
+    slug: "ferme-du-prieure",
+    description: "Ferme pédagogique avec animaux de la ferme, ateliers cuisine, jardin potager, balades à poney. Activités pour enfants dès 2 ans.",
+    image: "https://images.unsplash.com/photo-1516554063939-5150ef6cb1c5?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1516554063939-5150ef6cb1c5?w=800&q=80"],
+    city: "Rambouillet",
+    address: "Route de Poinville, 78120 Rambouillet",
+    category: "Ferme pédagogique",
+    rating: 4.7, reviewCount: 312,
+    latitude: "48.6400", longitude: "1.8400",
+    opening_hours: { lundi: "Fermé", mardi: "10:00–17:00", mercredi: "10:00–17:00", jeudi: "10:00–17:00", vendredi: "10:00–17:00", samedi: "10:00–18:00", dimanche: "10:00–18:00" },
+    price: 12, active: true
+  },
+  {
+    name: "Musée de la Toile de Jouy",
+    slug: "musee-toile-de-jouy",
+    description: "Musée dédié à la célèbre toile imprimée. Ateliers créatifs pour enfants, visites guidées, boutique. Château de l'Églantine.",
+    image: "https://images.unsplash.com/photo-1554907984-152e6609a8c9?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1554907984-152e6609a8c9?w=800&q=80"],
+    city: "Jouy-en-Josas",
+    address: "54 Rue Charles de Gaulle, 78350 Jouy-en-Josas",
+    category: "Musée",
+    rating: 4.4, reviewCount: 198,
+    latitude: "48.7644", longitude: "2.1619",
+    opening_hours: { lundi: "Fermé", mardi: "14:00–18:00", mercredi: "10:00–18:00", jeudi: "14:00–18:00", vendredi: "14:00–18:00", samedi: "10:00–18:00", dimanche: "10:00–18:00" },
+    price: 8, active: true
+  },
+  {
+    name: "Escalade K2 Poissy",
+    slug: "escalade-k2-poissy",
+    description: "Salle d'escalade avec 1200m² de murs, blocs et voies. Encadrement enfants dès 4 ans, anniversaires, cours collectifs.",
+    image: "https://images.unsplash.com/photo-1522165719154-dbc9265ba9b0?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1522165719154-dbc9265ba9b0?w=800&q=80"],
+    city: "Poissy",
+    address: "15 Rue des Pâtis, 78300 Poissy",
+    category: "Escalade",
+    rating: 4.5, reviewCount: 276,
+    latitude: "48.9273", longitude: "2.0430",
+    opening_hours: { lundi: "12:00–22:00", mardi: "10:00–22:00", mercredi: "10:00–22:00", jeudi: "12:00–22:00", vendredi: "12:00–22:00", samedi: "09:00–20:00", dimanche: "09:00–20:00" },
+    price: 16, active: true
+  },
+  {
+    name: "Bowling de Conflans",
+    slug: "bowling-conflans",
+    description: "Bowling 16 pistes, billards, salle d'arcade, bar et restaurant. Soirées cosmic bowling le week-end. Anniversaires enfants.",
+    image: "https://images.unsplash.com/photo-1517166125740-14c7465a4e9d?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1517166125740-14c7465a4e9d?w=800&q=80"],
+    city: "Conflans-Sainte-Honorine",
+    address: "3 Avenue de l'Europe, 78700 Conflans-Sainte-Honorine",
+    category: "Bowling",
+    rating: 4.2, reviewCount: 345,
+    latitude: "49.0030", longitude: "2.0970",
+    opening_hours: { lundi: "Fermé", mardi: "14:00–23:00", mercredi: "14:00–23:00", jeudi: "14:00–23:00", vendredi: "14:00–00:00", samedi: "10:00–00:00", dimanche: "10:00–22:00" },
+    price: 18, active: true
+  },
+  {
+    name: "Poterie de Versailles",
+    slug: "poterie-versailles",
+    description: "Atelier de poterie et céramique pour enfants et adultes. Cours de modelage, tournage, émaillage. Stages vacances et anniversaires créatifs.",
+    image: "https://images.unsplash.com/photo-1565193566273-9f4af3c51121?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1565193566273-9f4af3c51121?w=800&q=80"],
+    city: "Versailles",
+    address: "22 Rue de Satory, 78000 Versailles",
+    category: "Atelier créatif",
+    rating: 4.8, reviewCount: 156,
+    latitude: "48.8030", longitude: "2.1250",
+    opening_hours: { lundi: "Fermé", mardi: "10:00–18:00", mercredi: "10:00–18:00", jeudi: "10:00–18:00", vendredi: "10:00–18:00", samedi: "10:00–18:00", dimanche: "10:00–13:00" },
+    price: 25, active: true
+  },
+  {
+    name: "Cinéma Pathé Conflans",
+    slug: "cinema-pathe-conflans",
+    description: "Cinéma 12 salles avec dernière technologie. Séances enfants le mercredi, avant-premières, offres familles. Popcorn et boissons.",
+    image: "https://images.unsplash.com/photo-1489599841880-630c5c3b6f94?w=800&q=80",
+    images: ["https://images.unsplash.com/photo-1489599841880-630c5c3b6f94?w=800&q=80"],
+    city: "Conflans-Sainte-Honorine",
+    address: "Centre Commercial Les Boutriers, 78700 Conflans-Sainte-Honorine",
+    category: "Cinéma",
+    rating: 4.0, reviewCount: 678,
+    latitude: "49.0050", longitude: "2.1000",
+    opening_hours: { lundi: "11:00–23:00", mardi: "11:00–23:00", mercredi: "10:00–23:00", jeudi: "11:00–23:00", vendredi: "11:00–00:00", samedi: "10:00–00:00", dimanche: "10:00–23:00" },
+    price: 12, active: true
+  }
+]
+
+/* ─────────────────────────────────────────────────────────────
    MAIN
 ───────────────────────────────────────────────────────────── */
 async function main() {
@@ -571,6 +750,15 @@ async function main() {
     offerCount++
   }
   console.log(`✅ ${offerCount} offres Yvelines insérées`)
+
+  // ── Family Activities ──
+  const FamilyActivity = getFamilyActivityModel()
+  let familyCount = 0
+  for (const fa of FAMILY_ACTIVITIES) {
+    await FamilyActivity.findOneAndUpdate({ slug: fa.slug }, fa, { upsert: true })
+    familyCount++
+  }
+  console.log(`✅ ${familyCount} activités famille Yvelines insérées`)
 
   console.log('\n🎉 Seed Yvelines terminé ! LifeDeal Yvelines est prêt.')
   console.log('📍 Zones couvertes : Versailles, SGE, Poissy, Rambouillet, Les Mureaux, Sartrouville, Conflans, Vélizy, Mantes-la-Jolie')
