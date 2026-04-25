@@ -776,7 +776,7 @@ export default function HomePage() {
                 {/* ═══════════ PAR CATÉGORIE ═══════════ */}
                 <section className="mb-8">
                     <div className="flex items-center justify-between px-4 mb-3">
-                        <h2 className="text-base md:text-xl font-bold text-white">🎯 Par catégorie</h2>
+                        <h2 className="text-base md:text-xl font-bold text-white">Par catégorie</h2>
                         <Link href={`/offers?category=${activeCategoryTab}`} className="text-sm text-emerald-400 font-medium">Voir tout</Link>
                     </div>
                     <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
@@ -823,9 +823,7 @@ export default function HomePage() {
 
                 {/* ═══════════ PAR CATÉGORIE ═══════════ */}
                 <section className="px-4 mb-8">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-base md:text-xl font-bold text-white">🎯 Par catégorie</h2>
-                    </div>
+            
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                         {/* Meilleurs restaurants */}
                         <Link href="/offers?category=restaurant"
@@ -873,7 +871,7 @@ export default function HomePage() {
                 {familyActivities.length > 0 && (
                     <section className="px-4 mb-8">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-base md:text-xl font-bold text-white">👨‍👩‍👧‍👦 Top 10 activités en famille</h2>
+                            <h2 className="text-base md:text-xl font-bold text-white">Top 10 activités en famille</h2>
                             <Link href="/family-activities" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
                         </div>
                         <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-5 lg:grid-cols-5 gap-3">
@@ -906,10 +904,10 @@ export default function HomePage() {
                 )}
 
                 {/* ═══════════ BEAUTÉ & SANTÉ ═══════════ */}
-                <MerchantHorizontalSection title="Beauté & santé" href="/merchants?category=beaute-sante" merchants={beautyMerchants} categories={categories} offers={offers} />
+                <MerchantHorizontalSection title="Bon plans Beauté & santé" href="/merchants?category=beaute-sante" merchants={beautyMerchants} categories={categories} offers={offers} />
 
                 {/* ═══════════ RESTAURANTS ═══════════ */}
-                <MerchantHorizontalSection title="Restaurants" href="/merchants?category=restaurant" merchants={restaurantMerchants} categories={categories} offers={offers} />
+                <MerchantHorizontalSection title="Bon plans Restaurants" href="/merchants?category=restaurant" merchants={restaurantMerchants} categories={categories} offers={offers} />
 
                 {/* ═══════════ TOUTES LES NOUVEAUTÉS ═══════════ */}
                 <HorizontalSection title="Toutes les nouveautés" href="/offers?sort=new" offers={newOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
@@ -921,7 +919,7 @@ export default function HomePage() {
                 {/* ═══════════ TOUTES LES OFFRES ═══════════ */}
                 <section className="px-4 mb-8">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-base md:text-xl font-bold text-white">🔥 Toutes les offres</h2>
+                        <h2 className="text-base md:text-xl font-bold text-white">Toutes les offres</h2>
                         <span className="text-xs text-[#6a6a80]">{filteredOffers.length} offre{filteredOffers.length > 1 ? 's' : ''}</span>
                     </div>
 
