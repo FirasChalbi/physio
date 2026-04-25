@@ -447,7 +447,7 @@ function SkeletonSection({ title, children }: { title: string; children: ReactNo
     )
 }
 
-function SkeletonHorizontalCards({ count = 4, CardComp }: { count?: number; CardComp: () => JSX.Element }) {
+function SkeletonHorizontalCards({ count = 4, CardComp }: { count?: number; CardComp: () => React.JSX.Element }) {
     return (
         <>
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
