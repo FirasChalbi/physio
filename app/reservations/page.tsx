@@ -37,7 +37,7 @@ export default function ReservationsPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const sid = localStorage.getItem("life_sid")
+    const sid = localStorage.getItem("lifedeal_sid")
     if (!sid) { setLoading(false); return }
     fetch(`/api/reservations?sessionId=${sid}`)
       .then(r => r.json())

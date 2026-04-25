@@ -17,7 +17,8 @@ export async function GET(req: NextRequest) {
 
     const reservations = await Reservation.find(filter).sort({ createdAt: -1 }).lean()
     return NextResponse.json(reservations)
-  } catch (e) {
+  } catch (e: any) {
+    console.error('[reservations GET]', e?.message || e)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
@@ -39,8 +40,9 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json(reservation, { status: 201 })
-  } catch (e) {
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+  } catch (e: any) {
+    console.error('[reservations POST]', e?.message || e)
+    return NextResponse.json({ error: 'Server error', detail: e?.message }, { status: 500 })
   }
 }
 
@@ -52,7 +54,8 @@ export async function PATCH(req: NextRequest) {
     const { id, status } = body
     const updated = await Reservation.findByIdAndUpdate(id, { status }, { new: true })
     return NextResponse.json(updated)
-  } catch (e) {
+  } catch (e: any) {
+    console.error('[reservations PATCH]', e?.message || e)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }

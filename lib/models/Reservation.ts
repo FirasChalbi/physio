@@ -31,7 +31,7 @@ export interface IReservation {
 const SelectedItemSchema = new Schema({
   name:  { type: String, required: true },
   price: { type: Number, required: true },
-  type:  { type: String, enum: ['menu', 'service'], required: true },
+  type:  { type: String, enum: ['menu', 'service', 'offer'], required: true },
 }, { _id: false })
 
 const ReservationSchema = new Schema<IReservation>({
