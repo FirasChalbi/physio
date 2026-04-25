@@ -1,7 +1,7 @@
 // app/map/page.tsx — Dark-mode map of all merchants
 "use client"
 
-import React from "react"
+import React, { Suspense } from "react"
 import dynamic from "next/dynamic"
 import { useSearchParams } from "next/navigation"
 import Logo from "@/components/Logo"
@@ -19,7 +19,7 @@ const MapComponent = dynamic(
   }
 ) as React.ComponentType<{ focusLocation?: { lat: number; lng: number; name?: string } | null }>
 
-export default function MapPage() {
+function MapContent() {
   const searchParams = useSearchParams()
   const focusLat = searchParams.get("lat")
   const focusLng = searchParams.get("lng")
@@ -49,5 +49,17 @@ export default function MapPage() {
         <MapComponent focusLocation={focusLocation} />
       </div>
     </div>
+  )
+}
+
+export default function MapPage() {
+  return (
+    <Suspense fallback={
+      <div className="fixed inset-0 flex items-center justify-center" style={{ background: "#0a0a0f" }}>
+        <div className="w-10 h-10 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <MapContent />
+    </Suspense>
   )
 }
