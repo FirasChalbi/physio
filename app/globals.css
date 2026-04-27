@@ -271,3 +271,28 @@
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
   outline: none;
 }
+
+/* Swiper pagination dots */
+.swiper-pagination {
+  position: absolute !important;
+  bottom: 8px !important;
+  display: flex !important;
+  justify-content: center;
+  gap: 1px;
+  z-index: 10;
+}
+.swiper-pagination-bullet {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 9999px !important;
+  background: rgba(255, 255, 255, 0.5) !important;
+  opacity: 1 !important;
+  transition: all 0.2s ease !important;
+}
+.swiper-pagination-bullet-active {
+  width: 12px !important;
+  background: #fff !important;
+}
+.swiper-pagination-bullet:hover {
+  background: rgba(255, 255, 255, 0.7) !important;
+}

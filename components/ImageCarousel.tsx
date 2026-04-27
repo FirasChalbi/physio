@@ -1,7 +1,15 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import useEmblaCarousel from "embla-carousel-react"
+import { useRef } from "react"
+import { Swiper, SwiperSlide } from "swiper/react"
+import { Navigation, Pagination } from "swiper/modules"
+import type { Swiper as SwiperType } from "swiper/types"
+// @ts-expect-error — no type declarations for CSS side-effect imports
+import "swiper/css"
+// @ts-expect-error
+import "swiper/css/navigation"
+// @ts-expect-error
+import "swiper/css/pagination"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 interface ImageCarouselProps {
@@ -19,112 +27,74 @@ export default function ImageCarousel({
     showDots = true,
     showArrows = true,
 }: ImageCarouselProps) {
-    const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
-    const [selectedIndex, setSelectedIndex] = useState(0)
-    const [scrollSnaps, setScrollSnaps] = useState<number[]>([])
-    const isDragging = useRef(false)
-    const pointerStart = useRef({ x: 0, y: 0 })
-
-    const onSelect = useCallback(() => {
-        if (!emblaApi) return
-        setSelectedIndex(emblaApi.selectedScrollSnap())
-    }, [emblaApi])
-
-    useEffect(() => {
-        if (!emblaApi) return
-        setScrollSnaps(emblaApi.scrollSnapList())
-        emblaApi.on("select", onSelect)
-        onSelect()
-    }, [emblaApi, onSelect])
-
-    const handlePointerDown = useCallback((e: React.PointerEvent) => {
-        pointerStart.current = { x: e.clientX, y: e.clientY }
-        isDragging.current = false
-    }, [])
-
-    const handlePointerUp = useCallback((e: React.PointerEvent) => {
-        const dx = Math.abs(e.clientX - pointerStart.current.x)
-        const dy = Math.abs(e.clientY - pointerStart.current.y)
-        if (dx > 5 || dy > 5) {
-            isDragging.current = true
-        }
-    }, [])
-
-    const handleContainerClick = useCallback((e: React.MouseEvent) => {
-        if (isDragging.current) {
-            e.preventDefault()
-            e.stopPropagation()
-            isDragging.current = false
-        }
-    }, [])
-
-    const scrollPrev = useCallback(
-        (e: React.MouseEvent) => {
-            e.preventDefault()
-            e.stopPropagation()
-            emblaApi?.scrollPrev()
-        },
-        [emblaApi]
-    )
-
-    const scrollNext = useCallback(
-        (e: React.MouseEvent) => {
-            e.preventDefault()
-            e.stopPropagation()
-            emblaApi?.scrollNext()
-        },
-        [emblaApi]
-    )
-
-    const scrollTo = useCallback(
-        (index: number) => (e: React.MouseEvent) => {
-            e.preventDefault()
-            e.stopPropagation()
-            emblaApi?.scrollTo(index)
-        },
-        [emblaApi]
-    )
+    const swiperRef = useRef<SwiperType | null>(null)
+    const wasSwiped = useRef(false)
+    const prevRef = useRef<HTMLButtonElement>(null)
+    const nextRef = useRef<HTMLButtonElement>(null)
 
     // Single image — no carousel needed
     if (images.length <= 1) {
-        return (
-            <img
-                src={images[0] || ""}
-                alt={alt}
-                className={className}
-            />
-        )
+        return <img src={images[0] || ""} alt={alt} className={className} />
     }
 
     return (
-        <div className="relative w-full h-full overflow-hidden group" onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onClickCapture={handleContainerClick}>
-            <div ref={emblaRef} className="overflow-hidden w-full h-full">
-                <div className="flex h-full">
-                    {images.map((src, i) => (
-                        <div key={i} className="flex-[0_0_100%] min-w-0 relative h-full">
-                            <img
-                                src={src}
-                                alt={`${alt} ${i + 1}`}
-                                className={className}
-                                draggable={false}
-                            />
-                        </div>
-                    ))}
-                </div>
-            </div>
+        <div
+            className="relative w-full h-full overflow-hidden group"
+            onClickCapture={(e) => {
+                // Block parent <Link> navigation when user just swiped
+                if (wasSwiped.current) {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    wasSwiped.current = false
+                }
+            }}
+        >
+            <Swiper
+                modules={[Navigation, Pagination]}
+                loop={true}
+                navigation={{
+                    nextEl: nextRef.current!,
+                    prevEl: prevRef.current!,
+                }}
+                pagination={
+                    showDots
+                        ? { clickable: true, type: "bullets" }
+                        : false
+                }
+                className="w-full h-full"
+                style={{ touchAction: "pan-y" }}
+                onSwiper={(swiper) => { swiperRef.current = swiper }}
+                onTouchEnd={() => {
+                    // Mark as swiped so the subsequent click is blocked
+                    if (swiperRef.current && swiperRef.current.animating) {
+                        wasSwiped.current = true
+                        setTimeout(() => { wasSwiped.current = false }, 200)
+                    }
+                }}
+                onSlideChange={() => {
+                    wasSwiped.current = true
+                    setTimeout(() => { wasSwiped.current = false }, 200)
+                }}
+            >
+                {images.map((src, i) => (
+                    <SwiperSlide key={i} className="overflow-hidden">
+                        <img src={src} alt={`${alt} ${i + 1}`} className={className} draggable={false} />
+                    </SwiperSlide>
+                ))}
+            </Swiper>
 
-            {/* Prev / Next arrows */}
+            {/* Prev / Next arrows — desktop only, visible on hover */}
             {showArrows && (
                 <>
                     <button
-                        onClick={scrollPrev}
+                        ref={prevRef}
                         className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full hidden md:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
                         style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
                     >
                         <ChevronLeft className="w-4 h-4 text-white" />
                     </button>
                     <button
-                        onClick={scrollNext}
+                        ref={nextRef}
                         className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full hidden md:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10"
                         style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}
                     >
@@ -133,22 +103,6 @@ export default function ImageCarousel({
                 </>
             )}
 
-            {/* Dot indicators */}
-            {showDots && scrollSnaps.length > 1 && (
-                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                    {scrollSnaps.map((_, i) => (
-                        <button
-                            key={i}
-                            onClick={scrollTo(i)}
-                            className={`w-1.5 h-1.5 rounded-full transition-all ${
-                                i === selectedIndex
-                                    ? "bg-white w-3"
-                                    : "bg-white/50 hover:bg-white/70"
-                            }`}
-                        />
-                    ))}
-                </div>
-            )}
         </div>
     )
 }
