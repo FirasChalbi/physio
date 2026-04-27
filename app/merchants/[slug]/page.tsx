@@ -7,7 +7,7 @@ import Link from "next/link"
 import {
   MapPin, Star, Heart, ArrowLeft, BadgeCheck, Phone, Mail,
   Globe, Store, Clock, ChevronRight, Navigation, Share2,
-  ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag
+  ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag, TrendingUp
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
 import MenuServiceDrawer from "@/components/MenuServiceDrawer"
@@ -154,6 +154,7 @@ export default function MerchantPage() {
   const [showReservation, setShowReservation] = useState(false)
   const [activeTab, setActiveTab] = useState<"menu" | "services" | "offres">("menu")
   const [drawerType, setDrawerType] = useState<"menu" | "services" | null>(null)
+  const [heroScrolled, setHeroScrolled] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -169,6 +170,12 @@ export default function MerchantPage() {
     const favs: string[] = JSON.parse(localStorage.getItem("life_favorites") || "[]")
     setFavorites(new Set(favs))
   }, [slug])
+
+  useEffect(() => {
+    const onScroll = () => setHeroScrolled(window.scrollY > 60)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
 
   const toggleFav = (id: string) => {
     const favs: string[] = JSON.parse(localStorage.getItem("life_favorites") || "[]")
@@ -203,10 +210,38 @@ export default function MerchantPage() {
   const displayAddress = merchant.full_address || merchant.address || `${merchant.street ? merchant.street + ", " : ""}${merchant.municipality || merchant.city || ""}`
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: "#0a0a0f" }}>
+    <div className="min-h-screen pb-24 md:pb-0" style={{ background: "#0a0a0f" }}>
 
-      {/* ══ HERO GALLERY ══ */}
-      <div className="relative h-64 md:h-80 overflow-hidden bg-[#12121a]">
+      {/* ══ DESKTOP FLOATING NAVBAR — hidden on mobile ══ */}
+      <div className="hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        style={{
+          background: heroScrolled ? "rgba(10,10,15,0.85)" : "transparent",
+          backdropFilter: heroScrolled ? "blur(20px)" : "none",
+          borderBottom: heroScrolled ? "1px solid rgba(255,255,255,0.05)" : "1px solid transparent",
+        }}>
+        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <button onClick={() => router.back()}
+            className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group">
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+            <span className="text-sm font-medium">Retour</span>
+          </button>
+          {heroScrolled && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-semibold text-white">{merchant.name}</span>
+              {merchant.verified && <BadgeCheck className="w-4 h-4 text-cyan-400" />}
+            </div>
+          )}
+          <button
+            onClick={() => navigator.share?.({ title: merchant.name, url: window.location.href })}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/[0.06] transition-all border border-white/[0.06]">
+            <Share2 className="w-3.5 h-3.5" />
+            Partager
+          </button>
+        </div>
+      </div>
+
+      {/* ══ HERO ══ */}
+      <div className="relative h-64 md:h-[38vh] overflow-hidden bg-[#12121a]">
         {merchant.coverImage ? (
           <>
             <img
@@ -214,7 +249,15 @@ export default function MerchantPage() {
               alt={merchant.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-black/20 to-black/30" />
+            {/* Mobile gradient — exactly original */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-black/20 to-black/30 md:hidden" />
+            {/* Desktop gradient — richer fade so identity text reads clearly */}
+            <div className="absolute inset-0 hidden md:block" style={{
+              background: "linear-gradient(to top, #0a0a0f 0%, rgba(10,10,15,0.65) 45%, rgba(10,10,15,0.15) 75%, rgba(10,10,15,0.3) 100%)"
+            }} />
+            <div className="absolute inset-0 hidden md:block" style={{
+              background: "radial-gradient(ellipse at center, transparent 45%, rgba(10,10,15,0.5) 100%)"
+            }} />
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, #1a1a2e, #12121a)" }}>
@@ -222,8 +265,8 @@ export default function MerchantPage() {
           </div>
         )}
 
-        {/* Top bar */}
-        <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 z-10">
+        {/* Mobile top bar — exactly original */}
+        <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 md:hidden z-10">
           <button onClick={() => router.back()}
             className="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-md"
             style={{ background: "rgba(0,0,0,0.4)" }}>
@@ -238,95 +281,240 @@ export default function MerchantPage() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* ══ MERCHANT IDENTITY ══ */}
-      <div className="px-4 -mt-8 relative z-10 mb-6">
-        {/* Logo + name row */}
-        <div className="flex items-end gap-3 mb-4">
-          {merchant.logo ? (
-            <img src={merchant.logo} alt="" className="w-16 h-16 rounded-2xl object-cover border-4 shadow-lg shrink-0"
-              style={{ borderColor: "#0a0a0f" }} />
-          ) : (
-            <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-4 shrink-0"
-              style={{ borderColor: "#0a0a0f", background: "rgba(139,92,246,0.12)" }}>
-              {isResto ? <Utensils className="w-7 h-7 text-violet-400" /> : <Store className="w-7 h-7 text-violet-400" />}
-            </div>
-          )}
-          <div className="pb-1 flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h1 className="text-xl font-bold text-white leading-tight">{merchant.name}</h1>
-              {merchant.verified && <BadgeCheck className="w-5 h-5 text-cyan-400 shrink-0" />}
-            </div>
-            {/* Categories */}
-            {merchant.categories && merchant.categories.length > 0 && (
-              <div className="flex flex-wrap gap-1.5 mt-1.5">
-                {merchant.categories.slice(0, 3).map(c => (
-                  <span key={c} className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-                    style={{ background: "rgba(16,185,129,0.1)", color: "#10b981", border: "1px solid rgba(16,185,129,0.2)" }}>
-                    {c}
-                  </span>
-                ))}
+        {/* Desktop hero identity (logo + name + city) — hidden on mobile */}
+        <div className="hidden md:block absolute bottom-0 left-0 right-0 pb-8">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex items-end gap-4">
+              {merchant.logo ? (
+                <img src={merchant.logo} alt="" className="w-20 h-20 rounded-2xl object-cover border-2 shadow-2xl shrink-0"
+                  style={{ borderColor: "rgba(255,255,255,0.12)" }} />
+              ) : (
+                <div className="w-20 h-20 rounded-2xl flex items-center justify-center border-4 shrink-0"
+                  style={{ borderColor: "#0a0a0f", background: "rgba(139,92,246,0.12)" }}>
+                  {isResto ? <Utensils className="w-8 h-8 text-violet-400" /> : <Store className="w-8 h-8 text-violet-400" />}
+                </div>
+              )}
+              <div className="pb-0.5">
+                {merchant.categories && merchant.categories.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {merchant.categories.slice(0, 3).map(c => (
+                      <span key={c} className="px-2 py-0.5 rounded-full text-[10px] font-medium"
+                        style={{ background: "rgba(16,185,129,0.1)", color: "#10b981", border: "1px solid rgba(16,185,129,0.2)" }}>
+                        {c}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="flex items-center gap-2.5">
+                  <h1 className="text-3xl font-bold text-white tracking-tight leading-none">{merchant.name}</h1>
+                  {merchant.verified && <BadgeCheck className="w-6 h-6 text-cyan-400 shrink-0" />}
+                </div>
+                {(merchant.municipality || merchant.city) && (
+                  <div className="flex items-center gap-1.5 mt-2">
+                    <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-sm text-white/50">{merchant.municipality || merchant.city}</span>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
-
-        {/* Rating + location */}
-        <div className="flex items-center gap-4 mb-4">
-          {numRating > 0 && (
-            <div className="flex items-center gap-1.5">
-              <StarRow rating={numRating} />
-              <span className="text-white text-sm font-semibold">{typeof numRating === "number" && numRating % 1 !== 0 ? numRating.toFixed(1) : numRating}</span>
-              <span className="text-[#6a6a80] text-xs">({reviewCount} avis)</span>
-            </div>
-          )}
-          {(merchant.municipality || merchant.city) && (
-            <span className="flex items-center gap-1 text-sm text-[#8888a0]">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
-              {merchant.municipality || merchant.city}
-            </span>
-          )}
-        </div>
-
-        {/* Action buttons */}
-        <div className="flex gap-2">
-          {(offers.length > 0 || (merchant.menu && merchant.menu.length > 0) || (merchant.services && merchant.services.length > 0)) && (
-            <button
-              onClick={() => setShowReservation(true)}
-              className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
-              style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
-              <Calendar className="w-4 h-4" />
-              Réserver
-            </button>
-          )}
-
-          {merchant.phone && (
-            <a href={`tel:${merchant.phone}`}
-              className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
-              style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
-              <Phone className="w-4 h-4" />
-            </a>
-          )}
-
-          {mapPageUrl && (
-            <button onClick={() => router.push(mapPageUrl)}
-              className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
-              style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
-              <Navigation className="w-4 h-4" />
-            </button>
-          )}
-        </div>
       </div>
 
-      {/* ══ DIVIDER ══ */}
-      <div className="mx-4 border-b mb-6" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
+      {/* ══ TWO-COLUMN LAYOUT ══ */}
+      <div className="max-w-7xl mx-auto md:grid md:grid-cols-[340px_1fr] md:gap-10 md:px-6 md:pt-6 md:pb-8 relative z-10">
+
+        {/* ══════ LEFT SIDEBAR ══════ */}
+        <aside className="md:sticky md:top-20 md:self-start px-4 md:px-0 -mt-8 relative z-10 mb-6 md:mb-0">
+
+          {/* Logo + name — mobile only (desktop shows in hero) */}
+          <div className="flex items-end gap-3 mb-4 md:hidden">
+            {merchant.logo ? (
+              <img src={merchant.logo} alt="" className="w-16 h-16 rounded-2xl object-cover border-4 shadow-lg shrink-0"
+                style={{ borderColor: "#0a0a0f" }} />
+            ) : (
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-4 shrink-0"
+                style={{ borderColor: "#0a0a0f", background: "rgba(139,92,246,0.12)" }}>
+                {isResto ? <Utensils className="w-7 h-7 text-violet-400" /> : <Store className="w-7 h-7 text-violet-400" />}
+              </div>
+            )}
+            <div className="pb-1 flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h1 className="text-xl font-bold text-white leading-tight">{merchant.name}</h1>
+                {merchant.verified && <BadgeCheck className="w-5 h-5 text-cyan-400 shrink-0" />}
+              </div>
+              {merchant.categories && merchant.categories.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-1.5">
+                  {merchant.categories.slice(0, 3).map(c => (
+                    <span key={c} className="px-2 py-0.5 rounded-full text-[10px] font-medium"
+                      style={{ background: "rgba(16,185,129,0.1)", color: "#10b981", border: "1px solid rgba(16,185,129,0.2)" }}>
+                      {c}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Rating + location — mobile only */}
+          <div className="flex items-center gap-4 mb-4 md:hidden">
+            {numRating > 0 && (
+              <div className="flex items-center gap-1.5">
+                <StarRow rating={numRating} />
+                <span className="text-white text-sm font-semibold">{typeof numRating === "number" && numRating % 1 !== 0 ? numRating.toFixed(1) : numRating}</span>
+                <span className="text-[#6a6a80] text-xs">({reviewCount} avis)</span>
+              </div>
+            )}
+            {(merchant.municipality || merchant.city) && (
+              <span className="flex items-center gap-1 text-sm text-[#8888a0]">
+                <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                {merchant.municipality || merchant.city}
+              </span>
+            )}
+          </div>
+
+          {/* Desktop rating strip — hidden on mobile */}
+          {numRating > 0 && (
+            <div className="hidden md:flex items-center gap-4 mb-5 px-5 py-4 rounded-2xl border"
+              style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+              <div className="flex flex-col items-center">
+                <span className="text-3xl font-bold text-white leading-none">
+                  {typeof numRating === "number" ? numRating.toFixed(1) : numRating}
+                </span>
+                <StarRow rating={numRating} size={11} />
+              </div>
+              <div className="w-px h-8 self-center" style={{ background: "rgba(255,255,255,0.08)" }} />
+              <div>
+                <p className="text-sm font-semibold text-white">{reviewCount} avis clients</p>
+                <p className="text-[11px] text-[#6a6a80] mt-0.5">Avis vérifiés</p>
+              </div>
+              <TrendingUp className="w-4 h-4 text-emerald-400/50 ml-auto" />
+            </div>
+          )}
+
+          {/* Action buttons — same on both */}
+          <div className="flex gap-2 mb-6">
+            {(offers.length > 0 || (merchant.menu && merchant.menu.length > 0) || (merchant.services && merchant.services.length > 0)) && (
+              <button
+                onClick={() => setShowReservation(true)}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
+                style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+                <Calendar className="w-4 h-4" />
+                Réserver
+              </button>
+            )}
+            {merchant.phone && (
+              <a href={`tel:${merchant.phone}`}
+                className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
+                style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
+                <Phone className="w-4 h-4" />
+              </a>
+            )}
+            {mapPageUrl && (
+              <button onClick={() => router.push(mapPageUrl)}
+                className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
+                style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
+                <Navigation className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {/* Divider — mobile only */}
+          <div className="border-b mb-6 md:hidden" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
+
+          {/* Desktop-only sidebar sections */}
+          <div className="hidden md:block">
+            {merchant.opening_hours && Object.keys(merchant.opening_hours).length > 0 && (
+              <div className="mb-5">
+                <h2 className="text-sm font-bold text-white mb-2">Horaires</h2>
+                <HoursCard hours={merchant.opening_hours} />
+              </div>
+            )}
+            <div className="mb-5">
+              <h2 className="text-sm font-bold text-white mb-2">Localisation</h2>
+              <div className="rounded-2xl border overflow-hidden" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                {displayAddress && (
+                  <div className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                    <MapPin className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
+                      <p className="text-sm text-white">{displayAddress}</p>
+                    </div>
+                    {mapPageUrl && (
+                      <button onClick={() => router.push(mapPageUrl)} className="flex items-center justify-center">
+                        <ChevronRight className="w-4 h-4 text-[#333]" />
+                      </button>
+                    )}
+                  </div>
+                )}
+                {merchant.phone && (
+                  <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                    <Phone className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs text-[#6a6a80] mb-0.5">Téléphone</p>
+                      <p className="text-sm text-white">{merchant.phone}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-[#333]" />
+                  </a>
+                )}
+                {merchant.email && (
+                  <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                    <Mail className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <div className="flex-1">
+                      <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
+                      <p className="text-sm text-white">{merchant.email}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-[#333]" />
+                  </a>
+                )}
+                {(merchant.website || merchant.domain) && (
+                  <a href={merchant.website || `https://${merchant.domain}`} target="_blank" rel="noopener noreferrer"
+                    className="flex items-center gap-4 px-5 py-4">
+                    <Globe className="w-5 h-5 text-emerald-400 shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-[#6a6a80] mb-0.5">Site web</p>
+                      <p className="text-sm text-white truncate">{merchant.website || merchant.domain}</p>
+                    </div>
+                    <ChevronRight className="w-4 h-4 text-[#333]" />
+                  </a>
+                )}
+              </div>
+            </div>
+            {merchant.social_media && Object.keys(merchant.social_media).length > 0 && (
+              <div className="mb-5">
+                <h2 className="text-sm font-bold text-white mb-2">Réseaux sociaux</h2>
+                <div className="flex flex-wrap gap-2">
+                  {Object.entries(merchant.social_media).map(([platform, url]) => url ? (
+                    <a key={platform} href={url} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all"
+                      style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)", color: "#a0a0b8" }}>
+                      <ExternalLink className="w-3 h-3" />
+                      {platform.charAt(0).toUpperCase() + platform.slice(1)}
+                    </a>
+                  ) : null)}
+                </div>
+              </div>
+            )}
+            {mapPageUrl && (
+              <button onClick={() => router.push(mapPageUrl)}
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold border transition-all mb-4"
+                style={{ borderColor: "rgba(16,185,129,0.2)", color: "#10b981", background: "rgba(16,185,129,0.06)" }}>
+                <Navigation className="w-4 h-4" />
+                Obtenir l'itinéraire
+              </button>
+            )}
+          </div>
+        </aside>
+
+        {/* ══════ RIGHT MAIN CONTENT ══════ */}
+        <main className="px-4 md:px-0">
 
       {/* ══ ABOUT ══ */}
       {aboutText && (
-        <section className="px-4 mb-6">
-          <h2 className="text-base font-bold text-white mb-3">À propos</h2>
-          <div className="rounded-2xl p-4 border" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+        <section className="mb-8">
+          <h2 className="text-base md:text-lg font-bold text-white mb-3">À propos</h2>
+          <div className="rounded-2xl p-5 border" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
             <p className="text-sm text-[#a0a0b8] leading-relaxed">{aboutText}</p>
           </div>
         </section>
@@ -340,13 +528,13 @@ export default function MerchantPage() {
         if (!hasMenu && !hasServices && !hasOffers) return null
 
         return (
-          <section className="px-4 mb-6">
-            <h2 className="text-base font-bold text-white mb-3">Découvrir</h2>
+          <section className="mb-8">
+            <h2 className="text-base md:text-lg font-bold text-white mb-3">Découvrir</h2>
             <div className="grid gap-3" style={{ gridTemplateColumns: (hasMenu && hasServices) ? "1fr 1fr" : "1fr" }}>
               {hasMenu && (
                 <button
                   onClick={() => setDrawerType("menu")}
-                  className="relative overflow-hidden rounded-2xl p-4 text-left border transition-all active:scale-[0.97]"
+                  className="relative overflow-hidden rounded-2xl p-4 text-left border transition-all active:scale-[0.97] hover:border-emerald-500/30"
                   style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.1), rgba(16,185,129,0.03))", borderColor: "rgba(16,185,129,0.2)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
@@ -362,7 +550,7 @@ export default function MerchantPage() {
               {hasServices && (
                 <button
                   onClick={() => setDrawerType("services")}
-                  className="relative overflow-hidden rounded-2xl p-4 text-left border transition-all active:scale-[0.97]"
+                  className="relative overflow-hidden rounded-2xl p-4 text-left border transition-all active:scale-[0.97] hover:border-violet-500/30"
                   style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.1), rgba(139,92,246,0.03))", borderColor: "rgba(139,92,246,0.2)" }}
                 >
                   <div className="flex items-center gap-2 mb-2">
@@ -377,15 +565,15 @@ export default function MerchantPage() {
               )}
             </div>
 
-            {/* Offers horizontal scroll */}
             {hasOffers && (
-              <div className="mt-4">
+              <div className="mt-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Tag className="w-4 h-4 text-emerald-400" />
                   <h3 className="text-sm font-bold text-white">Offres</h3>
                   <span className="text-[10px] text-[#6a6a80]">({offers.length})</span>
                 </div>
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                {/* Mobile — horizontal scroll */}
+                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide md:hidden">
                   {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                       className="shrink-0 w-48 rounded-2xl overflow-hidden border block transition-all hover:border-emerald-500/20"
@@ -411,6 +599,37 @@ export default function MerchantPage() {
                     </Link>
                   ))}
                 </div>
+                {/* Desktop — grid with price overlay */}
+                <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {offers.map(offer => (
+                    <Link key={offer._id} href={`/offers/${offer.slug}`}
+                      className="group rounded-2xl overflow-hidden border block transition-all hover:border-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/5"
+                      style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                      <div className="relative h-44 overflow-hidden">
+                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                        <span className="absolute top-3 left-3 discount-badge px-2.5 py-1 rounded-lg text-[11px] font-bold text-white">
+                          -{offer.discountPercent}%
+                        </span>
+                        <button onClick={e => { e.preventDefault(); toggleFav(offer._id) }}
+                          className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center backdrop-blur-sm transition-colors"
+                          style={{ background: favorites.has(offer._id) ? "rgba(239,68,68,0.9)" : "rgba(0,0,0,0.4)" }}>
+                          <Heart className={`w-4 h-4 ${favorites.has(offer._id) ? "text-white fill-white" : "text-white"}`} />
+                        </button>
+                        <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-lg font-bold text-white">{offer.dealPrice} €</span>
+                            <span className="text-xs text-white/50 line-through">{offer.originalPrice} €</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4">
+                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-2 group-hover:text-emerald-300 transition-colors">{offer.title}</h3>
+                        <p className="text-xs text-[#6a6a80] line-clamp-1">{offer.shortDescription}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
           </section>
@@ -419,15 +638,25 @@ export default function MerchantPage() {
 
       {/* ══ PHOTOS ══ */}
       {merchant.images && merchant.images.length > 0 && (
-        <section className="px-4 mb-6">
+        <section className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base font-bold text-white">Photos</h2>
+            <h2 className="text-base md:text-lg font-bold text-white">Photos</h2>
             {merchant.images.length > 3 && <span className="text-sm text-emerald-400 font-medium">Voir tout</span>}
           </div>
-          <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
+          {/* Mobile — horizontal scroll */}
+          <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide md:hidden">
             {merchant.images.map((img, i) => (
-              <div key={i} className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden shrink-0">
+              <div key={i} className="w-28 h-28 rounded-2xl overflow-hidden shrink-0">
                 <img src={img} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+          {/* Desktop — masonry grid, first image spans 2x2 */}
+          <div className="hidden md:grid md:grid-cols-4 gap-3 auto-rows-[140px]">
+            {merchant.images.slice(0, 8).map((img, i) => (
+              <div key={i}
+                className={`rounded-2xl overflow-hidden ${i === 0 ? "md:col-span-2 md:row-span-2" : ""}`}>
+                <img src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
             ))}
           </div>
@@ -436,14 +665,14 @@ export default function MerchantPage() {
 
       {/* ══ USER REVIEWS ══ */}
       {merchant.user_reviews && merchant.user_reviews.length > 0 && (
-        <section className="mb-6">
-          <div className="flex items-center justify-between px-4 mb-3">
-            <h2 className="text-base font-bold text-white">
+        <section className="mb-8">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-base md:text-lg font-bold text-white">
               Avis clients <span className="text-[#6a6a80] font-normal text-sm">({merchant.user_reviews.length})</span>
             </h2>
           </div>
-          <div className="flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide">
-            {/* Summary card */}
+          {/* Mobile — horizontal scroll */}
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide md:hidden">
             {numRating > 0 && (
               <div className="shrink-0 w-28 rounded-2xl p-4 flex flex-col items-center justify-center border"
                 style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
@@ -454,8 +683,6 @@ export default function MerchantPage() {
                 <span className="text-[10px] text-[#6a6a80] mt-1.5 text-center">{reviewCount} avis</span>
               </div>
             )}
-
-            {/* Review cards */}
             {merchant.user_reviews.map((rev, i) => (
               <div key={i} className="shrink-0 w-64 rounded-2xl p-4 border"
                 style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
@@ -482,19 +709,75 @@ export default function MerchantPage() {
               </div>
             ))}
           </div>
+          {/* Desktop — rating summary bar + grid */}
+          <div className="hidden md:block">
+            {numRating > 0 && (
+              <div className="flex items-center gap-6 mb-5 px-5 py-4 rounded-2xl border"
+                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                <div className="flex flex-col items-center">
+                  <span className="text-4xl font-bold text-white leading-none">
+                    {typeof numRating === "number" ? numRating.toFixed(1) : numRating}
+                  </span>
+                  <StarRow rating={numRating} size={13} />
+                  <span className="text-[11px] text-[#6a6a80] mt-1">{reviewCount} avis</span>
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  {[5, 4, 3, 2, 1].map(star => {
+                    const count = merchant.user_reviews!.filter(r => parseInt(r.rating) === star).length
+                    const pct = merchant.user_reviews!.length > 0 ? (count / merchant.user_reviews!.length) * 100 : 0
+                    return (
+                      <div key={star} className="flex items-center gap-2">
+                        <span className="text-xs text-[#6a6a80] w-3">{star}</span>
+                        <div className="flex-1 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                          <div className="h-full rounded-full bg-amber-400" style={{ width: `${pct}%` }} />
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+            <div className="grid md:grid-cols-2 gap-4">
+              {merchant.user_reviews.map((rev, i) => (
+                <div key={i} className="rounded-2xl p-5 border"
+                  style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-3 mb-3">
+                    {rev.reviewer_photo ? (
+                      <img src={rev.reviewer_photo} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                        style={{ background: "linear-gradient(135deg,#10b981,#06b6d4)" }}>
+                        {rev.reviewer_name[0]}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-white truncate">{rev.reviewer_name}</p>
+                      <p className="text-[11px] text-[#6a6a80]">{rev.date}</p>
+                    </div>
+                    <div className="flex gap-0.5 shrink-0">
+                      {Array.from({ length: 5 }).map((_, si) => (
+                        <Star key={si} className={`w-3.5 h-3.5 ${si < parseInt(rev.rating) ? "text-amber-400 fill-amber-400" : "text-[#333]"}`} />
+                      ))}
+                    </div>
+                  </div>
+                  {rev.text && <p className="text-sm text-[#a0a0b8] leading-relaxed">{rev.text}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
         </section>
       )}
 
-      {/* ══ OPENING HOURS ══ */}
+      {/* ══ OPENING HOURS — mobile only ══ */}
       {merchant.opening_hours && Object.keys(merchant.opening_hours).length > 0 && (
-        <section className="px-4 mb-6">
+        <section className="px-4 mb-6 md:hidden">
           <h2 className="text-base font-bold text-white mb-3">Horaires</h2>
           <HoursCard hours={merchant.opening_hours} />
         </section>
       )}
 
-      {/* ══ ADDRESS & LOCATION ══ */}
-      <section className="px-4 mb-6">
+      {/* ══ ADDRESS & LOCATION — mobile only ══ */}
+      <section className="px-4 mb-6 md:hidden">
         <h2 className="text-base font-bold text-white mb-3">Localisation</h2>
         <div className="rounded-2xl border overflow-hidden" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
 
@@ -553,9 +836,9 @@ export default function MerchantPage() {
         </div>
       </section>
 
-      {/* ══ SOCIAL MEDIA ══ */}
+      {/* ══ SOCIAL MEDIA — mobile only ══ */}
       {merchant.social_media && Object.keys(merchant.social_media).length > 0 && (
-        <section className="px-4 mb-6">
+        <section className="px-4 mb-6 md:hidden">
           <h2 className="text-base font-bold text-white mb-3">Réseaux sociaux</h2>
           <div className="flex flex-wrap gap-2">
             {Object.entries(merchant.social_media).map(([platform, url]) => url ? (
@@ -570,9 +853,9 @@ export default function MerchantPage() {
         </section>
       )}
 
-      {/* ══ ITINÉRAIRE CTA ══ */}
+      {/* ══ ITINÉRAIRE CTA — mobile only ══ */}
       {mapPageUrl && (
-        <div className="px-4 mb-8">
+        <div className="px-4 mb-8 md:hidden">
           <button onClick={() => router.push(mapPageUrl)}
             className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl text-sm font-semibold border transition-all"
             style={{ borderColor: "rgba(16,185,129,0.2)", color: "#10b981", background: "rgba(16,185,129,0.06)" }}>
@@ -581,6 +864,9 @@ export default function MerchantPage() {
           </button>
         </div>
       )}
+
+        </main>
+      </div>{/* end two-column layout */}
 
       {/* ══ MENU/SERVICE DRAWER ══ */}
       <MenuServiceDrawer
