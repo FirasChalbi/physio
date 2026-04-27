@@ -11,10 +11,12 @@ import {
 import * as LucideIcons from "lucide-react"
 import NotificationDrawer from "@/components/NotificationDrawer"
 import Logo from "@/components/Logo"
+import ImageCarousel from "@/components/ImageCarousel"
 
 type Category = { _id: string; name: string; slug: string; icon?: string }
 type Offer = {
     _id: string; title: string; slug: string; shortDescription: string; coverImage: string;
+    galleryImages?: string[];
     originalPrice: number; dealPrice: number; discountPercent: number; rating?: number;
     reviewCount?: number; city: string; merchantId: string; featured?: boolean; categoryId: string
 }
@@ -55,7 +57,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
-                            <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                             <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
                                 className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -92,7 +94,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
-                            <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                             <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
                                 className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -150,7 +152,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div className="relative h-40 overflow-hidden">
-                            <img src={m.coverImage || m.images?.[0] || m.logo || ''} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                             {toggleFav && (
                                 <button onClick={e => { e.preventDefault(); toggleFav(m.slug) }}
@@ -195,7 +197,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                         className="deal-card rounded-2xl overflow-hidden border group"
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div className="relative h-40 overflow-hidden">
-                            <img src={m.coverImage || m.images?.[0] || m.logo || ''} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                             {toggleFav && (
                                 <button onClick={e => { e.preventDefault(); toggleFav(m.slug) }}
@@ -252,7 +254,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
-                            <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                             <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
                                 className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -289,7 +291,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
-                            <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                            <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                             <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
                                 className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -476,6 +478,7 @@ export default function HomePage() {
     const [allOffersCity, setAllOffersCity] = useState<string>("all")
     const [allOffersCategory, setAllOffersCategory] = useState<string>("all")
     const [familyActivities, setFamilyActivities] = useState<FamilyActivity[]>([])
+    const [heroScrolled, setHeroScrolled] = useState(false)
     const scrollRef1 = useRef<HTMLDivElement>(null)
     const scrollRef2 = useRef<HTMLDivElement>(null)
 
@@ -488,6 +491,12 @@ export default function HomePage() {
             return article + c.name.toLowerCase()
           })
         : defaultPlaceholders
+
+    useEffect(() => {
+        const onScroll = () => setHeroScrolled(window.scrollY > 200)
+        window.addEventListener('scroll', onScroll, { passive: true })
+        return () => window.removeEventListener('scroll', onScroll)
+    }, [])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -620,7 +629,7 @@ export default function HomePage() {
 
             {/* ═══════════ MOBILE HEADER ═══════════ */}
             <header className="sticky top-0 z-50 px-4 pt-4 pb-3 md:hidden" style={{ background: '#0a0a0f' }}>
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between">
                     <Logo size="lg" />
                     <button onClick={() => setNotifOpen(true)} className="relative p-2">
                         <Bell className="w-5 h-5 text-[#8888a0]" />
@@ -630,53 +639,67 @@ export default function HomePage() {
             </header>
 
             {/* ═══════════ DESKTOP NAVBAR ═══════════ */}
-            <nav className="hidden md:block sticky top-0 z-50 border-b"
-                style={{ background: 'rgba(10, 10, 15, 0.9)', backdropFilter: 'blur(12px)', borderColor: 'rgba(255,255,255,0.06)' }}>
-                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
+            <nav className="hidden md:block sticky top-0 z-50 transition-all duration-300"
+                style={{ background: heroScrolled ? 'rgba(10, 10, 15, 0.9)' : 'transparent', backdropFilter: heroScrolled ? 'blur(12px)' : 'none', borderBottom: heroScrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent' }}>
+                <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-6">
                     <Logo size="lg" />
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl flex-1 max-w-xl mx-auto relative overflow-hidden"
-                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
-                        <input type="text"
-                            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                            className="bg-transparent text-sm text-white outline-none w-full"
-                            onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
-                        {!searchQuery && (
-                            <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
-                                <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
-                                <div className="relative h-5 overflow-hidden">
-                                    <div ref={scrollRef1} className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
-                                        {dynamicPlaceholders.map((p, i) => (
-                                            <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
-                                        ))}
+                    {/* Search bar — only visible when scrolled past hero */}
+                    {heroScrolled && (
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl flex-1 max-w-lg mx-auto relative overflow-hidden"
+                            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
+                            <input type="text"
+                                value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                                className="bg-transparent text-sm text-white outline-none w-full"
+                                onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
+                            {!searchQuery && (
+                                <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
+                                    <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
+                                    <div className="relative h-5 overflow-hidden">
+                                        <div ref={scrollRef1} className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
+                                            {dynamicPlaceholders.map((p, i) => (
+                                                <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
+                                            ))}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <Link href="/favoris" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
-                            <Heart className="w-4 h-4" /> Favoris
+                            )}
+                        </div>
+                    )}
+                    {!heroScrolled && <div className="flex-1" />}
+                    <div className="flex items-center gap-6">
+                        <Link href="/" className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
+                            Explore
+                        </Link>
+                        <Link href="/map" className="text-sm text-[#8888a0] hover:text-white transition-colors">
+                            Map
+                        </Link>
+                        <button onClick={() => setNotifOpen(true)} className="relative text-[#8888a0] hover:text-white transition-colors">
+                            <Bell className="w-5 h-5" />
+                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500" />
+                        </button>
+                        <Link href="/favoris" className="text-[#8888a0] hover:text-white transition-colors">
+                            <Heart className="w-5 h-5" />
                         </Link>
                         {session ? (
                             (() => {
                                 const role = (session.user as any)?.role
                                 if (role === "admin" || role === "merchant") {
                                     return (
-                                        <Link href="/admin" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
-                                            <UserIcon className="w-4 h-4" /> Admin
+                                        <Link href="/admin" className="text-[#8888a0] hover:text-white transition-colors">
+                                            <UserIcon className="w-5 h-5" />
                                         </Link>
                                     )
                                 }
                                 return (
-                                    <Link href="/account" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
-                                        <UserIcon className="w-4 h-4" /> Mon compte
+                                    <Link href="/account" className="text-[#8888a0] hover:text-white transition-colors">
+                                        <UserIcon className="w-5 h-5" />
                                     </Link>
                                 )
                             })()
                         ) : (
-                            <Link href="/login" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1.5">
-                                <UserIcon className="w-4 h-4" /> Se connecter
+                            <Link href="/login" className="text-[#8888a0] hover:text-white transition-colors">
+                                <UserIcon className="w-5 h-5" />
                             </Link>
                         )}
                     </div>
@@ -808,22 +831,50 @@ export default function HomePage() {
                 </div>
 
                 {/* ═══════════ DESKTOP HERO ═══════════ */}
-                <section className="hidden md:block py-16 px-4">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium mb-6"
+                <section className="hidden md:block py-20 px-4 relative overflow-hidden">
+                    {/* Subtle background glow */}
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-20 pointer-events-none"
+                        style={{ background: 'radial-gradient(ellipse, rgba(16,185,129,0.3) 0%, transparent 70%)' }} />
+                    <div className="max-w-3xl mx-auto text-center relative z-10">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium mb-8"
                             style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
                             <LucideIcons.Percent className="w-3.5 h-3.5" />
                             Jusqu'à -70% sur vos activités favorites
                         </div>
-                        <h1 className="text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight">
+                        <h1 className="text-4xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
                             Les meilleures offres<br />
                             <span style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                                 près de chez vous
                             </span>
                         </h1>
-                        <p className="text-[#8888a0] text-lg max-w-2xl mx-auto">
+
+                           {/* Centered search input — same style as mobile */}
+                        <div className="max-w-xl mx-auto">
+                            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl relative overflow-hidden"
+                                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                                <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
+                                <input type="text"
+                                    value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
+                                    className="bg-transparent text-sm text-white outline-none w-full"
+                                    onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
+                                {!searchQuery && (
+                                    <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
+                                        <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
+                                        <div className="relative h-5 overflow-hidden">
+                                            <div className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
+                                                {dynamicPlaceholders.map((p, i) => (
+                                                    <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <p className="text-[#8888a0] text-lg max-w-2xl mx-auto mt-10 leading-relaxed">
                             Plombiers, électriciens, restaurants, espace bien-être et plus — découvrez des deals exclusifs dans les Yvelines (78).
                         </p>
+                     
                     </div>
                 </section>
 
@@ -901,7 +952,7 @@ export default function HomePage() {
                                     className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
                                     style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
-                                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                                         <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
                                             className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -939,7 +990,7 @@ export default function HomePage() {
                                     className="deal-card rounded-2xl overflow-hidden border group"
                                     style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
-                                        <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                                         <button onClick={e => { e.preventDefault(); toggleFav(offer.slug) }}
                                             className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -1266,7 +1317,7 @@ export default function HomePage() {
                                     className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
                                     style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
-                                        <img src={m.coverImage || m.images?.[0] || m.logo || ''} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                                         <button onClick={e => { e.preventDefault(); toggleFav(m.slug) }}
                                             className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
@@ -1310,7 +1361,7 @@ export default function HomePage() {
                                     className="deal-card rounded-2xl overflow-hidden border group"
                                     style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
-                                        <img src={m.coverImage || m.images?.[0] || m.logo || ''} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                        <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                                         <button onClick={e => { e.preventDefault(); toggleFav(m.slug) }}
                                             className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center"
