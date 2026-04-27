@@ -4,11 +4,8 @@ import { useRef } from "react"
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Navigation, Pagination } from "swiper/modules"
 import type { Swiper as SwiperType } from "swiper/types"
-// @ts-expect-error — no type declarations for CSS side-effect imports
 import "swiper/css"
-// @ts-expect-error
 import "swiper/css/navigation"
-// @ts-expect-error
 import "swiper/css/pagination"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
