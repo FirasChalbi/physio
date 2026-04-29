@@ -154,16 +154,16 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-[1]" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-1 pointer-events-none" />
                             {toggleFav && (
                                 <button onClick={e => { e.preventDefault(); toggleFav(m.slug) }}
-                                    className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center z-[2]"
+                                    className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center z-2 pointer-events-auto"
                                     style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
                                     <Heart className={`w-4 h-4 ${favorites?.has(m.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                                 </button>
                             )}
                             {getOfferCount(m._id) > 0 && (
-                                <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1 z-[2]"
+                                <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1 z-2 pointer-events-none"
                                     style={{ background: 'rgba(16, 185, 129, 0.85)' }}>
                                     <Tag className="w-2.5 h-2.5" />{getOfferCount(m._id)} offres
                                 </span>
@@ -199,16 +199,16 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                         style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
-                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-[1]" />
+                            <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-1 pointer-events-none" />
                             {toggleFav && (
                                 <button onClick={e => { e.preventDefault(); toggleFav(m.slug) }}
-                                    className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center z-[2]"
+                                    className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center z-2 pointer-events-auto"
                                     style={{ background: 'rgba(0,0,0,0.35)', backdropFilter: 'blur(4px)' }}>
                                     <Heart className={`w-4 h-4 ${favorites?.has(m.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                                 </button>
                             )}
                             {getOfferCount(m._id) > 0 && (
-                                <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1 z-[2]"
+                                <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1 z-2 pointer-events-none"
                                     style={{ background: 'rgba(16, 185, 129, 0.85)' }}>
                                     <Tag className="w-2.5 h-2.5" />{getOfferCount(m._id)} offres
                                 </span>
