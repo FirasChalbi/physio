@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useState, useCallback, useRef } from "react"
-import { MapContainer, TileLayer, Marker, Popup, useMap, Circle, useMapEvents } from "react-leaflet"
+import React, { useEffect, useState, useCallback, useRef, useMemo } from "react"
+import { MapContainer, TileLayer, Marker, Popup, useMap, Circle, useMapEvents, Polyline } from "react-leaflet"
 import L, { Icon } from "leaflet"
 // @ts-ignore — CSS side-effect import has no TS declarations
 import "leaflet/dist/leaflet.css"
@@ -96,6 +96,91 @@ function getTodayHours(opening_hours?: Record<string, string>) {
   return opening_hours[days[new Date().getDay()]] || null
 }
 
+/* ─── Route types ────────────────────────────────────────── */
+type RouteInfo = {
+  coordinates: [number, number][]
+  distance: number   // in km
+  duration: number   // in minutes
+  destName: string
+  destLat: number
+  destLng: number
+}
+
+/* ─── OSRM route fetcher ────────────────────────────────── */
+async function fetchRoute(
+  fromLat: number, fromLng: number,
+  toLat: number, toLng: number
+): Promise<{ coordinates: [number, number][]; distance: number; duration: number } | null> {
+  try {
+    const url = `https://router.project-osrm.org/route/v1/driving/${fromLng},${fromLat};${toLng},${toLat}?overview=full&geometries=geojson&steps=true`
+    const res = await fetch(url)
+    const data = await res.json()
+    if (data.code !== "Ok" || !data.routes?.[0]) return null
+    const route = data.routes[0]
+    const coords: [number, number][] = route.geometry.coordinates.map(
+      (c: [number, number]) => [c[1], c[0]] as [number, number]  // GeoJSON is [lng, lat], Leaflet needs [lat, lng]
+    )
+    return {
+      coordinates: coords,
+      distance: route.distance / 1000,    // meters → km
+      duration: route.duration / 60,       // seconds → minutes
+    }
+  } catch {
+    return null
+  }
+}
+
+/* ─── Route polyline component ──────────────────────────── */
+function RouteLine({ route }: { route: RouteInfo }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (route.coordinates.length > 0) {
+      const bounds = L.latLngBounds(route.coordinates.map(c => L.latLng(c[0], c[1])))
+      map.fitBounds(bounds, { padding: [60, 60], maxZoom: 15 })
+    }
+  }, [map, route])
+
+  return (
+    <>
+      {/* Glow / outline */}
+      <Polyline
+        positions={route.coordinates}
+        pathOptions={{
+          color: "#10b981",
+          weight: 8,
+          opacity: 0.25,
+          lineCap: "round",
+          lineJoin: "round",
+        }}
+      />
+      {/* Main line */}
+      <Polyline
+        positions={route.coordinates}
+        pathOptions={{
+          color: "#10b981",
+          weight: 4,
+          opacity: 0.9,
+          lineCap: "round",
+          lineJoin: "round",
+          dashArray: "12 6",
+        }}
+      />
+      {/* Destination marker with pulse */}
+      <Circle
+        center={[route.destLat, route.destLng]}
+        radius={60}
+        pathOptions={{
+          fillColor: "#10b981",
+          fillOpacity: 0.3,
+          color: "#10b981",
+          weight: 2,
+        }}
+      />
+    </>
+  )
+}
+
 /* ─── Map controller ─────────────────────────────────────── */
 function MapController({ userLocation }: { userLocation: { lat: number; lng: number } | null }) {
   const map = useMap()
@@ -149,6 +234,14 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
   const [isClient, setIsClient] = useState(false)
   const [nearbyDrawerOpen, setNearbyDrawerOpen] = useState(false)
   const [nearbyCollapsed, setNearbyCollapsed] = useState(false)
+
+  /* ── Routing state ── */
+  const [activeRoute, setActiveRoute] = useState<RouteInfo | null>(null)
+  const [isRouteLoading, setIsRouteLoading] = useState(false)
+  const [routeError, setRouteError] = useState<string | null>(null)
+  const [liveTracking, setLiveTracking] = useState(false)
+  const watchIdRef = useRef<number | null>(null)
+  const [needsLocationForRoute, setNeedsLocationForRoute] = useState<Merchant | null>(null)
 
   useEffect(() => { setIsClient(true) }, [])
 
@@ -207,6 +300,120 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
     setUserLocation({ lat: ll.lat, lng: ll.lng })
     setManualMode(false)
   }, [])
+
+  /* ── Start in-app route ── */
+  const startRoute = useCallback(async (merchant: Merchant) => {
+    const destLat = toNum(merchant.latitude)
+    const destLng = toNum(merchant.longitude)
+    if (!destLat && !destLng) return
+
+    if (!userLocation) {
+      // Need user location first — prompt them
+      setNeedsLocationForRoute(merchant)
+      setIsLocating(true)
+      navigator.geolocation?.getCurrentPosition(
+        (pos) => {
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+          setUserLocation(loc)
+          setIsLocating(false)
+          setNeedsLocationForRoute(null)
+          // Now actually start the route with the obtained location
+          doFetchRoute(loc.lat, loc.lng, destLat, destLng, merchant.name)
+        },
+        () => {
+          setIsLocating(false)
+          setNeedsLocationForRoute(null)
+          setRouteError("Impossible d'obtenir votre position. Cliquez sur la carte pour la définir manuellement.")
+          setManualMode(true)
+          setTimeout(() => setRouteError(null), 4000)
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      )
+      return
+    }
+
+    doFetchRoute(userLocation.lat, userLocation.lng, destLat, destLng, merchant.name)
+  }, [userLocation])
+
+  const doFetchRoute = useCallback(async (
+    fromLat: number, fromLng: number,
+    toLat: number, toLng: number,
+    destName: string
+  ) => {
+    setIsRouteLoading(true)
+    setRouteError(null)
+    const result = await fetchRoute(fromLat, fromLng, toLat, toLng)
+    setIsRouteLoading(false)
+    if (result) {
+      setActiveRoute({
+        ...result,
+        destName,
+        destLat: toLat,
+        destLng: toLng,
+      })
+    } else {
+      setRouteError("Impossible de calculer l'itinéraire.")
+      setTimeout(() => setRouteError(null), 3000)
+    }
+  }, [])
+
+  const cancelRoute = useCallback(() => {
+    setActiveRoute(null)
+    stopLiveTracking()
+  }, [])
+
+  /* ── Live GPS tracking ── */
+  const startLiveTracking = useCallback(() => {
+    if (!navigator.geolocation) return
+    setLiveTracking(true)
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (pos) => {
+        const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        setUserLocation(loc)
+        // Re-fetch route from new position if route active
+        if (activeRoute) {
+          fetchRoute(loc.lat, loc.lng, activeRoute.destLat, activeRoute.destLng).then(result => {
+            if (result) {
+              setActiveRoute(prev => prev ? {
+                ...prev,
+                coordinates: result.coordinates,
+                distance: result.distance,
+                duration: result.duration,
+              } : null)
+            }
+          })
+        }
+      },
+      () => {},
+      { enableHighAccuracy: true, maximumAge: 3000, timeout: 10000 }
+    )
+  }, [activeRoute])
+
+  const stopLiveTracking = useCallback(() => {
+    setLiveTracking(false)
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current)
+      watchIdRef.current = null
+    }
+  }, [])
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current)
+      }
+    }
+  }, [])
+
+  // If user set location manually and was waiting for route
+  useEffect(() => {
+    if (userLocation && needsLocationForRoute) {
+      const m = needsLocationForRoute
+      setNeedsLocationForRoute(null)
+      startRoute(m)
+    }
+  }, [userLocation, needsLocationForRoute])
 
   const getDistance = (m: Merchant) => {
     if (!userLocation) return null
@@ -697,17 +904,29 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                             background: "linear-gradient(135deg,#10b981,#059669)", color: "#fff", border: "none", cursor: "pointer"
                           }}
                         >Voir la page</button>
-                        {m.google_maps_url || (m.latitude && m.longitude) ? (
-                          <a
-                            href={m.google_maps_url || `https://www.google.com/maps/dir/?api=1&destination=${toNum(m.latitude)},${toNum(m.longitude)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
+                        {(m.latitude && m.longitude) ? (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); startRoute(m) }}
+                            disabled={isRouteLoading}
                             style={{
                               padding: "7px 10px", borderRadius: "8px", fontSize: "12px", fontWeight: 600,
-                              background: "rgba(255,255,255,0.06)", color: "#a0a0b8", border: "1px solid rgba(255,255,255,0.08)",
-                              display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none"
+                              background: activeRoute?.destName === m.name ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.06)",
+                              color: activeRoute?.destName === m.name ? "#10b981" : "#a0a0b8",
+                              border: `1px solid ${activeRoute?.destName === m.name ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.08)"}`,
+                              display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", gap: "4px"
                             }}
-                          >🗺</a>
+                          >
+                            {isRouteLoading ? (
+                              <span style={{ width: 14, height: 14, border: "2px solid #10b981", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.6s linear infinite" }} />
+                            ) : (
+                              <>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M3 12h3l3-9 3 18 3-9h6" />
+                                </svg>
+                                <span style={{ fontSize: "10px" }}>Itinéraire</span>
+                              </>
+                            )}
+                          </button>
                         ) : null}
                       </div>
                     </div>
@@ -717,7 +936,135 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
             )
           })}
         </MarkerClusterGroup>
+
+        {/* ── Route polyline ── */}
+        {activeRoute && <RouteLine route={activeRoute} />}
       </MapContainer>
+
+      {/* ── Navigation panel ── */}
+      {activeRoute && (
+        <div
+          className="absolute bottom-0 left-0 right-0 z-[1002]"
+          style={{
+            background: "rgba(10,10,15,0.97)",
+            backdropFilter: "blur(24px)",
+            borderTop: "1px solid rgba(16,185,129,0.2)",
+            boxShadow: "0 -8px 40px rgba(0,0,0,0.6)",
+          }}
+        >
+          {/* Green accent bar */}
+          <div style={{ height: "3px", background: "linear-gradient(90deg, #10b981, #06b6d4, #10b981)", animation: "shimmer 2s ease infinite" }} />
+          <div className="px-4 py-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <div
+                  className="w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 12h3l3-9 3 18 3-9h6" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-white text-sm font-bold">{activeRoute.destName}</p>
+                  <p className="text-[#6a6a80] text-[11px]">Navigation active</p>
+                </div>
+              </div>
+              <button
+                onClick={cancelRoute}
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)" }}
+              >
+                <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Stats row */}
+            <div className="flex gap-3 mb-3">
+              <div
+                className="flex-1 px-3 py-2.5 rounded-xl text-center"
+                style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.15)" }}
+              >
+                <p className="text-emerald-400 text-lg font-bold">{activeRoute.distance.toFixed(1)}</p>
+                <p className="text-[10px] text-[#6a6a80] font-medium">km</p>
+              </div>
+              <div
+                className="flex-1 px-3 py-2.5 rounded-xl text-center"
+                style={{ background: "rgba(6,182,212,0.08)", border: "1px solid rgba(6,182,212,0.15)" }}
+              >
+                <p className="text-cyan-400 text-lg font-bold">{Math.ceil(activeRoute.duration)}</p>
+                <p className="text-[10px] text-[#6a6a80] font-medium">min</p>
+              </div>
+              <div
+                className="flex-1 px-3 py-2.5 rounded-xl text-center"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <p className="text-white text-lg font-bold">
+                  {new Date(Date.now() + activeRoute.duration * 60000).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
+                </p>
+                <p className="text-[10px] text-[#6a6a80] font-medium">ETA</p>
+              </div>
+            </div>
+
+            {/* Live tracking toggle */}
+            <div className="flex gap-2">
+              <button
+                onClick={liveTracking ? stopLiveTracking : startLiveTracking}
+                className="flex-1 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all"
+                style={{
+                  background: liveTracking ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(255,255,255,0.06)",
+                  color: liveTracking ? "#fff" : "#a0a0b8",
+                  border: `1px solid ${liveTracking ? "transparent" : "rgba(255,255,255,0.08)"}`,
+                }}
+              >
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: liveTracking ? "#fff" : "#10b981", animation: liveTracking ? "pulse-dot 1.5s ease infinite" : "none" }} />
+                {liveTracking ? "Suivi GPS actif" : "Activer suivi GPS"}
+              </button>
+              <a
+                href={`https://www.google.com/maps/dir/?api=1&destination=${activeRoute.destLat},${activeRoute.destLng}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="py-2.5 px-4 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5"
+                style={{
+                  background: "rgba(255,255,255,0.06)",
+                  color: "#a0a0b8",
+                  border: "1px solid rgba(255,255,255,0.08)",
+                  textDecoration: "none",
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                  <polyline points="15 3 21 3 21 9" />
+                  <line x1="10" y1="14" x2="21" y2="3" />
+                </svg>
+                Google Maps
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Route loading overlay ── */}
+      {isRouteLoading && (
+        <div className="absolute inset-0 z-[1003] flex items-center justify-center" style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}>
+          <div className="px-6 py-4 rounded-2xl flex flex-col items-center gap-3" style={{ background: "rgba(10,10,15,0.95)", border: "1px solid rgba(16,185,129,0.2)" }}>
+            <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <p className="text-white text-sm font-medium">Calcul de l'itinéraire…</p>
+          </div>
+        </div>
+      )}
+
+      {/* ── Route error toast ── */}
+      {routeError && (
+        <div
+          className="absolute top-20 left-1/2 -translate-x-1/2 z-[1003] px-4 py-3 rounded-xl text-xs font-medium max-w-xs text-center"
+          style={{ background: "rgba(239,68,68,0.15)", border: "1px solid rgba(239,68,68,0.3)", color: "#f87171" }}
+        >
+          {routeError}
+        </div>
+      )}
 
       {/* ── Dark popup CSS override ── */}
       <style>{`
@@ -758,6 +1105,18 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
           0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4), 0 4px 16px rgba(16,185,129,0.5); }
           70% { box-shadow: 0 0 0 12px rgba(16,185,129,0), 0 4px 16px rgba(16,185,129,0.5); }
           100% { box-shadow: 0 0 0 0 rgba(16,185,129,0), 0 4px 16px rgba(16,185,129,0.5); }
+        }
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+        @keyframes shimmer {
+          0%, 100% { opacity: 0.7; }
+          50% { opacity: 1; }
+        }
+        @keyframes pulse-dot {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50% { opacity: 0.5; transform: scale(0.7); }
         }
       `}</style>
     </div>
