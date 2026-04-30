@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect, useRef, useCallback, type ReactNode } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import Link from "next/link"
 import {
   Search, MapPin, Star, BadgeCheck, ChevronRight, Loader2, X, Store
 } from "lucide-react"
@@ -31,10 +30,6 @@ type SearchResults = {
 interface SearchAutocompleteProps {
   /** Animated placeholder items to cycle through */
   placeholders?: string[]
-  /** Current placeholder index for animation */
-  placeholderIdx?: number
-  /** Ref for the animated scroller (for reset transitions) */
-  scrollRef?: React.RefObject<HTMLDivElement | null>
   /** Additional class for the wrapper */
   className?: string
   /** Style for the input wrapper */
@@ -47,8 +42,6 @@ interface SearchAutocompleteProps {
 
 export default function SearchAutocomplete({
   placeholders = [],
-  placeholderIdx = 0,
-  scrollRef,
   className = "",
   wrapperStyle,
   variant = "default",
@@ -63,6 +56,58 @@ export default function SearchAutocomplete({
   const wrapperRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Typewriter animation state
+  const [twText, setTwText] = useState("")
+  const [twIdx, setTwIdx] = useState(0)
+  const [twCharIdx, setTwCharIdx] = useState(0)
+  const [twDeleting, setTwDeleting] = useState(false)
+
+  // Typewriter effect
+  useEffect(() => {
+    if (placeholders.length === 0) return
+
+    const current = placeholders[twIdx]
+    if (!current) return
+
+    const typeSpeed = 70
+    const deleteSpeed = 35
+    const pauseEnd = 1500
+    const pauseStart = 400
+
+    if (!twDeleting && twCharIdx < current.length) {
+      // Typing forward
+      const t = setTimeout(() => {
+        setTwCharIdx(c => c + 1)
+        setTwText(current.slice(0, twCharIdx + 1))
+      }, typeSpeed)
+      return () => clearTimeout(t)
+    }
+
+    if (!twDeleting && twCharIdx === current.length) {
+      // Pause at end of word, then start deleting
+      const t = setTimeout(() => setTwDeleting(true), pauseEnd)
+      return () => clearTimeout(t)
+    }
+
+    if (twDeleting && twCharIdx > 0) {
+      // Deleting
+      const t = setTimeout(() => {
+        setTwCharIdx(c => c - 1)
+        setTwText(current.slice(0, twCharIdx - 1))
+      }, deleteSpeed)
+      return () => clearTimeout(t)
+    }
+
+    if (twDeleting && twCharIdx === 0) {
+      // Move to next placeholder
+      const t = setTimeout(() => {
+        setTwIdx(i => (i + 1) % placeholders.length)
+        setTwDeleting(false)
+      }, pauseStart)
+      return () => clearTimeout(t)
+    }
+  }, [twIdx, twCharIdx, twDeleting, placeholders])
 
   // Debounced search
   const doSearch = useCallback(async (q: string) => {
@@ -220,21 +265,12 @@ export default function SearchAutocomplete({
           </button>
         )}
 
-        {/* Animated placeholder */}
+        {/* Typewriter placeholder */}
         {!query && placeholders.length > 0 && (
           <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
             <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
-            <div className="relative h-5 overflow-hidden">
-              <div
-                ref={scrollRef}
-                className="transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}
-              >
-                {placeholders.map((p, i) => (
-                  <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
-                ))}
-              </div>
-            </div>
+            <span className="text-sm text-emerald-400 font-medium">{twText}</span>
+            <span className="text-sm text-emerald-400 animate-pulse ml-px">|</span>
           </div>
         )}
       </div>

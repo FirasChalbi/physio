@@ -473,7 +473,6 @@ export default function HomePage() {
     // searchQuery state removed — SearchAutocomplete manages its own state
     const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [notifOpen, setNotifOpen] = useState(false)
-    const [placeholderIdx, setPlaceholderIdx] = useState(0)
     const [recentlyViewed, setRecentlyViewed] = useState<string[]>([])
     const [activeCity, setActiveCity] = useState("plaisir")
     const [activeCategoryTab, setActiveCategoryTab] = useState("restaurant")
@@ -481,8 +480,6 @@ export default function HomePage() {
     const [allOffersCategory, setAllOffersCategory] = useState<string>("all")
     const [familyActivities, setFamilyActivities] = useState<FamilyActivity[]>([])
     const [heroScrolled, setHeroScrolled] = useState(false)
-    const scrollRef1 = useRef<HTMLDivElement>(null)
-    const scrollRef2 = useRef<HTMLDivElement>(null)
 
     const defaultPlaceholders = ['un restaurant', 'un spa', 'un hôtel', 'une boutique', 'un coiffeur', 'un plombier']
     const dynamicPlaceholders = categories.length > 0
@@ -500,26 +497,6 @@ export default function HomePage() {
         return () => window.removeEventListener('scroll', onScroll)
     }, [])
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setPlaceholderIdx(prev => {
-                const next = prev + 1
-                if (next >= dynamicPlaceholders.length) {
-                    [scrollRef1, scrollRef2].forEach(ref => {
-                        if (ref.current) ref.current.style.transition = 'none'
-                    })
-                    setTimeout(() => {
-                        [scrollRef1, scrollRef2].forEach(ref => {
-                            if (ref.current) ref.current.style.transition = ''
-                        })
-                    }, 60)
-                    return 0
-                }
-                return next
-            })
-        }, 2000)
-        return () => clearInterval(interval)
-    }, [dynamicPlaceholders.length])
 
     useEffect(() => {
         Promise.all([
@@ -660,8 +637,6 @@ export default function HomePage() {
                     {heroScrolled && (
                         <SearchAutocomplete
                             placeholders={dynamicPlaceholders}
-                            placeholderIdx={placeholderIdx}
-                            scrollRef={scrollRef1}
                             variant="compact"
                             className="flex-1 max-w-lg mx-auto"
                             idPrefix="nav-search"
@@ -811,8 +786,6 @@ export default function HomePage() {
                     </h1>
                     <SearchAutocomplete
                         placeholders={dynamicPlaceholders}
-                        placeholderIdx={placeholderIdx}
-                        scrollRef={scrollRef2}
                         idPrefix="mobile-search"
                     />
                 </div>
@@ -839,7 +812,6 @@ export default function HomePage() {
                         <div className="max-w-xl mx-auto">
                             <SearchAutocomplete
                                 placeholders={dynamicPlaceholders}
-                                placeholderIdx={placeholderIdx}
                                 idPrefix="hero-search"
                             />
                         </div>
