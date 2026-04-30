@@ -481,7 +481,14 @@ export default function HomePage() {
     const [familyActivities, setFamilyActivities] = useState<FamilyActivity[]>([])
     const [heroScrolled, setHeroScrolled] = useState(false)
 
-    const defaultPlaceholders = ['un restaurant', 'un spa', 'un hôtel', 'une boutique', 'un coiffeur', 'un plombier']
+    const defaultPlaceholders = [
+    'un restaurant',
+    'un spa',
+    'une salle de sport',
+    'un hôtel',
+    'un bar ou club',
+    'une activité en famille',
+    ]
     const dynamicPlaceholders = categories.length > 0
         ? categories.slice(0, 6).map(c => {
             const first = c.name.charAt(0).toLowerCase()
@@ -785,7 +792,7 @@ export default function HomePage() {
                         Que cherchez-vous<br />en Yvelines ?
                     </h1>
                     <SearchAutocomplete
-                        placeholders={dynamicPlaceholders}
+                        placeholders={defaultPlaceholders}
                         idPrefix="mobile-search"
                     />
                 </div>
@@ -811,7 +818,7 @@ export default function HomePage() {
                            {/* Centered search input — same style as mobile */}
                         <div className="max-w-xl mx-auto">
                             <SearchAutocomplete
-                                placeholders={dynamicPlaceholders}
+                                placeholders={defaultPlaceholders}
                                 idPrefix="hero-search"
                             />
                         </div>
