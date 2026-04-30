@@ -22,6 +22,7 @@ export interface IOffer {
   featured: boolean
   status: OfferStatus
   tags?: string[]
+  perks?: string[]
   startDate?: Date
   endDate?: Date
   soldCount?: number
@@ -49,6 +50,7 @@ const OfferSchema = new Schema<IOffer>({
   featured: { type: Boolean, default: false },
   status: { type: String, enum: ['active', 'draft', 'archived'], default: 'active' },
   tags: [{ type: String }],
+  perks: [{ type: String }],
   startDate: { type: Date },
   endDate: { type: Date },
   soldCount: { type: Number, default: 0 },

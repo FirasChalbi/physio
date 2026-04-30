@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation"
 import Link from "next/link"
 import {
     MapPin, Star, Heart, ChevronLeft, Share2, Phone, Mail, Clock,
-    Navigation, ChevronRight, Utensils, Sparkles, Leaf, ShoppingCart,
+    Navigation, ChevronRight, Utensils, Sparkles, Leaf, ShoppingCart, Gift, Check,
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
 
@@ -14,12 +14,14 @@ type Offer = {
     _id: string; title: string; slug: string; shortDescription: string; description: string; coverImage: string;
     galleryImages?: string[]; originalPrice: number; dealPrice: number; discountPercent: number; rating?: number;
     reviewCount?: number; city: string; address?: string; merchantId: string; categoryId: string; soldCount?: number;
-    tags?: string[]; startDate?: string; endDate?: string
+    tags?: string[]; perks?: string[]; startDate?: string; endDate?: string
 }
 type Merchant = {
     _id: string; name: string; slug: string; logo?: string; city?: string; verified: boolean;
-    rating?: number; reviewCount?: number; phone?: string; email?: string; description?: string
+    rating?: number; average_rating?: string; reviewCount?: number; review_count?: string;
+    phone?: string; email?: string; description?: string
     address?: string; full_address?: string; latitude?: string; longitude?: string; google_maps_url?: string
+    user_reviews?: { reviewer_name: string; reviewer_photo?: string; rating: string; date: string; text: string }[]
 }
 type Review = { _id: string; userName?: string; userAvatar?: string; rating: number; comment?: string; createdAt?: string }
 
@@ -77,7 +79,31 @@ export default function OfferDetailPage() {
     if (!offer) return <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#0a0a0f' }}><p className="text-white text-lg">Offre introuvable</p><Link href="/" className="text-emerald-400 hover:underline text-sm">Retour à l'accueil</Link></div>
 
     const allImages = [offer.coverImage, ...(offer.galleryImages || [])]
-    const avgRating = offer.rating || 0
+
+    // Merge offer API reviews + merchant embedded user_reviews
+    const merchantUserReviews = (merchant?.user_reviews || []).map((r, i) => ({
+        _id: `merchant-${i}`,
+        userName: r.reviewer_name,
+        userAvatar: r.reviewer_photo,
+        rating: parseFloat(r.rating) || 0,
+        comment: r.text,
+        createdAt: undefined as string | undefined,
+        dateLabel: r.date,
+    }))
+    const apiReviewsMapped = reviews.map(r => ({ ...r, dateLabel: undefined as string | undefined, userAvatar: undefined as string | undefined }))
+    // Deduplicate: prefer API reviews, fill with merchant reviews
+    const allReviews = [
+        ...apiReviewsMapped,
+        ...merchantUserReviews.filter(mr => !apiReviewsMapped.some(ar => ar.userName === mr.userName)),
+    ]
+
+    // Rating: prefer offer rating, fall back to merchant rating
+    const merchantRating = merchant?.rating || parseFloat(merchant?.average_rating?.replace(',', '.') || '0') || 0
+    const merchantReviewCount = merchant?.reviewCount || parseInt(merchant?.review_count || '0') || 0
+    const displayRating = offer.rating && offer.rating > 0 ? offer.rating : merchantRating
+    const displayReviewCount = offer.reviewCount && offer.reviewCount > 0 ? offer.reviewCount : merchantReviewCount
+
+    const avgRating = displayRating
     const endDateStr = offer.endDate ? new Date(offer.endDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : null
 
     // Feature icons for "À propos" section
@@ -185,11 +211,10 @@ export default function OfferDetailPage() {
                         Itinéraire
                     </button>
                 </div>
-
                 {/* ═══════════ EXCLUSIVE OFFER BANNER ═══════════ */}
-                <div className="rounded-2xl p-4 flex items-center gap-4 mb-8 border"
+                <div className="rounded-2xl p-4 flex items-start gap-4 mb-8 border"
                     style={{ background: 'rgba(16, 185, 129, 0.06)', borderColor: 'rgba(16, 185, 129, 0.15)' }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
                         style={{ background: 'rgba(16, 185, 129, 0.15)' }}>
                         <ShoppingCart className="w-5 h-5 text-emerald-400" />
                     </div>
@@ -197,8 +222,26 @@ export default function OfferDetailPage() {
                         <p className="text-xs text-emerald-400 font-semibold mb-0.5">Offre exclusive</p>
                         <p className="text-sm text-white font-medium">-{offer.discountPercent}% · {offer.dealPrice} € au lieu de {offer.originalPrice} €</p>
                         {endDateStr && <p className="text-xs text-[#6a6a80] mt-0.5">Valable jusqu'au {endDateStr}</p>}
+                        {offer.perks && offer.perks.length > 0 && (
+                            <div className="mt-4 pt-3.5 border-t" style={{ borderColor: 'rgba(16, 185, 129, 0.12)' }}>
+                                <div className="flex items-center gap-1.5 mb-2.5">
+                                    <Gift className="w-3.5 h-3.5 text-emerald-400" />
+                                    <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Inclus dans cette offre</span>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                    {offer.perks.map((perk, i) => (
+                                        <span key={i}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/90 border"
+                                            style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
+                                            <Check className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                                            {perk}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    <ChevronRight className="w-5 h-5 text-[#6a6a80] flex-shrink-0" />
+                    <ChevronRight className="w-5 h-5 text-[#6a6a80] flex-shrink-0 mt-0.5" />
                 </div>
 
                 {/* ═══════════ À PROPOS ═══════════ */}
@@ -258,27 +301,32 @@ export default function OfferDetailPage() {
                                     <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(avgRating) ? 'text-emerald-400 fill-emerald-400' : 'text-[#333]'}`} />
                                 ))}
                             </div>
-                            <span className="text-[10px] text-[#6a6a80]">Basé sur {offer.reviewCount || 0} avis</span>
+                            <span className="text-[10px] text-[#6a6a80]">Basé sur {displayReviewCount} avis</span>
                         </div>
 
                         {/* Review cards */}
-                        {reviews.length > 0 ? reviews.slice(0, 3).map(rev => (
+                        {allReviews.length > 0 ? allReviews.slice(0, 5).map(rev => (
                             <div key={rev._id} className="flex-shrink-0 w-64 rounded-2xl p-4 border"
                                 style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                                 <div className="flex items-center gap-2.5 mb-3">
-                                    <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                                        style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>
-                                        {(rev.userName || 'A')[0]}
-                                    </div>
+                                    {rev.userAvatar ? (
+                                        <img src={rev.userAvatar} alt="" className="w-9 h-9 rounded-full object-cover" />
+                                    ) : (
+                                        <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                                            style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>
+                                            {(rev.userName || 'A')[0]}
+                                        </div>
+                                    )}
                                     <div className="flex-1">
                                         <p className="text-sm font-medium text-white">{rev.userName || 'Anonyme'}</p>
                                         <p className="text-[10px] text-[#6a6a80]">
-                                            {rev.createdAt ? `Il y a ${Math.ceil((Date.now() - new Date(rev.createdAt).getTime()) / 86400000)} jours` : ''}
+                                            {rev.dateLabel ||
+                                                (rev.createdAt ? `Il y a ${Math.ceil((Date.now() - new Date(rev.createdAt).getTime()) / 86400000)} jours` : '')}
                                         </p>
                                     </div>
                                     <div className="flex gap-0.5">
                                         {Array.from({ length: 5 }).map((_, i) => (
-                                            <Star key={i} className={`w-3 h-3 ${i < rev.rating ? 'text-emerald-400 fill-emerald-400' : 'text-[#333]'}`} />
+                                            <Star key={i} className={`w-3 h-3 ${i < Math.round(rev.rating) ? 'text-emerald-400 fill-emerald-400' : 'text-[#333]'}`} />
                                         ))}
                                     </div>
                                 </div>

@@ -7,7 +7,7 @@ import { Plus, Search, Edit2, Trash2, Eye, Gift, Filter } from "lucide-react"
 type Offer = {
     _id: string; title: string; slug: string; shortDescription: string; categoryId: string; merchantId: string;
     city: string; coverImage: string; originalPrice: number; dealPrice: number; discountPercent: number;
-    featured: boolean; status: string; soldCount?: number; viewCount?: number
+    featured: boolean; status: string; soldCount?: number; viewCount?: number; perks?: string[]
 }
 
 const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
@@ -26,7 +26,7 @@ export default function OffersPage() {
     const [form, setForm] = useState({
         title: '', slug: '', shortDescription: '', description: '', categoryId: '', merchantId: '',
         city: '', address: '', coverImage: '', originalPrice: 0, dealPrice: 0, discountPercent: 0,
-        featured: false, status: 'active' as string, tags: ''
+        featured: false, status: 'active' as string, tags: '', perks: ''
     })
 
     useEffect(() => {
@@ -38,7 +38,7 @@ export default function OffersPage() {
 
     const openCreate = () => {
         setEditing(null)
-        setForm({ title: '', slug: '', shortDescription: '', description: '', categoryId: '', merchantId: '', city: '', address: '', coverImage: '', originalPrice: 0, dealPrice: 0, discountPercent: 0, featured: false, status: 'active', tags: '' })
+        setForm({ title: '', slug: '', shortDescription: '', description: '', categoryId: '', merchantId: '', city: '', address: '', coverImage: '', originalPrice: 0, dealPrice: 0, discountPercent: 0, featured: false, status: 'active', tags: '', perks: '' })
         setShowForm(true)
     }
 
@@ -49,14 +49,19 @@ export default function OffersPage() {
             description: '', categoryId: offer.categoryId, merchantId: offer.merchantId,
             city: offer.city, address: '', coverImage: offer.coverImage,
             originalPrice: offer.originalPrice, dealPrice: offer.dealPrice,
-            discountPercent: offer.discountPercent, featured: offer.featured, status: offer.status, tags: ''
+            discountPercent: offer.discountPercent, featured: offer.featured, status: offer.status, tags: offer.tags?.join(', ') || '', perks: offer.perks?.join(', ') || ''
         })
         setShowForm(true)
     }
 
     const saveOffer = async () => {
         const discount = form.originalPrice > 0 ? Math.round(((form.originalPrice - form.dealPrice) / form.originalPrice) * 100) : 0
-        const body = { ...form, discountPercent: discount, tags: form.tags.split(',').map(t => t.trim()).filter(Boolean) }
+        const body = { 
+            ...form, 
+            discountPercent: discount, 
+            tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+            perks: form.perks.split(',').map(t => t.trim()).filter(Boolean)
+        }
         const method = editing ? 'PUT' : 'POST'
         const payload = editing ? { ...body, _id: editing._id } : body
         const res = await fetch('/api/offers', { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
@@ -215,6 +220,10 @@ export default function OffersPage() {
                             <div>
                                 <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Tags (séparés par virgule)</label>
                                 <input value={form.tags} onChange={e => setForm({ ...form, tags: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" placeholder="spa, détente, massage" />
+                            </div>
+                            <div>
+                                <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Avantages / Inclus (séparés par virgule)</label>
+                                <input value={form.perks} onChange={e => setForm({ ...form, perks: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" placeholder="Cocktail offert, Accès spa 2h, Peignoir inclus" />
                             </div>
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" checked={form.featured} onChange={e => setForm({ ...form, featured: e.target.checked })} className="rounded accent-emerald-500" />
