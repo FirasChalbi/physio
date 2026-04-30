@@ -24,7 +24,7 @@ type Offer = {
 type Merchant = {
     _id: string; name: string; slug: string; logo?: string; coverImage?: string; city?: string; images?: string[];
     categories?: string[]; verified?: boolean; rating?: number; reviewCount?: number;
-    average_rating?: string; review_count?: string; active?: boolean
+    average_rating?: string; review_count?: string; active?: boolean; rank?: number
 }
 type FamilyActivity = {
     _id: string; name: string; slug: string; image?: string; city?: string; address?: string;
@@ -608,9 +608,20 @@ export default function HomePage() {
         return cat && /spa|restau|restaurant|hôtel|hotel|héberg|bien-être|wellness/i.test(cat.name)
     }).slice(0, 8)
 
-    // Merchant-based sections
-    const recMerchants = merchants.filter(m => m.active !== false).slice(0, 8)
-    const popularMerchants = [...merchants].sort((a, b) => (parseInt(b.review_count || '0') || b.reviewCount || 0) - (parseInt(a.review_count || '0') || a.reviewCount || 0)).slice(0, 8)
+    // Merchant-based sections — controlled by rank field:
+    //   rank 1 → "Nos recommandations"
+    //   rank 2 → "Les plus populaires"
+    //   no rank / other → sorted by review count for popular fallback
+    const recMerchants = merchants.filter(m => m.active !== false && m.rank === 1).slice(0, 8)
+    const popularMerchants = (() => {
+        const ranked = merchants.filter(m => m.rank === 2)
+        if (ranked.length >= 4) return ranked.slice(0, 8)
+        // Fallback: fill with top-reviewed merchants (exclude rank 1 to avoid duplication)
+        const byReviews = [...merchants]
+            .filter(m => m.rank !== 1)
+            .sort((a, b) => (parseInt(b.review_count || '0') || b.reviewCount || 0) - (parseInt(a.review_count || '0') || a.reviewCount || 0))
+        return [...ranked, ...byReviews.filter(m => !ranked.some(r => r._id === m._id))].slice(0, 8)
+    })()
     const bestRatedMerchants = [...merchants].filter(m => {
         const r = m.rating || parseFloat(m.average_rating || '0')
         return r >= 4
@@ -1120,7 +1131,7 @@ export default function HomePage() {
                 </section>
                 
                 {/* ═══════════ TOP 10 ACTIVITÉS EN FAMILLE ═══════════ */}
-                {familyActivities.length > 0 && (
+                {/* {familyActivities.length > 0 && (
                     <section className="px-4 mb-8">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-base md:text-xl font-bold text-white">Top 10 activités en famille</h2>
@@ -1153,7 +1164,7 @@ export default function HomePage() {
                             ))}
                         </div>
                     </section>
-                )}
+                )} */}
 
                 {/* ═══════════ BEAUTÉ & SANTÉ ═══════════ */}
                 <MerchantHorizontalSection title="Bon plans Beauté & santé" href="/merchants?category=beaute-sante" merchants={beautyMerchants} categories={categories} offers={offers} />

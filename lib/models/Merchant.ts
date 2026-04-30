@@ -50,6 +50,7 @@ export interface IMerchant {
   average_rating?: string
   review_count?: string
   userId?: string
+  rank?: number
 
   /* ─── Groupon-style fields ─── */
   latitude?: string
@@ -119,6 +120,7 @@ const MerchantSchema = new Schema<IMerchant>({
   average_rating: { type: String },
   review_count: { type: String },
   userId: { type: String },
+  rank: { type: Number, default: 999 },
 
   /* Groupon-style */
   latitude: { type: String },
@@ -142,6 +144,7 @@ MerchantSchema.index({ city: 1 })
 MerchantSchema.index({ active: 1 })
 MerchantSchema.index({ municipality: 1 })
 MerchantSchema.index({ categories: 1 })
+MerchantSchema.index({ rank: 1 })
 MerchantSchema.index({ name: 'text', categories: 'text', city: 'text', description: 'text', about: 'text' })
 
 export function getMerchantModel() {

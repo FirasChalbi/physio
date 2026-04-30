@@ -32,6 +32,7 @@ export default function OfferDetailPage() {
     const [loading, setLoading] = useState(true)
     const [isFav, setIsFav] = useState(false)
     const [showReservation, setShowReservation] = useState(false)
+    const [descExpanded, setDescExpanded] = useState(false)
 
     useEffect(() => {
         fetch('/api/offers?status=active').then(r => r.json()).then(async (data) => {
@@ -125,14 +126,26 @@ export default function OfferDetailPage() {
 
             {/* ═══════════ MERCHANT NAME + INFO ═══════════ */}
             <div className="px-4 -mt-6 relative z-10">
-                <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{merchant?.name || offer.title}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{offer.title || merchant?.name}</h1>
                 <div className="flex items-center gap-1.5 text-[#8888a0] text-sm mb-5">
                     <MapPin className="w-3.5 h-3.5 text-emerald-400" />
                     <span>{offer.city}{offer.address ? ` · ${offer.address}` : ''}</span>
                 </div>
 
                 {/* Description */}
-                <p className="text-sm text-[#a0a0b8] leading-relaxed mb-5">{offer.shortDescription}</p>
+                <div className="mb-5">
+                    <p className={`text-sm text-[#a0a0b8] leading-relaxed ${descExpanded ? '' : 'line-clamp-3'}`}>
+                        {offer.shortDescription}
+                    </p>
+                    {offer.shortDescription && offer.shortDescription.length > 120 && (
+                        <button
+                            onClick={() => setDescExpanded(p => !p)}
+                            className="mt-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                        >
+                            {descExpanded ? 'Voir moins ↑' : 'Voir plus ↓'}
+                        </button>
+                    )}
+                </div>
 
                 {/* Rating + Info Row */}
                 <div className="flex items-center gap-6 mb-6">
