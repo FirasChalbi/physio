@@ -12,6 +12,7 @@ import * as LucideIcons from "lucide-react"
 import NotificationDrawer from "@/components/NotificationDrawer"
 import Logo from "@/components/Logo"
 import ImageCarousel from "@/components/ImageCarousel"
+import SearchAutocomplete from "@/components/SearchAutocomplete"
 
 type Category = { _id: string; name: string; slug: string; icon?: string }
 type Offer = {
@@ -469,7 +470,7 @@ export default function HomePage() {
     const [offers, setOffers] = useState<Offer[]>([])
     const [merchants, setMerchants] = useState<Merchant[]>([])
     const [loading, setLoading] = useState(true)
-    const [searchQuery, setSearchQuery] = useState("")
+    // searchQuery state removed — SearchAutocomplete manages its own state
     const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [notifOpen, setNotifOpen] = useState(false)
     const [placeholderIdx, setPlaceholderIdx] = useState(0)
@@ -646,26 +647,14 @@ export default function HomePage() {
                     <Logo size="lg" />
                     {/* Search bar — only visible when scrolled past hero */}
                     {heroScrolled && (
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl flex-1 max-w-lg mx-auto relative overflow-hidden"
-                            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                            <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
-                            <input type="text"
-                                value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                                className="bg-transparent text-sm text-white outline-none w-full"
-                                onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
-                            {!searchQuery && (
-                                <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
-                                    <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
-                                    <div className="relative h-5 overflow-hidden">
-                                        <div ref={scrollRef1} className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
-                                            {dynamicPlaceholders.map((p, i) => (
-                                                <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                        <SearchAutocomplete
+                            placeholders={dynamicPlaceholders}
+                            placeholderIdx={placeholderIdx}
+                            scrollRef={scrollRef1}
+                            variant="compact"
+                            className="flex-1 max-w-lg mx-auto"
+                            idPrefix="nav-search"
+                        />
                     )}
                     {!heroScrolled && <div className="flex-1" />}
                     <div className="flex items-center gap-6">
@@ -804,31 +793,17 @@ export default function HomePage() {
                 <>
                 <div className="px-4 mb-6 md:hidden">
                     <p className="text-sm text-[#8888a0]">
-                        Bonjour {userName ? <span className="text-emerald-400 font-medium">{userName}</span> : <span className="text-emerald-400">Yvelines</span>}
+                        Bonjour {userName ? <span className="text-emerald-400 font-medium">{userName}</span> : <span className="text-emerald-400"></span>}
                     </p>
                     <h1 className="text-xl font-bold text-white mt-0.5 mb-4">
                         Que cherchez-vous<br />en Yvelines ?
                     </h1>
-                    <div className="flex items-center gap-2 px-4 py-3 rounded-2xl relative overflow-hidden"
-                        style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                        <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
-                        <input type="text"
-                            value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                            className="bg-transparent text-sm text-white outline-none w-full"
-                            onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
-                        {!searchQuery && (
-                            <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
-                                <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
-                                <div className="relative h-5 overflow-hidden">
-                                    <div ref={scrollRef2} className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
-                                        {dynamicPlaceholders.map((p, i) => (
-                                            <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
-                                        ))}
-                                    </div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
+                    <SearchAutocomplete
+                        placeholders={dynamicPlaceholders}
+                        placeholderIdx={placeholderIdx}
+                        scrollRef={scrollRef2}
+                        idPrefix="mobile-search"
+                    />
                 </div>
 
                 {/* ═══════════ DESKTOP HERO ═══════════ */}
@@ -851,26 +826,11 @@ export default function HomePage() {
 
                            {/* Centered search input — same style as mobile */}
                         <div className="max-w-xl mx-auto">
-                            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl relative overflow-hidden"
-                                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
-                                <Search className="w-4 h-4 text-[#6a6a80] shrink-0" />
-                                <input type="text"
-                                    value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
-                                    className="bg-transparent text-sm text-white outline-none w-full"
-                                    onKeyDown={e => e.key === 'Enter' && searchQuery && (window.location.href = `/offers?q=${searchQuery}`)} />
-                                {!searchQuery && (
-                                    <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
-                                        <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
-                                        <div className="relative h-5 overflow-hidden">
-                                            <div className="transition-transform duration-500 ease-in-out" style={{ transform: `translateY(-${placeholderIdx * 20}px)` }}>
-                                                {dynamicPlaceholders.map((p, i) => (
-                                                    <div key={i} className="h-5 text-sm text-emerald-400 font-medium">{p}</div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
+                            <SearchAutocomplete
+                                placeholders={dynamicPlaceholders}
+                                placeholderIdx={placeholderIdx}
+                                idPrefix="hero-search"
+                            />
                         </div>
                         <p className="text-[#8888a0] text-lg max-w-2xl mx-auto mt-10 leading-relaxed">
                             Plombiers, électriciens, restaurants, espace bien-être et plus — découvrez des deals exclusifs dans les Yvelines (78).
@@ -888,10 +848,18 @@ export default function HomePage() {
 
                     {/* Single horizontal scroll — all screen sizes */}
                     <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
-                        {categories.slice(0, 10).map(cat => {
-                            const IconComp = iconMap[cat.icon || ''] || Tag
+                        {[
+                            { name: 'Restaurants', slug: 'restaurant', icon: LucideIcons.UtensilsCrossed },
+                            { name: 'Séjours', slug: 'sejours', icon: LucideIcons.Building2 },
+                            { name: 'Bien-être', slug: 'bien-etre', icon: LucideIcons.Sparkles },
+                            { name: 'Sorties & Famille', slug: 'sorties-famille', icon: LucideIcons.PartyPopper },
+                            { name: 'Loisirs', slug: 'loisirs', icon: LucideIcons.Waves },
+                            { name: 'Sport', slug: 'sport', icon: LucideIcons.Dumbbell },
+                            { name: 'Nightlife', slug: 'nightlife', icon: LucideIcons.Zap },
+                        ].map(cat => {
+                            const IconComp = cat.icon
                             return (
-                                <Link key={cat._id} href={`/categories/${cat.slug}`}
+                                <Link key={cat.slug} href={`/offers?category=${cat.slug}`}
                                     className="shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl transition-all active:scale-95 group"
                                     style={{
                                         background: 'linear-gradient(145deg, #161620, #111118)',

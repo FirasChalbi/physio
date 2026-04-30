@@ -142,6 +142,7 @@ MerchantSchema.index({ city: 1 })
 MerchantSchema.index({ active: 1 })
 MerchantSchema.index({ municipality: 1 })
 MerchantSchema.index({ categories: 1 })
+MerchantSchema.index({ name: 'text', categories: 'text', city: 'text', description: 'text', about: 'text' })
 
 export function getMerchantModel() {
   return mongoose.models['Merchant'] as mongoose.Model<IMerchant>
