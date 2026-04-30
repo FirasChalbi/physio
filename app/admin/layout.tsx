@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { useState } from "react"
 import Logo from "@/components/Logo"
+import AdminNotificationPanel from "@/components/AdminNotificationPanel"
 
 const navItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -157,10 +158,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                     {/* Right side */}
                     <div className="flex items-center gap-3">
-                        <button className="relative p-2 rounded-lg hover:bg-white/5 transition-colors">
-                            <Bell className="w-5 h-5 text-[#8888a0]" />
-                            <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500" />
-                        </button>
+                        <AdminNotificationPanel />
                         <div className="flex items-center gap-2.5 pl-3 border-l" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                             <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>
                                 {session?.user?.name?.[0]?.toUpperCase() || 'A'}

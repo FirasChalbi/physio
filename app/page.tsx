@@ -474,6 +474,7 @@ export default function HomePage() {
     // searchQuery state removed — SearchAutocomplete manages its own state
     const [favorites, setFavorites] = useState<Set<string>>(new Set())
     const [notifOpen, setNotifOpen] = useState(false)
+    const [unreadNotifCount, setUnreadNotifCount] = useState(0)
     const [recentlyViewed, setRecentlyViewed] = useState<string[]>([])
     const [activeCity, setActiveCity] = useState("plaisir")
     const [activeCategoryTab, setActiveCategoryTab] = useState("restaurant")
@@ -519,6 +520,12 @@ export default function HomePage() {
             setFamilyActivities(Array.isArray(fa) ? fa : [])
             setLoading(false)
         }).catch(() => setLoading(false))
+
+        // Fetch unread notification count
+        fetch('/api/notifications?audience=user&limit=1')
+            .then(r => r.json())
+            .then(d => setUnreadNotifCount(d.unreadCount || 0))
+            .catch(() => {})
 
         // Load favorites from localStorage
         const favs: string[] = JSON.parse(localStorage.getItem('life_favorites') || '[]')
@@ -631,7 +638,11 @@ export default function HomePage() {
                     <Logo size="lg" />
                     <button onClick={() => setNotifOpen(true)} className="relative p-2">
                         <Bell className="w-5 h-5 text-[#8888a0]" />
-                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-emerald-500" />
+                        {unreadNotifCount > 0 && (
+                            <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                                {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
+                            </span>
+                        )}
                     </button>
                 </div>
             </header>
@@ -660,7 +671,11 @@ export default function HomePage() {
                         </Link>
                         <button onClick={() => setNotifOpen(true)} className="relative text-[#8888a0] hover:text-white transition-colors">
                             <Bell className="w-5 h-5" />
-                            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500" />
+                            {unreadNotifCount > 0 && (
+                                <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                                    {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
+                                </span>
+                            )}
                         </button>
                         <Link href="/favoris" className="text-[#8888a0] hover:text-white transition-colors">
                             <Heart className="w-5 h-5" />
@@ -1364,7 +1379,7 @@ export default function HomePage() {
             </main>
 
             {/* Notification Drawer */}
-            <NotificationDrawer open={notifOpen} onClose={() => setNotifOpen(false)} />
+            <NotificationDrawer open={notifOpen} onClose={() => { setNotifOpen(false); setUnreadNotifCount(0) }} />
         </div>
     )
 }

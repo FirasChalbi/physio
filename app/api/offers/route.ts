@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
-import { getOfferModel } from '@/lib/models'
+import { getOfferModel, getNotificationModel } from '@/lib/models'
 
 export async function GET(req: NextRequest) {
   await connectDB()
@@ -29,8 +29,29 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await connectDB()
   const Offer = getOfferModel()
+  const Notification = getNotificationModel()
   const body = await req.json()
   const offer = await Offer.create(body)
+
+  // Auto-generate notifications for new offer
+  try {
+    await Notification.create({
+      audience: 'user',
+      type: 'new_offer',
+      title: '🔥 Nouvelle offre disponible',
+      body: `${body.title} — ${body.discountPercent || 0}% de réduction ! À partir de ${body.dealPrice || 0} €`,
+      link: `/offers/${body.slug}`,
+      image: body.coverImage,
+    })
+    await Notification.create({
+      audience: 'admin',
+      type: 'new_offer',
+      title: 'Nouvelle offre créée',
+      body: `L'offre "${body.title}" a été ajoutée au catalogue`,
+      link: '/admin/offers',
+    })
+  } catch { }
+
   return NextResponse.json(offer, { status: 201 })
 }
 

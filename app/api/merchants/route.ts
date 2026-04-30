@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
-import { getMerchantModel } from '@/lib/models'
+import { getMerchantModel, getNotificationModel } from '@/lib/models'
 
 export async function GET(req: NextRequest) {
   await connectDB()
@@ -29,8 +29,21 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   await connectDB()
   const Merchant = getMerchantModel()
+  const Notification = getNotificationModel()
   const body = await req.json()
   const merchant = await Merchant.create(body)
+
+  // Auto-generate admin notification
+  try {
+    await Notification.create({
+      audience: 'admin',
+      type: 'new_merchant',
+      title: '🏪 Nouveau marchand',
+      body: `${body.name} (${body.city || 'Aucune ville'}) a été ajouté`,
+      link: '/admin/merchants',
+    })
+  } catch { }
+
   return NextResponse.json(merchant, { status: 201 })
 }
 
