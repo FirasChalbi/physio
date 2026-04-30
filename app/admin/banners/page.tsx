@@ -2,6 +2,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import { Plus, Edit2, Trash2, Image } from "lucide-react"
+import ImageUpload from "@/components/ImageUpload"
 
 type Banner = { _id: string; title: string; subtitle?: string; image: string; link?: string; position: string; order: number; active: boolean }
 
@@ -55,12 +56,20 @@ export default function BannersPage() {
 
             {showForm && (
                 <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
-                    <div className="w-full max-w-lg rounded-2xl p-6 border" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.08)' }} onClick={e => e.stopPropagation()}>
+                    <div className="w-full max-w-lg rounded-2xl p-6 border max-h-[85vh] overflow-y-auto" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.08)' }} onClick={e => e.stopPropagation()}>
                         <h2 className="text-lg font-semibold text-white mb-5">{editing ? 'Modifier' : 'Ajouter'} une bannière</h2>
                         <div className="space-y-4">
                             <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Titre</label><input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
                             <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Sous-titre</label><input value={form.subtitle} onChange={e => setForm({ ...form, subtitle: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
-                            <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Image (URL)</label><input value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
+
+                            {/* ── Banner Image Upload ── */}
+                            <ImageUpload
+                                value={form.image}
+                                onChange={url => setForm({ ...form, image: url })}
+                                label="Image de la bannière"
+                                folder="/Life/banners"
+                            />
+
                             <div className="grid grid-cols-2 gap-4">
                                 <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Lien</label><input value={form.link} onChange={e => setForm({ ...form, link: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
                                 <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Position</label><select value={form.position} onChange={e => setForm({ ...form, position: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white"><option value="hero">Hero</option><option value="sidebar">Sidebar</option><option value="category">Catégorie</option><option value="popup">Popup</option></select></div>

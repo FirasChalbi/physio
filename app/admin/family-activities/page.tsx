@@ -3,11 +3,12 @@
 
 import { useEffect, useState } from "react"
 import { Plus, Search, Edit2, Trash2, MapPin, Star } from "lucide-react"
+import ImageUpload, { MultiImageUpload } from "@/components/ImageUpload"
 
 type FamilyActivity = {
     _id: string; name: string; slug: string; city?: string; address?: string;
     category?: string; rating?: number; reviewCount?: number; price?: number;
-    image?: string; active: boolean
+    image?: string; images?: string[]; active: boolean
 }
 
 export default function FamilyActivitiesPage() {
@@ -18,7 +19,7 @@ export default function FamilyActivitiesPage() {
     const [editing, setEditing] = useState<FamilyActivity | null>(null)
     const [form, setForm] = useState({
         name: '', slug: '', city: '', address: '', category: '',
-        image: '', price: '', rating: '', reviewCount: '', active: true
+        image: '', images: [] as string[], price: '', rating: '', reviewCount: '', active: true
     })
 
     useEffect(() => {
@@ -30,7 +31,7 @@ export default function FamilyActivitiesPage() {
 
     const openCreate = () => {
         setEditing(null)
-        setForm({ name: '', slug: '', city: '', address: '', category: '', image: '', price: '', rating: '', reviewCount: '', active: true })
+        setForm({ name: '', slug: '', city: '', address: '', category: '', image: '', images: [], price: '', rating: '', reviewCount: '', active: true })
         setShowForm(true)
     }
 
@@ -38,7 +39,8 @@ export default function FamilyActivitiesPage() {
         setEditing(a)
         setForm({
             name: a.name, slug: a.slug, city: a.city || '', address: a.address || '',
-            category: a.category || '', image: a.image || '', price: a.price ? String(a.price) : '',
+            category: a.category || '', image: a.image || '', images: a.images || [],
+            price: a.price ? String(a.price) : '',
             rating: a.rating ? String(a.rating) : '', reviewCount: a.reviewCount ? String(a.reviewCount) : '',
             active: a.active
         })
@@ -53,6 +55,7 @@ export default function FamilyActivitiesPage() {
             address: form.address,
             category: form.category,
             image: form.image,
+            images: form.images,
             price: form.price ? Number(form.price) : undefined,
             rating: form.rating ? Number(form.rating) : undefined,
             reviewCount: form.reviewCount ? Number(form.reviewCount) : undefined,
@@ -179,10 +182,24 @@ export default function FamilyActivitiesPage() {
                                     <input value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" />
                                 </div>
                             </div>
-                            <div>
-                                <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Image (URL)</label>
-                                <input value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" />
-                            </div>
+
+                            {/* ── Main Image Upload ── */}
+                            <ImageUpload
+                                value={form.image}
+                                onChange={url => setForm({ ...form, image: url })}
+                                label="Image principale"
+                                folder="/Life/activities"
+                            />
+
+                            {/* ── Gallery Images ── */}
+                            <MultiImageUpload
+                                values={form.images}
+                                onChange={urls => setForm({ ...form, images: urls })}
+                                label="Galerie d'images"
+                                folder="/Life/activities"
+                                maxImages={8}
+                            />
+
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Prix (€)</label>

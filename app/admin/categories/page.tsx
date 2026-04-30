@@ -3,9 +3,10 @@
 
 import { useEffect, useState } from "react"
 import { Plus, Search, Edit2, Trash2, GripVertical, Tag } from "lucide-react"
+import ImageUpload from "@/components/ImageUpload"
 
 type Category = {
-    _id: string; name: string; slug: string; icon?: string; order: number; active: boolean; description?: string
+    _id: string; name: string; slug: string; icon?: string; image?: string; order: number; active: boolean; description?: string
 }
 
 export default function CategoriesPage() {
@@ -14,7 +15,7 @@ export default function CategoriesPage() {
     const [showForm, setShowForm] = useState(false)
     const [editing, setEditing] = useState<Category | null>(null)
     const [search, setSearch] = useState("")
-    const [form, setForm] = useState({ name: '', slug: '', icon: '', description: '', order: 0, active: true })
+    const [form, setForm] = useState({ name: '', slug: '', icon: '', image: '', description: '', order: 0, active: true })
 
     useEffect(() => {
         fetch('/api/categories').then(r => r.json()).then(data => {
@@ -25,13 +26,13 @@ export default function CategoriesPage() {
 
     const openCreate = () => {
         setEditing(null)
-        setForm({ name: '', slug: '', icon: '', description: '', order: categories.length + 1, active: true })
+        setForm({ name: '', slug: '', icon: '', image: '', description: '', order: categories.length + 1, active: true })
         setShowForm(true)
     }
 
     const openEdit = (cat: Category) => {
         setEditing(cat)
-        setForm({ name: cat.name, slug: cat.slug, icon: cat.icon || '', description: cat.description || '', order: cat.order, active: cat.active })
+        setForm({ name: cat.name, slug: cat.slug, icon: cat.icon || '', image: cat.image || '', description: cat.description || '', order: cat.order, active: cat.active })
         setShowForm(true)
     }
 
@@ -158,6 +159,15 @@ export default function CategoriesPage() {
                                 <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Description</label>
                                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white resize-none h-20" />
                             </div>
+
+                            {/* ── Category Image Upload ── */}
+                            <ImageUpload
+                                value={form.image}
+                                onChange={url => setForm({ ...form, image: url })}
+                                label="Image de la catégorie"
+                                folder="/Life/categories"
+                            />
+
                             <label className="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox" checked={form.active} onChange={e => setForm({ ...form, active: e.target.checked })} className="rounded accent-emerald-500" />
                                 <span className="text-sm text-[#a0a0b8]">Active</span>

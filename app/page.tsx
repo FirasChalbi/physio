@@ -13,6 +13,7 @@ import NotificationDrawer from "@/components/NotificationDrawer"
 import Logo from "@/components/Logo"
 import ImageCarousel from "@/components/ImageCarousel"
 import SearchAutocomplete from "@/components/SearchAutocomplete"
+import Footer from "@/components/Footer"
 
 type Category = { _id: string; name: string; slug: string; icon?: string }
 type Offer = {
@@ -1356,34 +1357,8 @@ export default function HomePage() {
                     </section>
                 )}
 
-                {/* ═══════════ DESKTOP FOOTER ═══════════ */}
-                <footer className="hidden md:block border-t py-12 mt-8" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                    <div className="max-w-7xl mx-auto px-4">
-                        <div className="grid grid-cols-4 gap-8 mb-8">
-                            <div>
-                                <div className="flex items-center gap-1.5 mb-4">
-                                    <Logo size="sm" />
-                                </div>
-                                <p className="text-xs text-[#6a6a80] leading-relaxed">Les meilleures offres locales en Yvelines (78).</p>
-                            </div>
-                            <div>
-                                <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Catégories</h4>
-                                <ul className="space-y-2">{categories.slice(0, 5).map(c => <li key={c._id}><Link href={`/categories/${c.slug}`} className="text-xs text-[#6a6a80] hover:text-white transition-colors">{c.name}</Link></li>)}</ul>
-                            </div>
-                            <div>
-                                <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Entreprise</h4>
-                                <ul className="space-y-2"><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">À propos</Link></li><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">Contact</Link></li></ul>
-                            </div>
-                            <div>
-                                <h4 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Légal</h4>
-                                <ul className="space-y-2"><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">Conditions</Link></li><li><Link href="#" className="text-xs text-[#6a6a80] hover:text-white transition-colors">Confidentialité</Link></li></ul>
-                            </div>
-                        </div>
-                        <div className="border-t pt-6 text-center" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <p className="text-xs text-[#6a6a80]">© {new Date().getFullYear()} LifeDeal Yvelines. Tous droits réservés.</p>
-                        </div>
-                    </div>
-                </footer>
+                {/* ═══════════ FOOTER ═══════════ */}
+                <Footer />
                 </>
                 )}
             </main>

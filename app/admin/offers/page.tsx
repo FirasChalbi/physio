@@ -3,10 +3,11 @@
 
 import { useEffect, useState } from "react"
 import { Plus, Search, Edit2, Trash2, Eye, Gift, Filter } from "lucide-react"
+import ImageUpload, { MultiImageUpload } from "@/components/ImageUpload"
 
 type Offer = {
     _id: string; title: string; slug: string; shortDescription: string; categoryId: string; merchantId: string;
-    city: string; coverImage: string; originalPrice: number; dealPrice: number; discountPercent: number;
+    city: string; coverImage: string; galleryImages?: string[]; originalPrice: number; dealPrice: number; discountPercent: number;
     featured: boolean; status: string; soldCount?: number; viewCount?: number; tags?: string[]; perks?: string[]
 }
 
@@ -25,7 +26,7 @@ export default function OffersPage() {
     const [editing, setEditing] = useState<Offer | null>(null)
     const [form, setForm] = useState({
         title: '', slug: '', shortDescription: '', description: '', categoryId: '', merchantId: '',
-        city: '', address: '', coverImage: '', originalPrice: 0, dealPrice: 0, discountPercent: 0,
+        city: '', address: '', coverImage: '', galleryImages: [] as string[], originalPrice: 0, dealPrice: 0, discountPercent: 0,
         featured: false, status: 'active' as string, tags: '', perks: ''
     })
 
@@ -38,7 +39,7 @@ export default function OffersPage() {
 
     const openCreate = () => {
         setEditing(null)
-        setForm({ title: '', slug: '', shortDescription: '', description: '', categoryId: '', merchantId: '', city: '', address: '', coverImage: '', originalPrice: 0, dealPrice: 0, discountPercent: 0, featured: false, status: 'active', tags: '', perks: '' })
+        setForm({ title: '', slug: '', shortDescription: '', description: '', categoryId: '', merchantId: '', city: '', address: '', coverImage: '', galleryImages: [], originalPrice: 0, dealPrice: 0, discountPercent: 0, featured: false, status: 'active', tags: '', perks: '' })
         setShowForm(true)
     }
 
@@ -48,6 +49,7 @@ export default function OffersPage() {
             title: offer.title, slug: offer.slug, shortDescription: offer.shortDescription,
             description: '', categoryId: offer.categoryId, merchantId: offer.merchantId,
             city: offer.city, address: '', coverImage: offer.coverImage,
+            galleryImages: offer.galleryImages || [],
             originalPrice: offer.originalPrice, dealPrice: offer.dealPrice,
             discountPercent: offer.discountPercent, featured: offer.featured, status: offer.status, tags: offer.tags?.join(', ') || '', perks: offer.perks?.join(', ') || ''
         })
@@ -195,10 +197,28 @@ export default function OffersPage() {
                                     <input value={form.city} onChange={e => setForm({ ...form, city: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" />
                                 </div>
                                 <div>
-                                    <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Image (URL)</label>
-                                    <input value={form.coverImage} onChange={e => setForm({ ...form, coverImage: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" />
+                                    <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Adresse</label>
+                                    <input value={form.address} onChange={e => setForm({ ...form, address: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" />
                                 </div>
                             </div>
+
+                            {/* ── Cover Image Upload ── */}
+                            <ImageUpload
+                                value={form.coverImage}
+                                onChange={url => setForm({ ...form, coverImage: url })}
+                                label="Image de couverture"
+                                folder="/Life/offers"
+                            />
+
+                            {/* ── Gallery Images Upload ── */}
+                            <MultiImageUpload
+                                values={form.galleryImages}
+                                onChange={urls => setForm({ ...form, galleryImages: urls })}
+                                label="Galerie d'images"
+                                folder="/Life/offers"
+                                maxImages={8}
+                            />
+
                             <div className="grid grid-cols-3 gap-4">
                                 <div>
                                     <label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Prix original</label>

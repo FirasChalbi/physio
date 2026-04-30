@@ -3,13 +3,14 @@
 
 import { useEffect, useState } from "react"
 import { Plus, Search, Edit2, Trash2, Store, BadgeCheck, MapPin } from "lucide-react"
+import ImageUpload, { MultiImageUpload } from "@/components/ImageUpload"
 
 type MenuItem = { name: string; price: number; description?: string; category?: string; image?: string }
 type ServiceItem = { name: string; price: number; duration?: string; description?: string; image?: string }
 type Merchant = {
-    _id: string; name: string; slug: string; logo?: string; city?: string; phone?: string;
+    _id: string; name: string; slug: string; logo?: string; coverImage?: string; city?: string; phone?: string;
     email?: string; verified: boolean; active: boolean; rating?: number; reviewCount?: number;
-    menu?: MenuItem[]; services?: ServiceItem[]
+    menu?: MenuItem[]; services?: ServiceItem[]; images?: string[]
 }
 
 export default function MerchantsPage() {
@@ -19,8 +20,8 @@ export default function MerchantsPage() {
     const [showForm, setShowForm] = useState(false)
     const [editing, setEditing] = useState<Merchant | null>(null)
     const [form, setForm] = useState({
-        name: '', slug: '', logo: '', city: '', phone: '', email: '', description: '', verified: false, active: true,
-        menu: [] as MenuItem[], services: [] as ServiceItem[]
+        name: '', slug: '', logo: '', coverImage: '', city: '', phone: '', email: '', description: '', verified: false, active: true,
+        menu: [] as MenuItem[], services: [] as ServiceItem[], images: [] as string[]
     })
 
     useEffect(() => {
@@ -30,8 +31,22 @@ export default function MerchantsPage() {
         }).catch(() => setLoading(false))
     }, [])
 
-    const openCreate = () => { setEditing(null); setForm({ name: '', slug: '', logo: '', city: '', phone: '', email: '', description: '', verified: false, active: true, menu: [], services: [] }); setShowForm(true) }
-    const openEdit = (m: Merchant) => { setEditing(m); setForm({ name: m.name, slug: m.slug, logo: m.logo || '', city: m.city || '', phone: m.phone || '', email: m.email || '', description: '', verified: m.verified, active: m.active, menu: m.menu || [], services: m.services || [] }); setShowForm(true) }
+    const openCreate = () => {
+        setEditing(null)
+        setForm({ name: '', slug: '', logo: '', coverImage: '', city: '', phone: '', email: '', description: '', verified: false, active: true, menu: [], services: [], images: [] })
+        setShowForm(true)
+    }
+
+    const openEdit = (m: Merchant) => {
+        setEditing(m)
+        setForm({
+            name: m.name, slug: m.slug, logo: m.logo || '', coverImage: m.coverImage || '',
+            city: m.city || '', phone: m.phone || '', email: m.email || '', description: '',
+            verified: m.verified, active: m.active, menu: m.menu || [], services: m.services || [],
+            images: m.images || []
+        })
+        setShowForm(true)
+    }
 
     const save = async () => {
         const method = editing ? 'PUT' : 'POST'
@@ -135,7 +150,33 @@ export default function MerchantsPage() {
                                 <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Téléphone</label><input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
                             </div>
                             <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Email</label><input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
-                            <div><label className="text-xs text-[#8888a0] font-medium uppercase tracking-wider mb-1.5 block">Logo (URL)</label><input value={form.logo} onChange={e => setForm({ ...form, logo: e.target.value })} className="input-dark w-full px-3 py-2.5 rounded-xl text-sm text-white" /></div>
+
+                            {/* ── Logo Upload ── */}
+                            <ImageUpload
+                                value={form.logo}
+                                onChange={url => setForm({ ...form, logo: url })}
+                                label="Logo"
+                                folder="/Life/logos"
+                                compact
+                            />
+
+                            {/* ── Cover Image Upload ── */}
+                            <ImageUpload
+                                value={form.coverImage}
+                                onChange={url => setForm({ ...form, coverImage: url })}
+                                label="Image de couverture"
+                                folder="/Life/merchants"
+                            />
+
+                            {/* ── Gallery Images ── */}
+                            <MultiImageUpload
+                                values={form.images}
+                                onChange={urls => setForm({ ...form, images: urls })}
+                                label="Galerie d'images"
+                                folder="/Life/merchants"
+                                maxImages={10}
+                            />
+
                             <div className="flex gap-4">
                                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.verified} onChange={e => setForm({ ...form, verified: e.target.checked })} className="rounded accent-cyan-500" /><span className="text-sm text-[#a0a0b8]">Vérifié</span></label>
                                 <label className="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked={form.active} onChange={e => setForm({ ...form, active: e.target.checked })} className="rounded accent-emerald-500" /><span className="text-sm text-[#a0a0b8]">Actif</span></label>
