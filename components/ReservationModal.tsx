@@ -78,6 +78,9 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
+  // ⚠️ useMemo MUST be before any early return — Rules of Hooks
+  const totalPrice = useMemo(() => selectedItems.reduce((s, i) => s + i.price, 0), [selectedItems])
+
   if (!open) return null
 
   const toggleItem = (itemName: string, price: number, type: 'menu' | 'service' | 'offer') => {
@@ -89,8 +92,6 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
   }
 
   const isSelected = (name: string, type: string) => selectedItems.some(i => i.name === name && i.type === type)
-
-  const totalPrice = useMemo(() => selectedItems.reduce((s, i) => s + i.price, 0), [selectedItems])
 
   const handleSubmit = async () => {
     if (!name.trim() || !phone.trim()) { setError("Veuillez remplir tous les champs."); return }
