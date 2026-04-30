@@ -7,7 +7,7 @@ import { Plus, Search, Edit2, Trash2, Eye, Gift, Filter } from "lucide-react"
 type Offer = {
     _id: string; title: string; slug: string; shortDescription: string; categoryId: string; merchantId: string;
     city: string; coverImage: string; originalPrice: number; dealPrice: number; discountPercent: number;
-    featured: boolean; status: string; soldCount?: number; viewCount?: number; perks?: string[]
+    featured: boolean; status: string; soldCount?: number; viewCount?: number; tags?: string[]; perks?: string[]
 }
 
 const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
