@@ -1373,7 +1373,7 @@ export default function HomePage() {
                 )}
 
                 {/* ═══════════ FOOTER ═══════════ */}
-                <Footer />
+                {/* <Footer /> */}
                 </>
                 )}
             </main>
