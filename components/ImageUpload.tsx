@@ -151,7 +151,7 @@ export default function ImageUpload({ value, onChange, label, folder = "/Life", 
                             border: `1px solid ${dragOver ? 'rgba(139, 92, 246, 0.4)' : 'rgba(139, 92, 246, 0.2)'}`,
                         }}
                     >
-                        {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : done ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Upload className="w-3.5 h-3.5" />}
+                        {uploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : done ? <Check className="w-3.5 h-3.5 text-[#FF2D55]" /> : <Upload className="w-3.5 h-3.5" />}
                         {uploading ? "Compression..." : done ? "Uploadé !" : value ? "Changer" : "Glissez ou cliquez"}
                     </div>
                     <input ref={inputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
@@ -162,7 +162,7 @@ export default function ImageUpload({ value, onChange, label, folder = "/Life", 
                         <span className="text-[10px] text-[#6a6a80]">
                             {formatFileSize(progress.original)} → {formatFileSize(progress.compressed)}
                             {progress.compressed < progress.original && (
-                                <span className="text-emerald-400 ml-1">(-{Math.round((1 - progress.compressed / progress.original) * 100)}%)</span>
+                                <span className="text-[#FF2D55] ml-1">(-{Math.round((1 - progress.compressed / progress.original) * 100)}%)</span>
                             )}
                         </span>
                     </div>
@@ -192,7 +192,7 @@ export default function ImageUpload({ value, onChange, label, folder = "/Life", 
                         </button>
                     </div>
                     {done && (
-                        <div className="absolute top-2 right-2 px-2 py-1 rounded-lg text-[10px] font-medium text-emerald-400 flex items-center gap-1" style={{ background: 'rgba(16,185,129,0.15)' }}>
+                        <div className="absolute top-2 right-2 px-2 py-1 rounded-lg text-[10px] font-medium text-[#FF2D55] flex items-center gap-1" style={{ background: 'rgba(255,45,85,0.15)' }}>
                             <Check className="w-3 h-3" /> Uploadé
                         </div>
                     )}

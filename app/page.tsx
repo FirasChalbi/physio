@@ -50,13 +50,13 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
         <section className="mb-8">
             <div className="flex items-center justify-between px-4 mb-4">
                 <h2 className="text-base md:text-xl font-bold text-white">{title}</h2>
-                <Link href={href} className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                <Link href={href} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -67,7 +67,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                                 <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                             </button>
                             <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
-                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
                             <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
@@ -76,12 +76,12 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                             </p>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-baseline gap-1.5">
-                                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                    <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                     <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                    <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                    <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                    <span className="text-[11px] text-[#FF2D55] font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                     <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
                                 </div>
                             </div>
@@ -93,7 +93,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border group"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -104,7 +104,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                                 <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                             </button>
                             <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
-                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
                             <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
@@ -113,12 +113,12 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                             </p>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-baseline gap-1.5">
-                                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                    <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                     <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                    <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                    <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                    <span className="text-[11px] text-[#FF2D55] font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                     <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
                                 </div>
                             </div>
@@ -146,14 +146,14 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
         <section className="mb-8">
             <div className="flex items-center justify-between px-4 mb-4">
                 <h2 className="text-base md:text-xl font-bold text-white">{title}</h2>
-                <Link href={href} className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                <Link href={href} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
                 {featuredCard}
                 {merchants.map(m => (
                     <Link key={m._id} href={`/merchants/${m.slug}`}
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-1 pointer-events-none" />
@@ -166,7 +166,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                             )}
                             {getOfferCount(m._id) > 0 && (
                                 <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1 z-2 pointer-events-none"
-                                    style={{ background: 'rgba(16, 185, 129, 0.85)' }}>
+                                    style={{ background: 'rgba(255, 45, 85, 0.85)' }}>
                                     <Tag className="w-2.5 h-2.5" />{getOfferCount(m._id)} offres
                                 </span>
                             )}
@@ -179,11 +179,11 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                             <div className="flex items-center justify-between">
                                 {getMaxDiscount(m._id) != null && (
                                     <span className="px-2 py-0.5 rounded-md text-xs font-bold text-white"
-                                        style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9))' }}>Jusqu'à -{getMaxDiscount(m._id)}%</span>
+                                        style={{ background: 'linear-gradient(135deg, rgba(255,45,85,0.9), rgba(204,36,68,0.9))' }}>Jusqu'à -{getMaxDiscount(m._id)}%</span>
                                 )}
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                    <span className="text-[11px] text-emerald-400 font-medium">
+                                    <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                    <span className="text-[11px] text-[#FF2D55] font-medium">
                                         {m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}
                                     </span>
                                     <span className="text-[10px] text-[#6a6a80]">({m.reviewCount || m.review_count || 0})</span>
@@ -198,7 +198,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                 {merchants.map(m => (
                     <Link key={m._id} href={`/merchants/${m.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border group"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-1 pointer-events-none" />
@@ -211,7 +211,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                             )}
                             {getOfferCount(m._id) > 0 && (
                                 <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1 z-2 pointer-events-none"
-                                    style={{ background: 'rgba(16, 185, 129, 0.85)' }}>
+                                    style={{ background: 'rgba(255, 45, 85, 0.85)' }}>
                                     <Tag className="w-2.5 h-2.5" />{getOfferCount(m._id)} offres
                                 </span>
                             )}
@@ -222,11 +222,11 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                             <div className="flex items-center justify-between">
                                 {getMaxDiscount(m._id) != null && (
                                     <span className="px-2 py-0.5 rounded-md text-xs font-bold text-white"
-                                        style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9))' }}>Jusqu'à -{getMaxDiscount(m._id)}%</span>
+                                        style={{ background: 'linear-gradient(135deg, rgba(255,45,85,0.9), rgba(204,36,68,0.9))' }}>Jusqu'à -{getMaxDiscount(m._id)}%</span>
                                 )}
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                    <span className="text-xs text-emerald-400 font-medium">
+                                    <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                    <span className="text-xs text-[#FF2D55] font-medium">
                                         {m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}
                                     </span>
                                     <span className="text-[10px] text-[#6a6a80]">({m.reviewCount || m.review_count || 0})</span>
@@ -254,7 +254,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -265,7 +265,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                                 <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                             </button>
                             <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
-                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
                             <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
@@ -274,12 +274,12 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                             </p>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-baseline gap-1.5">
-                                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                    <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                     <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                    <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                    <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                    <span className="text-[11px] text-[#FF2D55] font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                     <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
                                 </div>
                             </div>
@@ -291,7 +291,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border group"
-                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -302,7 +302,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                                 <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                             </button>
                             <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
-                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
                             <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
@@ -311,12 +311,12 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                             </p>
                             <div className="flex items-center justify-between">
                                 <div className="flex items-baseline gap-1.5">
-                                    <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                    <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                     <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                    <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                    <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                    <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                    <span className="text-[11px] text-[#FF2D55] font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                     <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
                                 </div>
                             </div>
@@ -335,7 +335,7 @@ const skelBg = { background: 'rgba(255,255,255,0.06)' }
 function SkeletonOfferCard() {
     return (
         <div className={`shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border`}
-            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className={`h-40 ${skelBase}`} style={skelBg} />
             <div className="p-3.5 space-y-2.5">
                 <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
@@ -352,7 +352,7 @@ function SkeletonOfferCard() {
 function SkeletonMerchantCard() {
     return (
         <div className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border"
-            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className={`h-40 ${skelBase}`} style={skelBg} />
             <div className="p-3.5 space-y-2.5">
                 <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
@@ -379,7 +379,7 @@ function SkeletonCategory() {
 function SkeletonFamilyCard() {
     return (
         <div className="shrink-0 w-40 md:w-auto rounded-2xl overflow-hidden border"
-            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className={`h-28 ${skelBase}`} style={skelBg} />
             <div className="p-2.5 space-y-2">
                 <div className={`h-3 w-3/4 ${skelBase}`} style={skelBg} />
@@ -395,7 +395,7 @@ function SkeletonFamilyCard() {
 function SkeletonCityCard() {
     return (
         <div className="relative rounded-2xl overflow-hidden h-28 md:h-36"
-            style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
             <div className={`absolute inset-0 ${skelBase}`} style={skelBg} />
             <div className="relative z-10 p-4 flex flex-col justify-end h-full space-y-1.5">
                 <div className={`h-2.5 w-16 ${skelBase}`} style={skelBg} />
@@ -408,7 +408,7 @@ function SkeletonCityCard() {
 function SkeletonListCard() {
     return (
         <div className="flex gap-3 rounded-2xl border p-3"
-            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className={`w-24 h-24 rounded-xl shrink-0 ${skelBase}`} style={skelBg} />
             <div className="flex-1 space-y-2 py-0.5">
                 <div className={`h-2.5 w-20 ${skelBase}`} style={skelBg} />
@@ -425,7 +425,7 @@ function SkeletonListCard() {
 function SkeletonDesktopGridCard() {
     return (
         <div className="rounded-2xl overflow-hidden border"
-            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
             <div className={`h-44 ${skelBase}`} style={skelBg} />
             <div className="p-4 space-y-2.5">
                 <div className={`h-2.5 w-20 ${skelBase}`} style={skelBg} />
@@ -630,16 +630,16 @@ export default function HomePage() {
         .filter((o): o is Offer => !!o)
 
     return (
-        <div className="min-h-screen pb-24 md:pb-0" style={{ background: '#0a0a0f' }}>
+        <div className="min-h-screen pb-24 md:pb-0" style={{ background: '#0E0E0F' }}>
 
             {/* ═══════════ MOBILE HEADER ═══════════ */}
-            <header className="sticky top-0 z-50 px-4 pt-4 pb-3 md:hidden" style={{ background: '#0a0a0f' }}>
+            <header className="sticky top-0 z-50 px-4 pt-4 pb-3 md:hidden" style={{ background: '#0E0E0F' }}>
                 <div className="flex items-center justify-between">
                     <Logo size="lg" />
                     <button onClick={() => setNotifOpen(true)} className="relative p-2">
                         <Bell className="w-5 h-5 text-[#8888a0]" />
                         {unreadNotifCount > 0 && (
-                            <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                            <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                                 {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
                             </span>
                         )}
@@ -663,7 +663,7 @@ export default function HomePage() {
                     )}
                     {!heroScrolled && <div className="flex-1" />}
                     <div className="flex items-center gap-6">
-                        <Link href="/" className="text-sm text-emerald-400 hover:text-emerald-300 transition-colors font-medium">
+                        <Link href="/" className="text-sm text-[#FF2D55] hover:text-[#FF4D7A] transition-colors font-medium">
                             Explore
                         </Link>
                         <Link href="/map" className="text-sm text-[#8888a0] hover:text-white transition-colors">
@@ -672,7 +672,7 @@ export default function HomePage() {
                         <button onClick={() => setNotifOpen(true)} className="relative text-[#8888a0] hover:text-white transition-colors">
                             <Bell className="w-5 h-5" />
                             {unreadNotifCount > 0 && (
-                                <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                                <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                                     {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
                                 </span>
                             )}
@@ -750,7 +750,7 @@ export default function HomePage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {Array.from({ length: 2 }).map((_, i) => (
                                     <div key={i} className="relative rounded-2xl overflow-hidden h-32 md:h-40"
-                                        style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                        style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
                                         <div className={`absolute inset-0 ${skelBase}`} style={skelBg} />
                                     </div>
                                 ))}
@@ -800,12 +800,12 @@ export default function HomePage() {
                     </>
                 ) : (
                 <>
-                <div className="px-4 mb-6 md:hidden">
-                    <p className="text-sm text-[#8888a0]">
-                        Bonjour {userName ? <span className="text-emerald-400 font-medium">{userName}</span> : <span className="text-emerald-400"></span>}
-                    </p>
-                    <h1 className="text-xl font-bold text-white mt-0.5 mb-4">
-                        Que cherchez-vous<br />en Yvelines ?
+                <div className="px-4 pt-4 pb-6 md:hidden">
+                    <h1 className="text-3xl font-extrabold text-white mb-5 leading-tight tracking-tight text-center">
+                        Les meilleures offres<br />
+                        <span style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                            près de chez vous
+                        </span>
                     </h1>
                     <SearchAutocomplete
                         placeholders={defaultPlaceholders}
@@ -817,16 +817,16 @@ export default function HomePage() {
                 <section className="hidden md:block py-20 px-4 relative overflow-hidden">
                     {/* Subtle background glow */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] rounded-full opacity-20 pointer-events-none"
-                        style={{ background: 'radial-gradient(ellipse, rgba(16,185,129,0.3) 0%, transparent 70%)' }} />
+                        style={{ background: 'radial-gradient(ellipse, rgba(255,45,85,0.3) 0%, transparent 70%)' }} />
                     <div className="max-w-3xl mx-auto text-center relative z-10">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium mb-8"
-                            style={{ background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+                            style={{ background: 'rgba(255, 45, 85, 0.1)', color: '#FF2D55', border: '1px solid rgba(255, 45, 85, 0.2)' }}>
                             <LucideIcons.Percent className="w-3.5 h-3.5" />
                             Jusqu'à -70% sur vos activités favorites
                         </div>
                         <h1 className="text-4xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
                             Les meilleures offres<br />
-                            <span style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+                            <span style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                                 près de chez vous
                             </span>
                         </h1>
@@ -849,7 +849,7 @@ export default function HomePage() {
                 <section className="px-4 mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-base md:text-xl font-bold text-white">Catégories populaires</h2>
-                        <Link href="/offers" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                        <Link href="/offers" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
 
                     {/* Single horizontal scroll — all screen sizes */}
@@ -868,12 +868,12 @@ export default function HomePage() {
                                 <Link key={cat.slug} href={`/offers?category=${cat.slug}`}
                                     className="shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl transition-all active:scale-95 group"
                                     style={{
-                                        background: 'linear-gradient(145deg, #161620, #111118)',
+                                        background: 'linear-gradient(145deg, #1C1C1E, #0E0E0F)',
                                         border: '1px solid rgba(255,255,255,0.07)',
-                                        boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(16,185,129,0.18)',
+                                        boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,45,85,0.18)',
                                         minWidth: '76px',
                                     }}>
-                                    <IconComp className="w-6 h-6 text-emerald-400 transition-transform group-hover:scale-110" />
+                                    <IconComp className="w-6 h-6 text-[#FF2D55] transition-transform group-hover:scale-110" />
                                     <span className="text-[10px] text-[#c0c0d0] font-medium text-center leading-tight whitespace-nowrap group-hover:text-white transition-colors">
                                         {cat.name}
                                     </span>
@@ -883,6 +883,22 @@ export default function HomePage() {
                     </div>
                 </section>
 
+                {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
+                <section className="mb-8">
+                    <div className="flex items-center justify-between px-4 mb-3">
+                        <h2 className="text-base md:text-xl font-bold text-white">📍 Bon plans par ville</h2>
+                        <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
+                    </div>
+                    <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
+                        {cities.map(city => (
+                            <button key={city.slug} onClick={() => setActiveCity(city.slug)}
+                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-[#FF2D55] text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                {city.name}
+                            </button>
+                        ))}
+                    </div>
+                    <OfferGrid offers={cityOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
+                </section>
                 {/* ═══════════ NOS RECOMMANDATIONS ═══════════ */}
                 <MerchantHorizontalSection
                     title="Nos recommandations"
@@ -891,13 +907,13 @@ export default function HomePage() {
                     categories={categories}
                     featuredCard={popularOffers.length > 0 ? (
                         <Link href="/offers?sort=discount" className="shrink-0 w-56 md:w-auto rounded-2xl relative overflow-hidden group active:scale-[0.98] transition-transform md:col-span-1 flex flex-col justify-end h-64 md:h-auto"
-                            style={{ background: '#12121a' }}>
+                            style={{ background: '#1C1C1E' }}>
                             <img src={popularOffers[0]?.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
                             <div className="relative z-10 p-4 flex flex-col justify-end h-full">
                                 <h3 className="text-lg font-bold text-white mb-1 leading-tight">Jusqu'à -70%</h3>
                                 <p className="text-xs text-white/70 mb-3">Promos et offres spéciales.</p>
-                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-1">Voir plus <ChevronRight className="w-4 h-4" /></span>
+                                <span className="text-sm font-semibold text-[#FF2D55] flex items-center gap-1">Voir plus <ChevronRight className="w-4 h-4" /></span>
                             </div>
                         </Link>
                     ) : undefined}
@@ -917,7 +933,7 @@ export default function HomePage() {
                     <section className="mb-8">
                         <div className="flex items-center justify-between px-4 mb-4">
                             <h2 className="text-base md:text-xl font-bold text-white">Recommandé pour vous</h2>
-                            <Link href="/offers?featured=1" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                            <Link href="/offers?featured=1" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                         </div>
 
                         {/* Mobile: horizontal scroll */}
@@ -925,7 +941,7 @@ export default function HomePage() {
                             {featuredOffers.map(offer => (
                                 <Link key={offer._id} href={`/offers/${offer.slug}`}
                                     className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -935,7 +951,7 @@ export default function HomePage() {
                                             <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                                         </button>
                                         <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
-                                            style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                            style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                                     </div>
                                     <div className="p-3.5">
                                         <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
@@ -944,12 +960,12 @@ export default function HomePage() {
                                         </p>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-baseline gap-1.5">
-                                                <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                                <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                                 <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                             </div>
                                             <div className="flex items-center gap-1">
-                                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                                <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                                <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                                <span className="text-[11px] text-[#FF2D55] font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                                 <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
                                             </div>
                                         </div>
@@ -963,7 +979,7 @@ export default function HomePage() {
                             {featuredOffers.map(offer => (
                                 <Link key={offer._id} href={`/offers/${offer.slug}`}
                                     className="deal-card rounded-2xl overflow-hidden border group"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -973,7 +989,7 @@ export default function HomePage() {
                                             <Heart className={`w-4 h-4 ${favorites.has(offer.slug) ? 'text-red-500 fill-red-500' : 'text-white'}`} />
                                         </button>
                                         <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white"
-                                            style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                            style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                                     </div>
                                     <div className="p-3.5">
                                         <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
@@ -982,12 +998,12 @@ export default function HomePage() {
                                         </p>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-baseline gap-1.5">
-                                                <span className="text-sm font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                                <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                                 <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                             </div>
                                             <div className="flex items-center gap-1">
-                                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                                <span className="text-[11px] text-emerald-400 font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                                <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                                <span className="text-[11px] text-[#FF2D55] font-medium">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                                 <span className="text-[10px] text-[#6a6a80]">({offer.reviewCount || 0})</span>
                                             </div>
                                         </div>
@@ -1002,45 +1018,29 @@ export default function HomePage() {
                 {popularOffers.length > 0 && (
                     <section className="px-4 mb-8">
                         <Link href="/offers?sort=popular" className="block relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-46 md:h-64"
-                            style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
                             <img src={popularOffers[0]?.coverImage || ''} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent" />
                             <div className="relative z-10 p-6 md:p-8 flex flex-col justify-end h-full">
                                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 leading-tight">Découvrez nos meilleures offres</h3>
                                 <p className="text-sm text-white/70 mb-4">Les deals les plus populaires de votre région.</p>
-                                <span className="text-sm font-semibold text-emerald-400 flex items-center gap-1">Voir plus <ChevronRight className="w-4 h-4" /></span>
+                                <span className="text-sm font-semibold text-[#FF2D55] flex items-center gap-1">Voir plus <ChevronRight className="w-4 h-4" /></span>
                             </div>
                         </Link>
                     </section>
                 )}
 
-                {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
-                <section className="mb-8">
-                    <div className="flex items-center justify-between px-4 mb-3">
-                        <h2 className="text-base md:text-xl font-bold text-white">📍 Bon plans par ville</h2>
-                        <Link href={`/offers?city=${activeCity}`} className="text-sm text-emerald-400 font-medium">Voir tout</Link>
-                    </div>
-                    <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
-                        {cities.map(city => (
-                            <button key={city.slug} onClick={() => setActiveCity(city.slug)}
-                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-emerald-500 text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
-                                {city.name}
-                            </button>
-                        ))}
-                    </div>
-                    <OfferGrid offers={cityOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
-                </section>
 
                 {/* ═══════════ PAR CATÉGORIE ═══════════ */}
                 <section className="mb-8">
                     <div className="flex items-center justify-between px-4 mb-3">
                         <h2 className="text-base md:text-xl font-bold text-white">Par catégorie</h2>
-                        <Link href={`/offers?category=${activeCategoryTab}`} className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                        <Link href={`/offers?category=${activeCategoryTab}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
                     <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
                         {categoryTabs.map(cat => (
                             <button key={cat.slug} onClick={() => setActiveCategoryTab(cat.slug)}
-                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCategoryTab === cat.slug ? 'bg-emerald-500 text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCategoryTab === cat.slug ? 'bg-[#FF2D55] text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
                                 {cat.name}
                             </button>
                         ))}
@@ -1066,11 +1066,11 @@ export default function HomePage() {
                             return (
                                 <Link key={city.slug} href={`/offers?city=${city.slug}`}
                                     className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-28 md:h-36"
-                                    style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                    style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
                                     {bgImage && <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-60" />}
                                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
                                     <div className="relative z-10 p-4 flex flex-col justify-end h-full">
-                                        <p className="text-xs text-emerald-400 font-medium mb-0.5">Bon plans à</p>
+                                        <p className="text-xs text-[#FF2D55] font-medium mb-0.5">Bon plans à</p>
                                         <h3 className="text-lg md:text-xl font-bold text-white">{city.name}</h3>
                                     </div>
                                 </Link>
@@ -1086,7 +1086,7 @@ export default function HomePage() {
                         {/* Meilleurs restaurants */}
                         <Link href="/offers?category=restaurant"
                             className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-32 md:h-40"
-                            style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
                             {(() => {
                                 const restoOffers = offers.filter(o => {
                                     const cat = categories.find(c => c._id === o.categoryId)
@@ -1095,9 +1095,9 @@ export default function HomePage() {
                                 const bgImage = restoOffers[0]?.coverImage || popularOffers[0]?.coverImage || ''
                                 return bgImage ? <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-50" /> : null
                             })()}
-                            <div className="absolute inset-0 bg-linear-to-r from-emerald-900/80 via-emerald-800/40 to-transparent" />
+                            <div className="absolute inset-0 bg-linear-to-r from-rose-900/80 via-rose-800/40 to-transparent" />
                             <div className="relative z-10 p-5 flex flex-col justify-center h-full">
-                                <LucideIcons.UtensilsCrossed className="w-8 h-8 text-emerald-400 mb-2" />
+                                <LucideIcons.UtensilsCrossed className="w-8 h-8 text-[#FF2D55] mb-2" />
                                 <h3 className="text-xl font-bold text-white">Meilleurs restaurants</h3>
                                 <p className="text-sm text-white/70">Découvrez les meilleures tables</p>
                             </div>
@@ -1106,7 +1106,7 @@ export default function HomePage() {
                         {/* Beauté & Santé */}
                         <Link href="/offers?category=beaute-sante"
                             className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-32 md:h-40"
-                            style={{ background: '#12121a', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
                             {(() => {
                                 const beautyOffers = offers.filter(o => {
                                     const cat = categories.find(c => c._id === o.categoryId)
@@ -1130,27 +1130,27 @@ export default function HomePage() {
                     <section className="px-4 mb-8">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-base md:text-xl font-bold text-white">Top 10 activités en famille</h2>
-                            <Link href="/family-activities" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                            <Link href="/family-activities" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                         </div>
                         <div className="flex gap-3 overflow-x-auto pb-3 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:grid md:grid-cols-5 lg:grid-cols-5 gap-3">
                             {familyActivities.slice(0, 10).map((activity, idx) => (
                                 <Link key={activity._id} href={`/family-activities/${activity.slug}`}
                                     className="shrink-0 w-40 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-28 overflow-hidden">
                                         <img src={activity.image} alt="" className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
                                         <div className="absolute top-2 left-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                                            style={{ background: 'rgba(16, 185, 129, 0.9)' }}>
+                                            style={{ background: 'rgba(255, 45, 85, 0.9)' }}>
                                             {idx + 1}
                                         </div>
                                     </div>
                                     <div className="p-2.5">
                                         <h3 className="text-xs font-semibold text-white mb-1 line-clamp-1">{activity.name}</h3>
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs font-bold text-emerald-400">{activity.price ? `${activity.price} €` : 'Gratuit'}</span>
+                                            <span className="text-xs font-bold text-[#FF2D55]">{activity.price ? `${activity.price} €` : 'Gratuit'}</span>
                                             <div className="flex items-center gap-0.5">
-                                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                                <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
                                                 <span className="text-[10px] text-[#8888a0]">{activity.rating ? activity.rating.toFixed(1) : '—'}</span>
                                             </div>
                                         </div>
@@ -1186,7 +1186,7 @@ export default function HomePage() {
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                             {allCitiesFilter.map(c => (
                                 <button key={c.slug} onClick={() => setAllOffersCity(c.slug)}
-                                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${allOffersCity === c.slug ? 'bg-emerald-500 text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${allOffersCity === c.slug ? 'bg-[#FF2D55] text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
                                     {c.name}
                                 </button>
                             ))}
@@ -1206,24 +1206,24 @@ export default function HomePage() {
                         {filteredOffers.map(offer => (
                             <Link key={offer._id} href={`/merchants/${getMerchantSlug(offer.merchantId)}`}
                                 className="flex gap-3 rounded-2xl border p-3 active:scale-[0.98] transition-transform"
-                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                 <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 relative">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
-                                        style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                        style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                                 </div>
                                 <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                                     <div>
-                                        <p className="text-[10px] text-emerald-400 font-medium">{getMerchantName(offer.merchantId)}</p>
+                                        <p className="text-[10px] text-[#FF2D55] font-medium">{getMerchantName(offer.merchantId)}</p>
                                         <h3 className="text-sm font-semibold text-white line-clamp-2 mt-0.5">{offer.title}</h3>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-1.5">
-                                            <span className="text-base font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                            <span className="text-base font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                             <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                         </div>
                                         <div className="flex items-center gap-1">
-                                            <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                            <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
                                             <span className="text-[11px] text-white">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                         </div>
                                     </div>
@@ -1241,7 +1241,7 @@ export default function HomePage() {
                         {filteredOffers.map(offer => (
                             <Link key={offer._id} href={`/merchants/${getMerchantSlug(offer.merchantId)}`}
                                 className="deal-card rounded-2xl overflow-hidden border"
-                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                 <div className="relative h-44 overflow-hidden">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -1254,12 +1254,12 @@ export default function HomePage() {
                                     <div className="absolute bottom-3 left-3 flex items-center gap-1"><MapPin className="w-3 h-3 text-white/70" /><span className="text-xs text-white/80">{offer.city}</span></div>
                                 </div>
                                 <div className="p-4">
-                                    <p className="text-[11px] text-emerald-400 font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
+                                    <p className="text-[11px] text-[#FF2D55] font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
                                     <h3 className="text-sm font-semibold text-white mb-1.5 line-clamp-2">{offer.title}</h3>
                                     <p className="text-xs text-[#6a6a80] mb-3 line-clamp-1">{offer.shortDescription}</p>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-2">
-                                            <span className="text-lg font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                            <span className="text-lg font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                             <span className="text-xs text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                         </div>
                                         {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
@@ -1279,7 +1279,7 @@ export default function HomePage() {
                     <section className="px-4 mb-8">
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-base md:text-xl font-bold text-white">🏪 Marchands populaires</h2>
-                            <Link href="/merchants" className="text-sm text-emerald-400 font-medium">Voir tout</Link>
+                            <Link href="/merchants" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                         </div>
 
                         {/* Mobile: horizontal scroll */}
@@ -1290,7 +1290,7 @@ export default function HomePage() {
                                 return (
                                 <Link key={m._id} href={`/merchants/${m.slug}`}
                                     className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -1301,7 +1301,7 @@ export default function HomePage() {
                                         </button>
                                         {merchOffers.length > 0 && (
                                             <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1"
-                                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>
+                                                style={{ background: 'rgba(255, 45, 85, 0.85)' }}>
                                                 <Tag className="w-2.5 h-2.5" />{merchOffers.length} offres
                                             </span>
                                         )}
@@ -1312,11 +1312,11 @@ export default function HomePage() {
                                         <div className="flex items-center justify-between">
                                             {maxDisc > 0 && (
                                                 <span className="px-2 py-0.5 rounded-md text-xs font-bold text-white"
-                                                    style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9))' }}>Jusqu'à -{maxDisc}%</span>
+                                                    style={{ background: 'linear-gradient(135deg, rgba(255,45,85,0.9), rgba(204,36,68,0.9))' }}>Jusqu'à -{maxDisc}%</span>
                                             )}
                                             <div className="flex items-center gap-1">
-                                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                                <span className="text-[11px] text-emerald-400 font-medium">{m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}</span>
+                                                <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                                <span className="text-[11px] text-[#FF2D55] font-medium">{m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}</span>
                                                 <span className="text-[10px] text-[#6a6a80]">({m.reviewCount || m.review_count || 0})</span>
                                             </div>
                                         </div>
@@ -1334,7 +1334,7 @@ export default function HomePage() {
                                 return (
                                 <Link key={m._id} href={`/merchants/${m.slug}`}
                                     className="deal-card rounded-2xl overflow-hidden border group"
-                                    style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -1345,7 +1345,7 @@ export default function HomePage() {
                                         </button>
                                         {merchOffers.length > 0 && (
                                             <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-bold text-white flex items-center gap-1"
-                                                style={{ background: 'rgba(16, 185, 129, 0.85)' }}>
+                                                style={{ background: 'rgba(255, 45, 85, 0.85)' }}>
                                                 <Tag className="w-2.5 h-2.5" />{merchOffers.length} offres
                                             </span>
                                         )}
@@ -1356,11 +1356,11 @@ export default function HomePage() {
                                         <div className="flex items-center justify-between">
                                             {maxDisc > 0 && (
                                                 <span className="px-2 py-0.5 rounded-md text-xs font-bold text-white"
-                                                    style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.9), rgba(5,150,105,0.9))' }}>Jusqu'à -{maxDisc}%</span>
+                                                    style={{ background: 'linear-gradient(135deg, rgba(255,45,85,0.9), rgba(204,36,68,0.9))' }}>Jusqu'à -{maxDisc}%</span>
                                             )}
                                             <div className="flex items-center gap-1">
-                                                <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-                                                <span className="text-xs text-emerald-400 font-medium">{m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}</span>
+                                                <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
+                                                <span className="text-xs text-[#FF2D55] font-medium">{m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}</span>
                                                 <span className="text-[10px] text-[#6a6a80]">({m.reviewCount || m.review_count || 0})</span>
                                             </div>
                                         </div>

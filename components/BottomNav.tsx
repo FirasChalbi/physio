@@ -22,14 +22,14 @@ export default function BottomNav() {
         return pathname?.startsWith(href)
     }
 
-    const activeClass = "text-emerald-400"
+    const activeClass = "text-[#FF2D55]"
     const inactiveClass = "text-[#6a6a80]"
 
     return (
         <nav
             className="fixed bottom-0 left-0 right-0 z-50 border-t md:hidden"
             style={{
-                background: "rgba(10, 10, 15, 0.95)",
+                background: "rgba(14, 14, 15, 0.95)",
                 backdropFilter: "blur(16px)",
                 borderColor: "rgba(255,255,255,0.06)",
             }}
@@ -57,9 +57,9 @@ export default function BottomNav() {
                         className="w-12 h-12 rounded-full flex items-center justify-center shadow-lg"
                         style={{
                             background: isActive("/map")
-                                ? "linear-gradient(135deg, #059669, #047857)"
-                                : "linear-gradient(135deg, #10b981, #059669)",
-                            boxShadow: "0 4px 20px rgba(16, 185, 129, 0.3)",
+                                ? "linear-gradient(135deg, #CC2444, #AA1D38)"
+                                : "linear-gradient(135deg, #FF2D55, #CC2444)",
+                            boxShadow: "0 4px 20px rgba(255, 45, 85, 0.3)",
                         }}
                     >
                         <Map className="w-6 h-6 text-white" />

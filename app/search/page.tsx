@@ -91,7 +91,7 @@ function SearchContent() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h1 className="text-lg md:text-2xl font-bold text-white">
-                Résultats pour « <span className="text-emerald-400">{q}</span> »
+                Résultats pour « <span className="text-[#FF2D55]">{q}</span> »
               </h1>
               <p className="text-sm text-[#6a6a80] mt-1">
                 {total} marchand{total !== 1 ? 's' : ''} trouvé{total !== 1 ? 's' : ''}
@@ -128,8 +128,8 @@ function SearchContent() {
         {!q && !loading && (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
-              style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
-              <Search className="w-8 h-8 text-emerald-400" />
+              style={{ background: 'rgba(255, 45, 85, 0.1)' }}>
+              <Search className="w-8 h-8 text-[#FF2D55]" />
             </div>
             <h2 className="text-xl font-bold text-white mb-2">Rechercher un marchand</h2>
             <p className="text-sm text-[#6a6a80] max-w-sm">
@@ -151,7 +151,7 @@ function SearchContent() {
               Essayez avec d'autres mots-clés.
             </p>
             <Link href="/" className="mt-6 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+              style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
               Retour à l'accueil
             </Link>
           </div>
@@ -168,7 +168,7 @@ function SearchContent() {
                 <Link
                   key={m._id}
                   href={`/merchants/${m.slug}`}
-                  className="group rounded-2xl overflow-hidden border transition-all duration-200 hover:border-emerald-500/20 hover:shadow-lg hover:shadow-emerald-500/5"
+                  className="group rounded-2xl overflow-hidden border transition-all duration-200 hover:border-[#FF2D55]/20 hover:shadow-lg hover:shadow-emerald-500/5"
                   style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
                 >
                   {/* Image */}
@@ -191,7 +191,7 @@ function SearchContent() {
                     {m.categories && m.categories.length > 0 && (
                       <div className="absolute top-3 left-3 flex gap-1.5 flex-wrap">
                         <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-white"
-                          style={{ background: 'rgba(16, 185, 129, 0.85)', backdropFilter: 'blur(4px)' }}>
+                          style={{ background: 'rgba(255, 45, 85, 0.85)', backdropFilter: 'blur(4px)' }}>
                           {m.categories[0]}
                         </span>
                       </div>
@@ -199,14 +199,14 @@ function SearchContent() {
 
                     {m.verified && (
                       <div className="absolute top-3 right-3">
-                        <BadgeCheck className="w-5 h-5 text-emerald-400 drop-shadow-lg" />
+                        <BadgeCheck className="w-5 h-5 text-[#FF2D55] drop-shadow-lg" />
                       </div>
                     )}
                   </div>
 
                   {/* Info */}
                   <div className="p-4">
-                    <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1 group-hover:text-emerald-400 transition-colors">
+                    <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1 group-hover:text-[#FF2D55] transition-colors">
                       {m.name}
                     </h3>
                     <div className="flex items-center gap-2 mb-3">
@@ -225,12 +225,12 @@ function SearchContent() {
                     <div className="flex items-center justify-between">
                       {rating && (
                         <div className="flex items-center gap-1">
-                          <Star className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
-                          <span className="text-xs text-emerald-400 font-medium">{rating}</span>
+                          <Star className="w-3.5 h-3.5 text-[#FF2D55] fill-[#FF2D55]" />
+                          <span className="text-xs text-[#FF2D55] font-medium">{rating}</span>
                           <span className="text-[10px] text-[#6a6a80]">({reviews})</span>
                         </div>
                       )}
-                      <span className="text-xs text-emerald-400 font-medium flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-xs text-[#FF2D55] font-medium flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                         Voir <ChevronRight className="w-3.5 h-3.5" />
                       </span>
                     </div>
@@ -249,7 +249,7 @@ export default function SearchPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
-        <div className="w-8 h-8 rounded-full border-2 border-emerald-400 border-t-transparent animate-spin" />
+        <div className="w-8 h-8 rounded-full border-2 border-[#FF2D55] border-t-transparent animate-spin" />
       </div>
     }>
       <SearchContent />

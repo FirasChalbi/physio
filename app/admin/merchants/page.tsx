@@ -91,7 +91,7 @@ export default function MerchantsPage() {
         <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div><h1 className="text-2xl font-bold text-white">Marchands</h1><p className="text-sm text-[#6a6a80] mt-1">{merchants.length} marchands</p></div>
-                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}><Plus className="w-4 h-4" /> Ajouter</button>
+                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}><Plus className="w-4 h-4" /> Ajouter</button>
             </div>
             <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl max-w-sm" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><Search className="w-4 h-4 text-[#6a6a80]" /><input type="text" placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full" /></div>
             <div className="rounded-2xl border overflow-hidden" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
@@ -112,7 +112,7 @@ export default function MerchantsPage() {
                             </div></td>
                             <td className="py-3.5 px-5 hidden md:table-cell"><span className="flex items-center gap-1.5 text-sm text-[#a0a0b8]"><MapPin className="w-3.5 h-3.5" />{m.city || '—'}</span></td>
                             <td className="py-3.5 px-5 hidden lg:table-cell"><span className="text-sm text-amber-400">★ {m.rating?.toFixed(1) || '—'}</span><span className="text-xs text-[#6a6a80] ml-1">({m.reviewCount || 0})</span></td>
-                            <td className="py-3.5 px-5"><span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={m.active ? { background: 'rgba(16,185,129,0.1)', color: '#10b981' } : { background: 'rgba(255,255,255,0.05)', color: '#6a6a80' }}>{m.active ? 'Actif' : 'Inactif'}</span></td>
+                            <td className="py-3.5 px-5"><span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={m.active ? { background: 'rgba(255,45,85,0.1)', color: '#FF2D55' } : { background: 'rgba(255,255,255,0.05)', color: '#6a6a80' }}>{m.active ? 'Actif' : 'Inactif'}</span></td>
                             <td className="py-3.5 px-5"><div className="flex items-center justify-end gap-1">
                                 <button onClick={() => openEdit(m)} className="p-2 rounded-lg hover:bg-white/5 text-[#8888a0] hover:text-white transition-colors"><Edit2 className="w-4 h-4" /></button>
                                 <button onClick={() => remove(m._id)} className="p-2 rounded-lg hover:bg-red-500/10 text-[#8888a0] hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button>
@@ -178,7 +178,7 @@ export default function MerchantsPage() {
                                             <button onClick={() => setForm({ ...form, menu: form.menu.filter((_, idx) => idx !== i) })} className="p-1 rounded hover:bg-red-500/10 text-red-400"><Trash2 className="w-3 h-3" /></button>
                                         </div>
                                     ))}
-                                    <button onClick={() => setForm({ ...form, menu: [...form.menu, { name: '', price: 0, category: '' }] })} className="w-full py-2 rounded-xl text-xs font-medium text-emerald-400 border border-dashed hover:bg-white/5 transition-colors" style={{ borderColor: 'rgba(16,185,129,0.2)' }}>+ Ajouter un plat</button>
+                                    <button onClick={() => setForm({ ...form, menu: [...form.menu, { name: '', price: 0, category: '' }] })} className="w-full py-2 rounded-xl text-xs font-medium text-[#FF2D55] border border-dashed hover:bg-white/5 transition-colors" style={{ borderColor: 'rgba(255,45,85,0.2)' }}>+ Ajouter un plat</button>
                                 </div>
                             </>)}
                             {tab === "services" && (<>
@@ -204,7 +204,7 @@ export default function MerchantsPage() {
                         </div>
                         <div className="flex gap-3 mt-6">
                             <button onClick={() => setShowForm(false)} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8888a0] hover:text-white border transition-colors" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>Annuler</button>
-                            <button onClick={save} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>{editing ? 'Enregistrer' : 'Créer'}</button>
+                            <button onClick={save} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>{editing ? 'Enregistrer' : 'Créer'}</button>
                         </div>
                     </div>
                 </div>

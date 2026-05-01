@@ -12,8 +12,8 @@ export async function GET(req: NextRequest) {
   const slug = searchParams.get('slug')
 
   const filter: Record<string, unknown> = {}
-  if (city) filter.city = city
-  if (category) filter.categories = category
+  if (city) filter.city = { $regex: city, $options: 'i' }
+  if (category) filter.categories = { $regex: category, $options: 'i' }
   if (slug) filter.slug = slug
 
   // Only return merchants that have lat/lng (for the map page)

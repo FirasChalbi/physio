@@ -25,7 +25,7 @@ export default function ReviewsPage() {
                                 <td className="py-3.5 px-5 text-sm font-medium text-white">{r.userName || 'Anonyme'}</td>
                                 <td className="py-3.5 px-5"><div className="flex items-center gap-0.5">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className={`w-3.5 h-3.5 ${i < r.rating ? 'text-amber-400 fill-amber-400' : 'text-[#333]'}`} />)}</div></td>
                                 <td className="py-3.5 px-5 text-sm text-[#a0a0b8] max-w-[300px] truncate hidden md:table-cell">{r.comment || '—'}</td>
-                                <td className="py-3.5 px-5"><span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={r.approved ? { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' } : { background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>{r.approved ? 'Approuvé' : 'En attente'}</span></td>
+                                <td className="py-3.5 px-5"><span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={r.approved ? { background: 'rgba(255, 45, 85, 0.1)', color: '#FF2D55' } : { background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b' }}>{r.approved ? 'Approuvé' : 'En attente'}</span></td>
                                 <td className="py-3.5 px-5 text-right"><button onClick={() => remove(r._id)} className="p-2 rounded-lg hover:bg-red-500/10 text-[#8888a0] hover:text-red-400 transition-colors"><Trash2 className="w-4 h-4" /></button></td>
                             </tr>
                         ))}

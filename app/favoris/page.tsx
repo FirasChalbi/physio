@@ -114,7 +114,7 @@ export default function FavorisPage() {
                         </p>
                         <Link href="/"
                             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white"
-                            style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                            style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                             <ShoppingBag className="w-4 h-4" />
                             Explorer les offres
                         </Link>
@@ -131,21 +131,21 @@ export default function FavorisPage() {
                                     className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
-                                        style={{ background: 'rgba(16, 185, 129, 0.85)' }}>-{offer.discountPercent}%</span>
+                                        style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                                 </Link>
 
                                 <Link href={`/offers/${offer.slug}`} className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                                     <div>
-                                        <p className="text-[10px] text-emerald-400 font-medium">{getMerchantName(offer.merchantId)}</p>
+                                        <p className="text-[10px] text-[#FF2D55] font-medium">{getMerchantName(offer.merchantId)}</p>
                                         <h3 className="text-sm font-semibold text-white line-clamp-2 mt-0.5">{offer.title}</h3>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-baseline gap-1.5">
-                                            <span className="text-base font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                            <span className="text-base font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                             <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                         </div>
                                         <div className="flex items-center gap-1">
-                                            <Star className="w-3 h-3 text-emerald-400 fill-emerald-400" />
+                                            <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
                                             <span className="text-[11px] text-white">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                         </div>
                                         <span className="flex items-center gap-0.5 text-[10px] text-[#6a6a80]">

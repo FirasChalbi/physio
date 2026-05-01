@@ -29,7 +29,7 @@ export default function BannersPage() {
         <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div><h1 className="text-2xl font-bold text-white">Bannières</h1><p className="text-sm text-[#6a6a80] mt-1">{banners.length} bannières</p></div>
-                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}><Plus className="w-4 h-4" /> Ajouter</button>
+                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}><Plus className="w-4 h-4" /> Ajouter</button>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {loading ? Array.from({ length: 3 }).map((_, i) => <div key={i} className="rounded-2xl h-48 shimmer" />) : banners.length === 0 ? <p className="text-[#6a6a80] col-span-full text-center py-12">Aucune bannière</p> : banners.map(b => (
@@ -48,7 +48,7 @@ export default function BannersPage() {
                         </div>
                         <div className="px-3 py-2.5 flex items-center justify-between">
                             <span className="px-2 py-0.5 rounded text-[10px] font-medium uppercase" style={{ background: 'rgba(6, 182, 212, 0.1)', color: '#06b6d4' }}>{b.position}</span>
-                            <span className="px-2 py-0.5 rounded text-[10px] font-medium" style={b.active ? { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' } : { background: 'rgba(255,255,255,0.05)', color: '#6a6a80' }}>{b.active ? 'Active' : 'Inactive'}</span>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-medium" style={b.active ? { background: 'rgba(255, 45, 85, 0.1)', color: '#FF2D55' } : { background: 'rgba(255,255,255,0.05)', color: '#6a6a80' }}>{b.active ? 'Active' : 'Inactive'}</span>
                         </div>
                     </div>
                 ))}
@@ -78,7 +78,7 @@ export default function BannersPage() {
                         </div>
                         <div className="flex gap-3 mt-6">
                             <button onClick={() => setShowForm(false)} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8888a0] hover:text-white border transition-colors" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>Annuler</button>
-                            <button onClick={save} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>{editing ? 'Enregistrer' : 'Créer'}</button>
+                            <button onClick={save} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>{editing ? 'Enregistrer' : 'Créer'}</button>
                         </div>
                     </div>
                 </div>

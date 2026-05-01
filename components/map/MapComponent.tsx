@@ -51,7 +51,7 @@ function createCategoryPinIcon(categoryName?: string) {
   return L.divIcon({
     html: `<div style="
       width:36px;height:36px;border-radius:50%;
-      background:linear-gradient(135deg,#10b981,#059669);
+      background:linear-gradient(135deg,#FF2D55,#CC2444);
       display:flex;align-items:center;justify-content:center;
       color:#fff;box-shadow:0 4px 12px rgba(16,185,129,0.4);
       border:2px solid rgba(255,255,255,0.25);
@@ -147,7 +147,7 @@ function RouteLine({ route }: { route: RouteInfo }) {
       <Polyline
         positions={route.coordinates}
         pathOptions={{
-          color: "#10b981",
+          color: "#FF2D55",
           weight: 8,
           opacity: 0.25,
           lineCap: "round",
@@ -158,7 +158,7 @@ function RouteLine({ route }: { route: RouteInfo }) {
       <Polyline
         positions={route.coordinates}
         pathOptions={{
-          color: "#10b981",
+          color: "#FF2D55",
           weight: 4,
           opacity: 0.9,
           lineCap: "round",
@@ -171,9 +171,9 @@ function RouteLine({ route }: { route: RouteInfo }) {
         center={[route.destLat, route.destLng]}
         radius={60}
         pathOptions={{
-          fillColor: "#10b981",
+          fillColor: "#FF2D55",
           fillOpacity: 0.3,
-          color: "#10b981",
+          color: "#FF2D55",
           weight: 2,
         }}
       />
@@ -434,7 +434,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
 
   if (!isClient) return (
     <div className="w-full h-full flex items-center justify-center" style={{ background: "#0a0a0f" }}>
-      <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
@@ -472,7 +472,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
           onClick={() => setPanelOpen(p => !p)}
           className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg transition-all"
           style={{
-            background: panelOpen ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(14,14,22,0.95)",
+            background: panelOpen ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "rgba(14,14,22,0.95)",
             border: "1px solid rgba(255,255,255,0.08)",
           }}
           title="Filtres"
@@ -491,9 +491,9 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
           title="Ma position"
         >
           {isLocating ? (
-            <div className="w-4 h-4 border-2 border-emerald-400 border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
           ) : (
-            <svg className="w-5 h-5 text-emerald-400" fill="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-[#FF2D55]" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
             </svg>
           )}
@@ -540,7 +540,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                     onClick={() => setSelCategory("")}
                     className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                     style={{
-                      background: !selCategory ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(255,255,255,0.05)",
+                      background: !selCategory ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "rgba(255,255,255,0.05)",
                       color: !selCategory ? "#fff" : "#8888a0",
                     }}
                   >Tout</button>
@@ -548,9 +548,9 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                     <button key={c} onClick={() => setSelCategory(selCategory === c ? "" : c)}
                       className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                       style={{
-                        background: selCategory === c ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.05)",
-                        border: `1px solid ${selCategory === c ? "rgba(16,185,129,0.3)" : "transparent"}`,
-                        color: selCategory === c ? "#10b981" : "#8888a0",
+                        background: selCategory === c ? "rgba(255,45,85,0.15)" : "rgba(255,255,255,0.05)",
+                        border: `1px solid ${selCategory === c ? "rgba(255,45,85,0.3)" : "transparent"}`,
+                        color: selCategory === c ? "#FF2D55" : "#8888a0",
                       }}
                     >{c}</button>
                   ))}
@@ -567,7 +567,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                     onClick={() => setSelMunicipality("")}
                     className="px-3 py-1.5 rounded-full text-xs font-medium"
                     style={{
-                      background: !selMunicipality ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(255,255,255,0.05)",
+                      background: !selMunicipality ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "rgba(255,255,255,0.05)",
                       color: !selMunicipality ? "#fff" : "#8888a0",
                     }}
                   >Tout</button>
@@ -575,9 +575,9 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                     <button key={m} onClick={() => setSelMunicipality(selMunicipality === m ? "" : m)}
                       className="px-3 py-1.5 rounded-full text-xs font-medium"
                       style={{
-                        background: selMunicipality === m ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.05)",
-                        border: `1px solid ${selMunicipality === m ? "rgba(16,185,129,0.3)" : "transparent"}`,
-                        color: selMunicipality === m ? "#10b981" : "#8888a0",
+                        background: selMunicipality === m ? "rgba(255,45,85,0.15)" : "rgba(255,255,255,0.05)",
+                        border: `1px solid ${selMunicipality === m ? "rgba(255,45,85,0.3)" : "transparent"}`,
+                        color: selMunicipality === m ? "#FF2D55" : "#8888a0",
                       }}
                     >{m}</button>
                   ))}
@@ -590,7 +590,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
               <button
                 onClick={() => { setSelCategory(""); setSelMunicipality("") }}
                 className="w-full py-2.5 rounded-xl text-sm font-medium"
-                style={{ background: "rgba(255,255,255,0.06)", color: "#10b981" }}
+                style={{ background: "rgba(255,255,255,0.06)", color: "#FF2D55" }}
               >Réinitialiser les filtres</button>
             )}
           </div>
@@ -604,7 +604,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
       >
         <span className="text-white font-bold text-sm">{filtered.length}</span> marchand{filtered.length !== 1 ? "s" : ""}
         {(selCategory || selMunicipality || searchQ) && (
-          <span className="text-emerald-400 ml-1">· filtré{filtered.length !== 1 ? "s" : ""}</span>
+          <span className="text-[#FF2D55] ml-1">· filtré{filtered.length !== 1 ? "s" : ""}</span>
         )}
       </div>
 
@@ -620,7 +620,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setNearbyDrawerOpen(true)}
-                  className="text-xs font-medium text-emerald-400 hover:text-emerald-300 transition-colors"
+                  className="text-xs font-medium text-[#FF2D55] hover:text-[#FF4D7A] transition-colors"
                 >Voir tout</button>
                 <button
                   onClick={() => setNearbyCollapsed(c => !c)}
@@ -656,7 +656,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                       </div>
                     )}
                     <div className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full flex items-center justify-center" style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)" }}>
-                      <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 text-[#FF2D55]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                       </svg>
                     </div>
@@ -665,11 +665,11 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                     <p className="text-xs font-semibold text-white truncate">{m.name}</p>
                     <p className="text-[10px] text-[#6a6a80] mt-0.5">{m.categories?.[0] || "Marchand"}</p>
                     <div className="flex items-center gap-1 mt-1">
-                      <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 text-[#FF2D55]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="text-[10px] text-emerald-400 font-medium">{d.toFixed(1)} km</span>
+                      <span className="text-[10px] text-[#FF2D55] font-medium">{d.toFixed(1)} km</span>
                     </div>
                   </div>
                 </button>
@@ -684,7 +684,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
       {nearbyDrawerOpen && (
         <div className="absolute inset-0 z-[1001] flex flex-col" style={{ background: "rgba(10,10,15,0.98)", backdropFilter: "blur(24px)" }}>
           <div className="flex items-center justify-between px-4 h-14 flex-shrink-0 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
-            <h2 className="text-sm font-semibold text-white">Près de vous · <span className="text-emerald-400">{nearbySorted.length}</span></h2>
+            <h2 className="text-sm font-semibold text-white">Près de vous · <span className="text-[#FF2D55]">{nearbySorted.length}</span></h2>
             <button onClick={() => setNearbyDrawerOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "rgba(255,255,255,0.06)" }}>
               <svg className="w-4 h-4 text-[#6a6a80]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -722,11 +722,11 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                       </div>
                     )}
                     <div className="flex items-center gap-1">
-                      <svg className="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 text-[#FF2D55]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      <span className="text-xs text-emerald-400 font-medium">{d.toFixed(1)} km</span>
+                      <span className="text-xs text-[#FF2D55] font-medium">{d.toFixed(1)} km</span>
                     </div>
                   </div>
                 </div>
@@ -776,7 +776,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
             <Circle
               center={[userLocation.lat, userLocation.lng]}
               radius={500}
-              pathOptions={{ fillColor: "#10b981", fillOpacity: 0.08, color: "#10b981", weight: 1.5, dashArray: "4 4" }}
+              pathOptions={{ fillColor: "#FF2D55", fillOpacity: 0.08, color: "#FF2D55", weight: 1.5, dashArray: "4 4" }}
             />
           </>
         )}
@@ -789,7 +789,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
               icon={L.divIcon({
                 html: `<div style="
                   width:44px;height:44px;border-radius:50%;
-                  background:linear-gradient(135deg,#10b981,#059669);
+                  background:linear-gradient(135deg,#FF2D55,#CC2444);
                   display:flex;align-items:center;justify-content:center;
                   color:#fff;box-shadow:0 0 0 6px rgba(16,185,129,0.25),0 4px 16px rgba(16,185,129,0.5);
                   border:3px solid rgba(255,255,255,0.4);
@@ -805,7 +805,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                 <div style={{ background: "#0e0e16", borderRadius: "12px", overflow: "hidden", border: "1px solid rgba(255,255,255,0.08)", minWidth: "180px" }}>
                   <div style={{ padding: "10px 12px" }}>
                     <p style={{ fontWeight: 700, fontSize: "14px", color: "#fff", marginBottom: "4px" }}>{focusLocation.name || "Emplacement"}</p>
-                    <p style={{ fontSize: "11px", color: "#10b981" }}>{focusLocation.lat.toFixed(4)}, {focusLocation.lng.toFixed(4)}</p>
+                    <p style={{ fontSize: "11px", color: "#FF2D55" }}>{focusLocation.lat.toFixed(4)}, {focusLocation.lng.toFixed(4)}</p>
                   </div>
                 </div>
               </Popup>
@@ -813,7 +813,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
             <Circle
               center={[focusLocation.lat, focusLocation.lng]}
               radius={200}
-              pathOptions={{ fillColor: "#10b981", fillOpacity: 0.12, color: "#10b981", weight: 2, dashArray: "6 4" }}
+              pathOptions={{ fillColor: "#FF2D55", fillOpacity: 0.12, color: "#FF2D55", weight: 2, dashArray: "6 4" }}
             />
           </>
         )}
@@ -829,7 +829,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
             return L.divIcon({
               html: `<div style="
                 width:36px;height:36px;border-radius:50%;
-                background:linear-gradient(135deg,#10b981,#059669);
+                background:linear-gradient(135deg,#FF2D55,#CC2444);
                 display:flex;align-items:center;justify-content:center;
                 color:#fff;font-size:12px;font-weight:700;
                 box-shadow:0 4px 12px rgba(16,185,129,0.4);
@@ -864,7 +864,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
 
                       {/* Categories */}
                       {m.categories && m.categories.length > 0 && (
-                        <p style={{ fontSize: "11px", color: "#10b981", marginBottom: "4px" }}>
+                        <p style={{ fontSize: "11px", color: "#FF2D55", marginBottom: "4px" }}>
                           {m.categories.slice(0, 2).join(" · ")}
                         </p>
                       )}
@@ -883,7 +883,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
 
                       {/* Today's hours */}
                       {todayHours && (
-                        <p style={{ fontSize: "11px", color: todayHours === "Fermé" ? "#ef4444" : "#10b981", marginBottom: "4px" }}>
+                        <p style={{ fontSize: "11px", color: todayHours === "Fermé" ? "#ef4444" : "#FF2D55", marginBottom: "4px" }}>
                           ● {todayHours}
                         </p>
                       )}
@@ -901,7 +901,7 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                           onClick={() => router.push(`/merchants/${m.slug}`)}
                           style={{
                             flex: 1, padding: "7px 0", borderRadius: "8px", fontSize: "12px", fontWeight: 600,
-                            background: "linear-gradient(135deg,#10b981,#059669)", color: "#fff", border: "none", cursor: "pointer"
+                            background: "linear-gradient(135deg,#FF2D55,#CC2444)", color: "#fff", border: "none", cursor: "pointer"
                           }}
                         >Voir la page</button>
                         {(m.latitude && m.longitude) ? (
@@ -910,14 +910,14 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                             disabled={isRouteLoading}
                             style={{
                               padding: "7px 10px", borderRadius: "8px", fontSize: "12px", fontWeight: 600,
-                              background: activeRoute?.destName === m.name ? "rgba(16,185,129,0.15)" : "rgba(255,255,255,0.06)",
-                              color: activeRoute?.destName === m.name ? "#10b981" : "#a0a0b8",
-                              border: `1px solid ${activeRoute?.destName === m.name ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.08)"}`,
+                              background: activeRoute?.destName === m.name ? "rgba(255,45,85,0.15)" : "rgba(255,255,255,0.06)",
+                              color: activeRoute?.destName === m.name ? "#FF2D55" : "#a0a0b8",
+                              border: `1px solid ${activeRoute?.destName === m.name ? "rgba(255,45,85,0.3)" : "rgba(255,255,255,0.08)"}`,
                               display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", gap: "4px"
                             }}
                           >
                             {isRouteLoading ? (
-                              <span style={{ width: 14, height: 14, border: "2px solid #10b981", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.6s linear infinite" }} />
+                              <span style={{ width: 14, height: 14, border: "2px solid #FF2D55", borderTopColor: "transparent", borderRadius: "50%", display: "inline-block", animation: "spin 0.6s linear infinite" }} />
                             ) : (
                               <>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -948,18 +948,18 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
           style={{
             background: "rgba(10,10,15,0.97)",
             backdropFilter: "blur(24px)",
-            borderTop: "1px solid rgba(16,185,129,0.2)",
+            borderTop: "1px solid rgba(255,45,85,0.2)",
             boxShadow: "0 -8px 40px rgba(0,0,0,0.6)",
           }}
         >
           {/* Green accent bar */}
-          <div style={{ height: "3px", background: "linear-gradient(90deg, #10b981, #06b6d4, #10b981)", animation: "shimmer 2s ease infinite" }} />
+          <div style={{ height: "3px", background: "linear-gradient(90deg, #FF2D55, #06b6d4, #FF2D55)", animation: "shimmer 2s ease infinite" }} />
           <div className="px-4 py-3">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}
+                  style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M3 12h3l3-9 3 18 3-9h6" />
@@ -985,9 +985,9 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
             <div className="flex gap-3 mb-3">
               <div
                 className="flex-1 px-3 py-2.5 rounded-xl text-center"
-                style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.15)" }}
+                style={{ background: "rgba(255,45,85,0.08)", border: "1px solid rgba(255,45,85,0.15)" }}
               >
-                <p className="text-emerald-400 text-lg font-bold">{activeRoute.distance.toFixed(1)}</p>
+                <p className="text-[#FF2D55] text-lg font-bold">{activeRoute.distance.toFixed(1)}</p>
                 <p className="text-[10px] text-[#6a6a80] font-medium">km</p>
               </div>
               <div
@@ -1014,12 +1014,12 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
                 onClick={liveTracking ? stopLiveTracking : startLiveTracking}
                 className="flex-1 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all"
                 style={{
-                  background: liveTracking ? "linear-gradient(135deg,#10b981,#059669)" : "rgba(255,255,255,0.06)",
+                  background: liveTracking ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "rgba(255,255,255,0.06)",
                   color: liveTracking ? "#fff" : "#a0a0b8",
                   border: `1px solid ${liveTracking ? "transparent" : "rgba(255,255,255,0.08)"}`,
                 }}
               >
-                <span style={{ width: 8, height: 8, borderRadius: "50%", background: liveTracking ? "#fff" : "#10b981", animation: liveTracking ? "pulse-dot 1.5s ease infinite" : "none" }} />
+                <span style={{ width: 8, height: 8, borderRadius: "50%", background: liveTracking ? "#fff" : "#FF2D55", animation: liveTracking ? "pulse-dot 1.5s ease infinite" : "none" }} />
                 {liveTracking ? "Suivi GPS actif" : "Activer suivi GPS"}
               </button>
               <a
@@ -1049,8 +1049,8 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
       {/* ── Route loading overlay ── */}
       {isRouteLoading && (
         <div className="absolute inset-0 z-[1003] flex items-center justify-center" style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}>
-          <div className="px-6 py-4 rounded-2xl flex flex-col items-center gap-3" style={{ background: "rgba(10,10,15,0.95)", border: "1px solid rgba(16,185,129,0.2)" }}>
-            <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+          <div className="px-6 py-4 rounded-2xl flex flex-col items-center gap-3" style={{ background: "rgba(10,10,15,0.95)", border: "1px solid rgba(255,45,85,0.2)" }}>
+            <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
             <p className="text-white text-sm font-medium">Calcul de l'itinéraire…</p>
           </div>
         </div>
@@ -1091,16 +1091,16 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
         .leaflet-popup-close-button:hover { color: #fff !important; }
         .leaflet-control-zoom a {
           background: rgba(14,14,22,0.95) !important;
-          color: #10b981 !important;
+          color: #FF2D55 !important;
           border-color: rgba(255,255,255,0.08) !important;
         }
-        .leaflet-control-zoom a:hover { background: rgba(16,185,129,0.1) !important; }
+        .leaflet-control-zoom a:hover { background: rgba(255,45,85,0.1) !important; }
         .leaflet-control-attribution {
           background: rgba(10,10,15,0.7) !important;
           color: #4a4a5a !important;
           font-size: 10px !important;
         }
-        .leaflet-control-attribution a { color: #10b981 !important; }
+        .leaflet-control-attribution a { color: #FF2D55 !important; }
         @keyframes pulse-pin {
           0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4), 0 4px 16px rgba(16,185,129,0.5); }
           70% { box-shadow: 0 0 0 12px rgba(16,185,129,0), 0 4px 16px rgba(16,185,129,0.5); }

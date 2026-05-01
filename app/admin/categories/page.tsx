@@ -66,7 +66,7 @@ export default function CategoriesPage() {
                     <h1 className="text-2xl font-bold text-white">Catégories</h1>
                     <p className="text-sm text-[#6a6a80] mt-1">{categories.length} catégories au total</p>
                 </div>
-                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                     <Plus className="w-4 h-4" /> Ajouter
                 </button>
             </div>
@@ -104,8 +104,8 @@ export default function CategoriesPage() {
                                 <tr key={cat._id} className="table-row-hover border-b last:border-0" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
                                     <td className="py-3.5 px-5">
                                         <div className="flex items-center gap-2.5">
-                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
-                                                <Tag className="w-4 h-4 text-emerald-400" />
+                                            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255, 45, 85, 0.1)' }}>
+                                                <Tag className="w-4 h-4 text-[#FF2D55]" />
                                             </div>
                                             <span className="text-sm font-medium text-white">{cat.name}</span>
                                         </div>
@@ -114,7 +114,7 @@ export default function CategoriesPage() {
                                     <td className="py-3.5 px-5 text-sm text-[#8888a0] hidden md:table-cell">{cat.icon || '—'}</td>
                                     <td className="py-3.5 px-5 text-sm text-[#8888a0]">{cat.order}</td>
                                     <td className="py-3.5 px-5">
-                                        <span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={cat.active ? { background: 'rgba(16, 185, 129, 0.1)', color: '#10b981' } : { background: 'rgba(255,255,255,0.05)', color: '#6a6a80' }}>
+                                        <span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={cat.active ? { background: 'rgba(255, 45, 85, 0.1)', color: '#FF2D55' } : { background: 'rgba(255,255,255,0.05)', color: '#6a6a80' }}>
                                             {cat.active ? 'Active' : 'Inactive'}
                                         </span>
                                     </td>
@@ -175,7 +175,7 @@ export default function CategoriesPage() {
                         </div>
                         <div className="flex gap-3 mt-6">
                             <button onClick={() => setShowForm(false)} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8888a0] hover:text-white border transition-colors" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>Annuler</button>
-                            <button onClick={saveCategory} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                            <button onClick={saveCategory} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                                 {editing ? 'Enregistrer' : 'Créer'}
                             </button>
                         </div>

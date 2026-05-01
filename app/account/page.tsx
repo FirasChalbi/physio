@@ -20,7 +20,7 @@ export default function AccountPage() {
 
   if (status === "loading") return (
     <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
-      <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
@@ -66,7 +66,7 @@ export default function AccountPage() {
             {user.image ? (
               <img src={user.image} alt="" className="w-20 h-20 rounded-2xl object-cover border-2" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
             ) : (
-              <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>{initials}</div>
+              <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>{initials}</div>
             )}
             <div>
               <h1 className="text-2xl font-bold text-white">{user.name}</h1>
@@ -86,15 +86,15 @@ export default function AccountPage() {
           {menuItems.map(item => {
             const Icon = item.icon
             return (
-              <Link key={item.label} href={item.href} className="flex items-center gap-4 p-5 rounded-2xl border transition-all hover:border-emerald-500/30 group" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
-                  <Icon className="w-5 h-5 text-emerald-400" />
+              <Link key={item.label} href={item.href} className="flex items-center gap-4 p-5 rounded-2xl border transition-all hover:border-[#FF2D55]/30 group" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255, 45, 85, 0.1)' }}>
+                  <Icon className="w-5 h-5 text-[#FF2D55]" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-white text-sm">{item.label}</p>
                   <p className="text-[#6a6a80] text-xs mt-0.5">{item.desc}</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#333] group-hover:text-emerald-400 transition-colors" />
+                <ChevronRight className="w-4 h-4 text-[#333] group-hover:text-[#FF2D55] transition-colors" />
               </Link>
             )
           })}

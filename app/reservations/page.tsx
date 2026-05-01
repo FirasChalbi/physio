@@ -21,7 +21,7 @@ type Reservation = {
 
 const statusConfig = {
   pending:   { label: "En attente",  icon: AlertCircle,  color: "#f59e0b", bg: "rgba(245,158,11,0.1)",   border: "rgba(245,158,11,0.2)"  },
-  confirmed: { label: "Confirmée",   icon: CheckCircle,  color: "#10b981", bg: "rgba(16,185,129,0.1)",   border: "rgba(16,185,129,0.2)"  },
+  confirmed: { label: "Confirmée",   icon: CheckCircle,  color: "#FF2D55", bg: "rgba(255,45,85,0.1)",   border: "rgba(255,45,85,0.2)"  },
   cancelled: { label: "Annulée",     icon: XCircle,      color: "#ef4444", bg: "rgba(239,68,68,0.1)",    border: "rgba(239,68,68,0.2)"   },
 }
 
@@ -82,7 +82,7 @@ export default function ReservationsPage() {
             </p>
             <Link href="/"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white"
-              style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+              style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>
               Découvrir les offres
             </Link>
           </div>
@@ -101,33 +101,33 @@ export default function ReservationsPage() {
                       <img src={r.offerImage} alt="" className="w-20 h-20 rounded-xl object-cover flex-shrink-0" />
                     ) : (
                       <div className="w-20 h-20 rounded-xl flex-shrink-0 flex items-center justify-center"
-                        style={{ background: "rgba(16,185,129,0.08)" }}>
-                        <CalendarDays className="w-6 h-6 text-emerald-400" />
+                        style={{ background: "rgba(255,45,85,0.08)" }}>
+                        <CalendarDays className="w-6 h-6 text-[#FF2D55]" />
                       </div>
                     )}
 
                     {/* Info */}
                     <div className="flex-1 min-w-0">
-                      <p className="text-[10px] text-emerald-400 font-semibold mb-0.5">{r.merchantName}</p>
+                      <p className="text-[10px] text-[#FF2D55] font-semibold mb-0.5">{r.merchantName}</p>
                       <h3 className="text-sm font-bold text-white line-clamp-1 mb-2">{r.offerTitle}</h3>
 
                       <div className="flex flex-wrap gap-x-4 gap-y-1">
                         <div className="flex items-center gap-1.5 text-[11px] text-[#8888a0]">
-                          <Calendar className="w-3 h-3 text-emerald-400" />
+                          <Calendar className="w-3 h-3 text-[#FF2D55]" />
                           {fmtDate(r.date)}
                         </div>
                         <div className="flex items-center gap-1.5 text-[11px] text-[#8888a0]">
-                          <Clock className="w-3 h-3 text-emerald-400" />
+                          <Clock className="w-3 h-3 text-[#FF2D55]" />
                           {r.time}
                         </div>
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1">
                         <div className="flex items-center gap-1.5 text-[11px] text-[#8888a0]">
-                          <User className="w-3 h-3 text-emerald-400" />
+                          <User className="w-3 h-3 text-[#FF2D55]" />
                           {r.name}
                         </div>
                         <div className="flex items-center gap-1.5 text-[11px] text-[#8888a0]">
-                          <Phone className="w-3 h-3 text-emerald-400" />
+                          <Phone className="w-3 h-3 text-[#FF2D55]" />
                           {r.phone}
                         </div>
                       </div>

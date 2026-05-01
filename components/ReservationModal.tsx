@@ -53,8 +53,8 @@ function MiniCalendar({ selected, onSelect }: { selected: string; onSelect: (d: 
           const isToday = dateStr === todayStr
           return (
             <button key={i} disabled={isPast} onClick={() => onSelect(dateStr)}
-              className={`h-8 w-full rounded-lg text-xs font-medium transition-all ${isPast ? "text-[#333] cursor-not-allowed" : "hover:bg-emerald-500/10 cursor-pointer"} ${isSel ? "text-white" : isToday ? "text-emerald-400" : "text-[#a0a0b8]"}`}
-              style={isSel ? { background: "linear-gradient(135deg,#10b981,#059669)" } : {}}>{day}</button>
+              className={`h-8 w-full rounded-lg text-xs font-medium transition-all ${isPast ? "text-[#333] cursor-not-allowed" : "hover:bg-[#FF2D55]/10 cursor-pointer"} ${isSel ? "text-white" : isToday ? "text-[#FF2D55]" : "text-[#a0a0b8]"}`}
+              style={isSel ? { background: "linear-gradient(135deg,#FF2D55,#CC2444)" } : {}}>{day}</button>
           )
         })}
       </div>
@@ -169,18 +169,18 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
                     const sel = isSelected(o.title, "offer")
                     return (
                       <button key={o._id} onClick={() => toggleItem(o.title, o.dealPrice, "offer")}
-                        className={`w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all ${sel ? "border-emerald-500/30" : ""}`}
-                        style={{ background: sel ? "rgba(16,185,129,0.08)" : "#12121a", borderColor: sel ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.06)" }}>
+                        className={`w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all ${sel ? "border-[#FF2D55]/30" : ""}`}
+                        style={{ background: sel ? "rgba(255,45,85,0.08)" : "#12121a", borderColor: sel ? "rgba(255,45,85,0.3)" : "rgba(255,255,255,0.06)" }}>
                         <img src={o.coverImage} alt="" className="w-14 h-14 rounded-xl object-cover shrink-0" />
                         <div className="flex-1 min-w-0">
                           <span className="text-sm font-medium text-white line-clamp-2">{o.title}</span>
                           <div className="flex items-baseline gap-1.5 mt-1">
-                            <span className="text-sm font-bold text-emerald-400">{o.dealPrice} €</span>
+                            <span className="text-sm font-bold text-[#FF2D55]">{o.dealPrice} €</span>
                             <span className="text-[10px] text-[#6a6a80] line-through">{o.originalPrice} €</span>
-                            <span className="text-[10px] font-bold text-emerald-400">-{o.discountPercent}%</span>
+                            <span className="text-[10px] font-bold text-[#FF2D55]">-{o.discountPercent}%</span>
                           </div>
                         </div>
-                        {sel && <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 mt-0.5"><CheckCircle className="w-3 h-3 text-white" /></div>}
+                        {sel && <div className="w-4 h-4 rounded-full bg-[#FF2D55] flex items-center justify-center shrink-0 mt-0.5"><CheckCircle className="w-3 h-3 text-white" /></div>}
                       </button>
                     )
                   })}
@@ -194,17 +194,17 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
                     const sel = isSelected(item.name, "menu")
                     return (
                       <button key={i} onClick={() => toggleItem(item.name, item.price, "menu")}
-                        className={`w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all ${sel ? "border-emerald-500/30" : ""}`}
-                        style={{ background: sel ? "rgba(16,185,129,0.08)" : "#12121a", borderColor: sel ? "rgba(16,185,129,0.3)" : "rgba(255,255,255,0.06)" }}>
+                        className={`w-full flex items-start gap-3 p-3 rounded-xl border text-left transition-all ${sel ? "border-[#FF2D55]/30" : ""}`}
+                        style={{ background: sel ? "rgba(255,45,85,0.08)" : "#12121a", borderColor: sel ? "rgba(255,45,85,0.3)" : "rgba(255,255,255,0.06)" }}>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start justify-between gap-2">
                             <span className="text-sm font-medium text-white">{item.name}</span>
-                            <span className="text-sm font-bold text-emerald-400 shrink-0">{item.price} €</span>
+                            <span className="text-sm font-bold text-[#FF2D55] shrink-0">{item.price} €</span>
                           </div>
                           {item.description && <p className="text-xs text-[#6a6a80] mt-0.5 line-clamp-2">{item.description}</p>}
                           {item.category && <p className="text-[10px] text-[#6a6a80] mt-0.5">{item.category}</p>}
                         </div>
-                        {sel && <div className="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shrink-0 mt-0.5"><CheckCircle className="w-3 h-3 text-white" /></div>}
+                        {sel && <div className="w-4 h-4 rounded-full bg-[#FF2D55] flex items-center justify-center shrink-0 mt-0.5"><CheckCircle className="w-3 h-3 text-white" /></div>}
                       </button>
                     )
                   })}
@@ -237,19 +237,19 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
 
               {/* Summary */}
               {selectedItems.length > 0 && (
-                <div className="px-4 py-3 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
-                  <p className="text-xs text-emerald-400 font-medium mb-1">{selectedItems.length} sélection(s)</p>
+                <div className="px-4 py-3 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(255,45,85,0.15)" }}>
+                  <p className="text-xs text-[#FF2D55] font-medium mb-1">{selectedItems.length} sélection(s)</p>
                   <div className="space-y-0.5">
                     {selectedItems.map((item, i) => <p key={i} className="text-[10px] text-[#6a6a80]">{item.name} — {item.price} €</p>)}
                   </div>
                   <div className="flex items-center justify-between mt-2 pt-1">
                     <span className="text-xs font-bold text-white">Total</span>
-                    <span className="text-sm font-bold text-emerald-400">{totalPrice} €</span>
+                    <span className="text-sm font-bold text-[#FF2D55]">{totalPrice} €</span>
                   </div>
                 </div>
               )}
 
-              <button onClick={() => setStep("datetime")} className="w-full py-3.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>Continuer</button>
+              <button onClick={() => setStep("datetime")} className="w-full py-3.5 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>Continuer</button>
             </div>
           )}
 
@@ -263,13 +263,13 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
                     {selectedItems.map((item, i) => (
                       <div key={i} className="flex items-center justify-between text-xs">
                         <span className="text-[#a0a0b8]">{item.name}</span>
-                        <span className="text-emerald-400 font-medium">{item.price} €</span>
+                        <span className="text-[#FF2D55] font-medium">{item.price} €</span>
                       </div>
                     ))}
                     <div className="border-t pt-1 mt-1" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
                       <div className="flex items-center justify-between text-xs font-bold">
                         <span className="text-white">Total</span>
-                        <span className="text-emerald-400">{totalPrice} €</span>
+                        <span className="text-[#FF2D55]">{totalPrice} €</span>
                       </div>
                     </div>
                   </div>
@@ -277,24 +277,24 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
               )}
 
               <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center gap-2 mb-3"><Calendar className="w-4 h-4 text-emerald-400" /><p className="text-xs font-semibold text-white uppercase tracking-wider">Date</p></div>
+                <div className="flex items-center gap-2 mb-3"><Calendar className="w-4 h-4 text-[#FF2D55]" /><p className="text-xs font-semibold text-white uppercase tracking-wider">Date</p></div>
                 <MiniCalendar selected={selectedDate} onSelect={setSelectedDate} />
               </div>
 
               <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
-                <div className="flex items-center gap-2 mb-3"><Clock className="w-4 h-4 text-emerald-400" /><p className="text-xs font-semibold text-white uppercase tracking-wider">Heure</p></div>
+                <div className="flex items-center gap-2 mb-3"><Clock className="w-4 h-4 text-[#FF2D55]" /><p className="text-xs font-semibold text-white uppercase tracking-wider">Heure</p></div>
                 <div className="grid grid-cols-4 gap-2">
                   {TIME_SLOTS.map(t => (
                     <button key={t} onClick={() => setSelectedTime(t)}
                       className={`py-2 rounded-xl text-xs font-medium transition-all ${selectedTime === t ? "text-white" : "text-[#8888a0] hover:text-white"}`}
-                      style={selectedTime === t ? { background: "linear-gradient(135deg,#10b981,#059669)" } : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>{t}</button>
+                      style={selectedTime === t ? { background: "linear-gradient(135deg,#FF2D55,#CC2444)" } : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>{t}</button>
                   ))}
                 </div>
               </div>
 
               {(selectedDate || selectedTime) && (
-                <div className="px-4 py-3 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
-                  <p className="text-xs text-emerald-400 font-medium">
+                <div className="px-4 py-3 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(255,45,85,0.15)" }}>
+                  <p className="text-xs text-[#FF2D55] font-medium">
                     📅 {selectedDate ? new Date(selectedDate + "T00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" }) : "—"}
                     {selectedTime && ` à ${selectedTime}`}
                   </p>
@@ -302,17 +302,17 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
               )}
 
               <button disabled={!selectedDate || !selectedTime} onClick={() => setStep("info")}
-                className="w-full py-3.5 rounded-xl text-sm font-semibold text-white disabled:opacity-40" style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>Continuer</button>
+                className="w-full py-3.5 rounded-xl text-sm font-semibold text-white disabled:opacity-40" style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>Continuer</button>
             </div>
           )}
 
           {/* ── STEP: Info ── */}
           {step === "info" && (
             <div className="space-y-4">
-              <div className="px-4 py-2.5 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(16,185,129,0.15)" }}>
+              <div className="px-4 py-2.5 rounded-xl" style={{ background: "rgba(16,185,129,0.06)", border: "1px solid rgba(255,45,85,0.15)" }}>
                 <div className="flex items-center gap-2 mb-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <p className="text-xs text-emerald-400 font-medium">
+                  <Calendar className="w-3.5 h-3.5 text-[#FF2D55] shrink-0" />
+                  <p className="text-xs text-[#FF2D55] font-medium">
                     {new Date(selectedDate + "T00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })} à {selectedTime}
                   </p>
                 </div>
@@ -344,7 +344,7 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
               {error && <p className="text-xs text-red-400 px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.08)" }}>{error}</p>}
 
               <button onClick={handleSubmit} disabled={loading}
-                className="w-full py-3.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60" style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+                className="w-full py-3.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 disabled:opacity-60" style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Confirmer la réservation"}
               </button>
               <p className="text-[10px] text-[#6a6a80] text-center">En confirmant, vous acceptez d'être contacté par le marchand pour votre réservation.</p>
@@ -355,12 +355,12 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
           {step === "success" && (
             <div className="text-center py-6">
               <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: "rgba(16,185,129,0.12)" }}>
-                <CheckCircle className="w-8 h-8 text-emerald-400" />
+                <CheckCircle className="w-8 h-8 text-[#FF2D55]" />
               </div>
               <h3 className="text-lg font-bold text-white mb-2">Réservation envoyée !</h3>
               <p className="text-sm text-[#6a6a80] mb-1">{new Date(selectedDate + "T00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })} à {selectedTime}</p>
               <p className="text-xs text-[#6a6a80] mb-6">Le marchand vous contactera au <span className="text-white">{phone}</span> pour confirmer.</p>
-              <button onClick={handleClose} className="w-full py-3 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>Fermer</button>
+              <button onClick={handleClose} className="w-full py-3 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>Fermer</button>
             </div>
           )}
         </div>

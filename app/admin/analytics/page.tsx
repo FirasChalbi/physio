@@ -33,7 +33,7 @@ type AnalyticsData = {
     topMerchants: { name: string; reservations: number }[]
 }
 
-const PIE_COLORS = ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#f43f5e', '#ec4899', '#14b8a6', '#6366f1']
+const PIE_COLORS = ['#FF2D55', '#06b6d4', '#8b5cf6', '#f59e0b', '#f43f5e', '#ec4899', '#14b8a6', '#6366f1']
 
 export default function AnalyticsPage() {
     const [data, setData] = useState<AnalyticsData | null>(null)
@@ -50,7 +50,7 @@ export default function AnalyticsPage() {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-[#FF2D55] animate-spin" />
                     <p className="text-sm text-[#6a6a80]">Chargement des analytiques...</p>
                 </div>
             </div>
@@ -69,7 +69,7 @@ export default function AnalyticsPage() {
 
     const kpis = [
         { label: 'Vues totales', value: data.totalViews.toLocaleString('fr-FR'), icon: Eye, color: '#06b6d4' },
-        { label: 'Réservations', value: data.totalReservations.toString(), icon: Calendar, color: '#10b981' },
+        { label: 'Réservations', value: data.totalReservations.toString(), icon: Calendar, color: '#FF2D55' },
         { label: 'Revenu total', value: `${data.totalRevenue.toLocaleString('fr-FR')} €`, icon: DollarSign, color: '#8b5cf6' },
         { label: 'Taux conversion', value: `${conversionRate}%`, icon: TrendingUp, color: '#f59e0b' },
     ]
@@ -84,7 +84,7 @@ export default function AnalyticsPage() {
 
     // Reservation status for donut
     const reservationStatus = [
-        { name: 'Confirmées', value: data.confirmedReservations, color: '#10b981' },
+        { name: 'Confirmées', value: data.confirmedReservations, color: '#FF2D55' },
         { name: 'En attente', value: data.pendingReservations, color: '#f59e0b' },
         { name: 'Annulées', value: data.cancelledReservations, color: '#ef4444' },
     ].filter(s => s.value > 0)
@@ -115,7 +115,7 @@ export default function AnalyticsPage() {
             {/* Summary Counters */}
             <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
                 {[
-                    { label: 'Offres', value: data.totalOffers, color: '#10b981' },
+                    { label: 'Offres', value: data.totalOffers, color: '#FF2D55' },
                     { label: 'Marchands', value: data.totalMerchants, color: '#8b5cf6' },
                     { label: 'Catégories', value: data.totalCategories, color: '#06b6d4' },
                     { label: 'Utilisateurs', value: data.totalUsers, color: '#f59e0b' },
@@ -147,7 +147,7 @@ export default function AnalyticsPage() {
                                     name === 'revenue' ? 'Revenu' : 'Transactions'
                                 ]}
                             />
-                            <Bar dataKey="revenue" fill="#10b981" radius={[6, 6, 0, 0]} />
+                            <Bar dataKey="revenue" fill="#FF2D55" radius={[6, 6, 0, 0]} />
                         </BarChart>
                     </ResponsiveContainer>
                 </div>
@@ -191,14 +191,14 @@ export default function AnalyticsPage() {
                         <AreaChart data={data.dailyActivity}>
                             <defs>
                                 <linearGradient id="colorRes" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#06b6d4" stopOpacity={0.3} /><stop offset="100%" stopColor="#06b6d4" stopOpacity={0} /></linearGradient>
-                                <linearGradient id="colorOrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#10b981" stopOpacity={0.3} /><stop offset="100%" stopColor="#10b981" stopOpacity={0} /></linearGradient>
+                                <linearGradient id="colorOrd" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#FF2D55" stopOpacity={0.3} /><stop offset="100%" stopColor="#FF2D55" stopOpacity={0} /></linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
                             <XAxis dataKey="day" stroke="#6a6a80" fontSize={12} tickLine={false} axisLine={false} />
                             <YAxis stroke="#6a6a80" fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
                             <Tooltip contentStyle={{ background: '#1a1a2e', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: '#f0f0f5' }} />
                             <Area type="monotone" dataKey="reservations" stroke="#06b6d4" strokeWidth={2} fill="url(#colorRes)" name="Réservations" />
-                            <Area type="monotone" dataKey="orders" stroke="#10b981" strokeWidth={2} fill="url(#colorOrd)" name="Commandes" />
+                            <Area type="monotone" dataKey="orders" stroke="#FF2D55" strokeWidth={2} fill="url(#colorOrd)" name="Commandes" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>

@@ -16,7 +16,7 @@ type Cat = { _id: string; name: string }
 type Merch = { _id: string; name: string }
 
 const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
-    active: { bg: 'rgba(16,185,129,0.1)', text: '#10b981', label: 'Active' },
+    active: { bg: 'rgba(255,45,85,0.1)', text: '#FF2D55', label: 'Active' },
     draft: { bg: 'rgba(245,158,11,0.1)', text: '#f59e0b', label: 'Brouillon' },
     archived: { bg: 'rgba(255,255,255,0.05)', text: '#6a6a80', label: 'Archivée' },
 }
@@ -94,12 +94,12 @@ export default function OffersPage() {
         <div className="space-y-6 animate-fade-in">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div><h1 className="text-2xl font-bold text-white">Offres</h1><p className="text-sm text-[#6a6a80] mt-1">{offers.length} offres</p></div>
-                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}><Plus className="w-4 h-4" /> Nouvelle offre</button>
+                <button onClick={openCreate} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}><Plus className="w-4 h-4" /> Nouvelle offre</button>
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl flex-1 max-w-sm" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><Search className="w-4 h-4 text-[#6a6a80]" /><input type="text" placeholder="Rechercher..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full" /></div>
                 <div className="flex gap-2">{['all', 'active', 'draft', 'archived'].map(s => (
-                    <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-colors ${statusFilter === s ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={statusFilter === s ? { background: 'rgba(16,185,129,0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>{s === 'all' ? 'Toutes' : statusConfig[s]?.label || s}</button>
+                    <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-colors ${statusFilter === s ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={statusFilter === s ? { background: 'rgba(255,45,85,0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>{s === 'all' ? 'Toutes' : statusConfig[s]?.label || s}</button>
                 ))}</div>
             </div>
 
@@ -118,12 +118,12 @@ export default function OffersPage() {
                     return (
                         <tr key={offer._id} className="table-row-hover border-b last:border-0" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
                             <td className="py-3.5 px-5"><div className="flex items-center gap-3">
-                                {offer.coverImage ? <img src={offer.coverImage} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" /> : <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.1)' }}><Gift className="w-4 h-4 text-emerald-400" /></div>}
+                                {offer.coverImage ? <img src={offer.coverImage} alt="" className="w-10 h-10 rounded-lg object-cover flex-shrink-0" /> : <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ background: 'rgba(255,45,85,0.1)' }}><Gift className="w-4 h-4 text-[#FF2D55]" /></div>}
                                 <div className="min-w-0"><p className="text-sm font-medium text-white truncate max-w-[200px]">{offer.title}</p><p className="text-xs text-[#6a6a80] truncate max-w-[200px]">{offer.shortDescription}</p></div>
                                 {offer.featured && <span className="px-1.5 py-0.5 rounded text-[10px] font-bold text-amber-400" style={{ background: 'rgba(245,158,11,0.1)' }}>★</span>}
                             </div></td>
                             <td className="py-3.5 px-5 text-sm text-[#a0a0b8] hidden md:table-cell">{offer.city}</td>
-                            <td className="py-3.5 px-5"><span className="text-sm font-semibold text-emerald-400">{offer.dealPrice} €</span><span className="text-xs text-[#6a6a80] line-through ml-1.5">{offer.originalPrice} €</span></td>
+                            <td className="py-3.5 px-5"><span className="text-sm font-semibold text-[#FF2D55]">{offer.dealPrice} €</span><span className="text-xs text-[#6a6a80] line-through ml-1.5">{offer.originalPrice} €</span></td>
                             <td className="py-3.5 px-5 hidden lg:table-cell"><span className="text-sm font-semibold text-white">-{offer.discountPercent}%</span></td>
                             <td className="py-3.5 px-5"><span className="px-2.5 py-1 rounded-lg text-xs font-medium" style={{ background: st.bg, color: st.text }}>{st.label}</span></td>
                             <td className="py-3.5 px-5"><div className="flex items-center justify-end gap-1">
@@ -177,7 +177,7 @@ export default function OffersPage() {
                                 </div>
                             </div>
                             {form.originalPrice > 0 && form.dealPrice > 0 && (
-                                <p className="text-xs text-emerald-400 -mt-2">Réduction calculée : -{Math.round(((form.originalPrice - form.dealPrice) / form.originalPrice) * 100)}%</p>
+                                <p className="text-xs text-[#FF2D55] -mt-2">Réduction calculée : -{Math.round(((form.originalPrice - form.dealPrice) / form.originalPrice) * 100)}%</p>
                             )}
 
                             <div className="grid grid-cols-2 gap-4">
@@ -191,7 +191,7 @@ export default function OffersPage() {
                         </div>
                         <div className="flex gap-3 mt-6">
                             <button onClick={() => setShowForm(false)} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8888a0] hover:text-white border transition-colors" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>Annuler</button>
-                            <button onClick={saveOffer} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>{editing ? 'Enregistrer' : 'Créer'}</button>
+                            <button onClick={saveOffer} className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>{editing ? 'Enregistrer' : 'Créer'}</button>
                         </div>
                     </div>
                 </div>

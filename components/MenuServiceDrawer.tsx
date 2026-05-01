@@ -45,7 +45,7 @@ export default function MenuServiceDrawer({ open, onClose, type, menu, services,
 
   const isMenu = type === "menu"
   const items = isMenu ? menu : services
-  const accentColor = isMenu ? "#10b981" : "#8b5cf6"
+  const accentColor = isMenu ? "#FF2D55" : "#8b5cf6"
   const accentRgb = isMenu ? "16,185,129" : "139,92,246"
 
   return (
@@ -101,7 +101,7 @@ export default function MenuServiceDrawer({ open, onClose, type, menu, services,
                   </div>
                   <div className="space-y-2">
                     {catItems.map((item, i) => (
-                      <div key={i} className="flex items-start gap-3 p-3.5 rounded-2xl border transition-all hover:border-emerald-500/20"
+                      <div key={i} className="flex items-start gap-3 p-3.5 rounded-2xl border transition-all hover:border-[#FF2D55]/20"
                         style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
                         {item.image && (
                           <img src={item.image} alt="" className="w-16 h-16 rounded-xl object-cover shrink-0" />

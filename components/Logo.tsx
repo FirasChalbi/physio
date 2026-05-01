@@ -18,7 +18,7 @@ export default function Logo({ size = "md", href = "/", className = "" }: LogoPr
   const content = (
     <span className={`flex items-center gap-1.5 ${className}`}>
       <img 
-        src="/logo-icon.png" 
+        src="/logo2.png" 
         alt="Life Icon" 
         className={`${s.icon} object-contain flex-shrink-0 mb-0`}
       />
@@ -28,7 +28,7 @@ export default function Logo({ size = "md", href = "/", className = "" }: LogoPr
         >Life</span>
         {/* <span
           className={`${s.yvelines} font-semibold`}
-          style={{ color: "#10b981", letterSpacing: "0.01em" }}
+          style={{ color: "#FF2D55", letterSpacing: "0.01em" }}
         >Yvelines</span> */}
       </span>
     </span>
@@ -43,6 +43,6 @@ export default function Logo({ size = "md", href = "/", className = "" }: LogoPr
         >life</span>
         <span
           className={`${s.yvelines} font-semibold`}
-          style={{ color: "#10b981", letterSpacing: "0.03em" ,fontFamily: "var(--font-fredoka), sans-serif"}}
+          style={{ color: "#FF2D55", letterSpacing: "0.03em" ,fontFamily: "var(--font-fredoka), sans-serif"}}
         >Yvelines</span>
       </span> */}

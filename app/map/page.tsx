@@ -12,7 +12,7 @@ const MapComponent = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-full flex flex-col items-center justify-center gap-3" style={{ background: "#0a0a0f" }}>
-        <div className="w-10 h-10 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
         <p className="text-[#6a6a80] text-sm">Chargement de la carte…</p>
       </div>
     ),
@@ -56,7 +56,7 @@ export default function MapPage() {
   return (
     <Suspense fallback={
       <div className="fixed inset-0 flex items-center justify-center" style={{ background: "#0a0a0f" }}>
-        <div className="w-10 h-10 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
       </div>
     }>
       <MapContent />

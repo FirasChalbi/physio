@@ -18,10 +18,10 @@ type Notification = {
 }
 
 const typeConfig: Record<string, { icon: any; iconColor: string; iconBg: string }> = {
-  new_offer:               { icon: Tag,          iconColor: '#10b981', iconBg: 'rgba(16,185,129,0.12)' },
+  new_offer:               { icon: Tag,          iconColor: '#FF2D55', iconBg: 'rgba(16,185,129,0.12)' },
   promo:                   { icon: Gift,         iconColor: '#8b5cf6', iconBg: 'rgba(139,92,246,0.12)' },
   reservation_reminder:    { icon: Clock,        iconColor: '#f59e0b', iconBg: 'rgba(245,158,11,0.12)' },
-  reservation_confirmed:   { icon: CheckCircle,  iconColor: '#10b981', iconBg: 'rgba(16,185,129,0.12)' },
+  reservation_confirmed:   { icon: CheckCircle,  iconColor: '#FF2D55', iconBg: 'rgba(16,185,129,0.12)' },
   reservation_cancelled:   { icon: XCircle,      iconColor: '#ef4444', iconBg: 'rgba(239,68,68,0.12)' },
   review:                  { icon: Star,         iconColor: '#06b6d4', iconBg: 'rgba(6,182,212,0.12)' },
   new_merchant:            { icon: Store,        iconColor: '#8b5cf6', iconBg: 'rgba(139,92,246,0.12)' },
@@ -195,18 +195,18 @@ function NotificationContent({
       <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
         style={{ borderColor: "rgba(255,255,255,0.06)" }}>
         <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4 text-emerald-400" />
+          <Bell className="w-4 h-4 text-[#FF2D55]" />
           <h2 className="text-base font-bold text-white">Notifications</h2>
           {unreadCount > 0 && (
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white"
-              style={{ background: "linear-gradient(135deg,#10b981,#059669)" }}>
+              style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>
               {unreadCount}
             </span>
           )}
         </div>
         <div className="flex items-center gap-3">
           {unreadCount > 0 && (
-            <button onClick={onMarkAll} className="text-xs text-emerald-400 font-medium hover:text-emerald-300 transition-colors">
+            <button onClick={onMarkAll} className="text-xs text-[#FF2D55] font-medium hover:text-[#FF4D7A] transition-colors">
               Tout lire
             </button>
           )}
@@ -221,7 +221,7 @@ function NotificationContent({
       <div className="overflow-y-auto flex-1">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
-            <Loader2 className="w-6 h-6 text-emerald-400 animate-spin" />
+            <Loader2 className="w-6 h-6 text-[#FF2D55] animate-spin" />
             <p className="text-sm text-[#6a6a80]">Chargement...</p>
           </div>
         ) : notifications.length === 0 ? (
@@ -247,7 +247,7 @@ function NotificationContent({
                   onClick={() => { if (!n.read) onMarkRead(n._id) }}
                 >
                   {!n.read && (
-                    <div className="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-[#FF2D55]" />
                   )}
                   {n.image ? (
                     <img src={n.image} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />

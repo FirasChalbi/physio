@@ -75,8 +75,8 @@ export default function OfferDetailPage() {
         setIsFav(!isFav)
     }
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}><div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" /></div>
-    if (!offer) return <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#0a0a0f' }}><p className="text-white text-lg">Offre introuvable</p><Link href="/" className="text-emerald-400 hover:underline text-sm">Retour à l'accueil</Link></div>
+    if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}><div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" /></div>
+    if (!offer) return <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#0a0a0f' }}><p className="text-white text-lg">Offre introuvable</p><Link href="/" className="text-[#FF2D55] hover:underline text-sm">Retour à l'accueil</Link></div>
 
     const allImages = [offer.coverImage, ...(offer.galleryImages || [])]
 
@@ -144,7 +144,7 @@ export default function OfferDetailPage() {
 
                 {/* Discount badge */}
                 <div className="absolute top-20 left-4">
-                    <span className="px-3.5 py-1.5 rounded-full text-sm font-bold text-white" style={{ background: 'rgba(16, 185, 129, 0.9)' }}>
+                    <span className="px-3.5 py-1.5 rounded-full text-sm font-bold text-white" style={{ background: 'rgba(255, 45, 85, 0.9)' }}>
                         -{offer.discountPercent}%
                     </span>
                 </div>
@@ -154,7 +154,7 @@ export default function OfferDetailPage() {
             <div className="px-4 -mt-6 relative z-10">
                 <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{offer.title || merchant?.name}</h1>
                 <div className="flex items-center gap-1.5 text-[#8888a0] text-sm mb-5">
-                    <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                    <MapPin className="w-3.5 h-3.5 text-[#FF2D55]" />
                     <span>{offer.city}{offer.address ? ` · ${offer.address}` : ''}</span>
                 </div>
 
@@ -166,7 +166,7 @@ export default function OfferDetailPage() {
                     {offer.shortDescription && offer.shortDescription.length > 120 && (
                         <button
                             onClick={() => setDescExpanded(p => !p)}
-                            className="mt-1.5 text-xs font-semibold text-emerald-400 hover:text-emerald-300 transition-colors"
+                            className="mt-1.5 text-xs font-semibold text-[#FF2D55] hover:text-[#FF4D7A] transition-colors"
                         >
                             {descExpanded ? 'Voir moins ↑' : 'Voir plus ↓'}
                         </button>
@@ -176,16 +176,16 @@ export default function OfferDetailPage() {
                 {/* Rating + Info Row */}
                 <div className="flex items-center gap-6 mb-6">
                     <div className="flex items-center gap-1.5">
-                        <Star className="w-4 h-4 text-emerald-400" />
+                        <Star className="w-4 h-4 text-[#FF2D55]" />
                         <span className="text-white font-semibold text-sm">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
                         <span className="text-[#6a6a80] text-xs">({offer.reviewCount || 0} avis)</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-emerald-400" />
+                        <Clock className="w-4 h-4 text-[#FF2D55]" />
                         <span className="text-[#a0a0b8] text-sm">Ouvert</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                        <Navigation className="w-4 h-4 text-emerald-400" />
+                        <Navigation className="w-4 h-4 text-[#FF2D55]" />
                         <span className="text-[#a0a0b8] text-sm">1,2 km</span>
                     </div>
                 </div>
@@ -195,7 +195,7 @@ export default function OfferDetailPage() {
                     <button
                         onClick={() => setShowReservation(true)}
                         className="flex-1 py-3.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2"
-                        style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                        style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                         Réserver maintenant
                         <ChevronRight className="w-4 h-4" />
                     </button>
@@ -213,27 +213,27 @@ export default function OfferDetailPage() {
                 </div>
                 {/* ═══════════ EXCLUSIVE OFFER BANNER ═══════════ */}
                 <div className="rounded-2xl p-4 flex items-start gap-4 mb-8 border"
-                    style={{ background: 'rgba(16, 185, 129, 0.06)', borderColor: 'rgba(16, 185, 129, 0.15)' }}>
+                    style={{ background: 'rgba(16, 185, 129, 0.06)', borderColor: 'rgba(255, 45, 85, 0.15)' }}>
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-                        style={{ background: 'rgba(16, 185, 129, 0.15)' }}>
-                        <ShoppingCart className="w-5 h-5 text-emerald-400" />
+                        style={{ background: 'rgba(255, 45, 85, 0.15)' }}>
+                        <ShoppingCart className="w-5 h-5 text-[#FF2D55]" />
                     </div>
                     <div className="flex-1 min-w-0">
-                        <p className="text-xs text-emerald-400 font-semibold mb-0.5">Offre exclusive</p>
+                        <p className="text-xs text-[#FF2D55] font-semibold mb-0.5">Offre exclusive</p>
                         <p className="text-sm text-white font-medium">-{offer.discountPercent}% · {offer.dealPrice} € au lieu de {offer.originalPrice} €</p>
                         {endDateStr && <p className="text-xs text-[#6a6a80] mt-0.5">Valable jusqu'au {endDateStr}</p>}
                         {offer.perks && offer.perks.length > 0 && (
                             <div className="mt-4 pt-3.5 border-t" style={{ borderColor: 'rgba(16, 185, 129, 0.12)' }}>
                                 <div className="flex items-center gap-1.5 mb-2.5">
-                                    <Gift className="w-3.5 h-3.5 text-emerald-400" />
-                                    <span className="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">Inclus dans cette offre</span>
+                                    <Gift className="w-3.5 h-3.5 text-[#FF2D55]" />
+                                    <span className="text-[11px] font-semibold text-[#FF2D55] uppercase tracking-wider">Inclus dans cette offre</span>
                                 </div>
                                 <div className="flex flex-wrap gap-2">
                                     {offer.perks.map((perk, i) => (
                                         <span key={i}
                                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/90 border"
                                             style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
-                                            <Check className="w-3 h-3 text-emerald-400 flex-shrink-0" />
+                                            <Check className="w-3 h-3 text-[#FF2D55] flex-shrink-0" />
                                             {perk}
                                         </span>
                                     ))}
@@ -257,7 +257,7 @@ export default function OfferDetailPage() {
                                 <div key={f.label} className="flex flex-col items-center gap-2">
                                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center border"
                                         style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}>
-                                        <Icon className="w-5 h-5 text-emerald-400" />
+                                        <Icon className="w-5 h-5 text-[#FF2D55]" />
                                     </div>
                                     <span className="text-[10px] text-[#8888a0] text-center">{f.label}</span>
                                 </div>
@@ -271,7 +271,7 @@ export default function OfferDetailPage() {
                     <section className="mb-8">
                         <div className="flex items-center justify-between mb-3">
                             <h2 className="text-lg font-bold text-white">Photos</h2>
-                            {allImages.length > 3 && <span className="text-sm text-emerald-400 font-medium">Voir tout</span>}
+                            {allImages.length > 3 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
                         </div>
                         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
                             {allImages.map((img, i) => (
@@ -287,7 +287,7 @@ export default function OfferDetailPage() {
                 <section className="mb-8">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg font-bold text-white">Avis clients</h2>
-                        {reviews.length > 2 && <span className="text-sm text-emerald-400 font-medium">Voir tout</span>}
+                        {reviews.length > 2 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
                     </div>
 
                     {/* Rating summary + Review cards */}
@@ -298,7 +298,7 @@ export default function OfferDetailPage() {
                             <span className="text-4xl font-bold text-white mb-1">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
                             <div className="flex gap-0.5 mb-1.5">
                                 {Array.from({ length: 5 }).map((_, i) => (
-                                    <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(avgRating) ? 'text-emerald-400 fill-emerald-400' : 'text-[#333]'}`} />
+                                    <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(avgRating) ? 'text-[#FF2D55] fill-[#FF2D55]' : 'text-[#333]'}`} />
                                 ))}
                             </div>
                             <span className="text-[10px] text-[#6a6a80]">Basé sur {displayReviewCount} avis</span>
@@ -313,7 +313,7 @@ export default function OfferDetailPage() {
                                         <img src={rev.userAvatar} alt="" className="w-9 h-9 rounded-full object-cover" />
                                     ) : (
                                         <div className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold text-white"
-                                            style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>
+                                            style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>
                                             {(rev.userName || 'A')[0]}
                                         </div>
                                     )}
@@ -326,7 +326,7 @@ export default function OfferDetailPage() {
                                     </div>
                                     <div className="flex gap-0.5">
                                         {Array.from({ length: 5 }).map((_, i) => (
-                                            <Star key={i} className={`w-3 h-3 ${i < Math.round(rev.rating) ? 'text-emerald-400 fill-emerald-400' : 'text-[#333]'}`} />
+                                            <Star key={i} className={`w-3 h-3 ${i < Math.round(rev.rating) ? 'text-[#FF2D55] fill-[#FF2D55]' : 'text-[#333]'}`} />
                                         ))}
                                     </div>
                                 </div>
@@ -353,7 +353,7 @@ export default function OfferDetailPage() {
                                 if (lat && lng) router.push(`/map?lat=${lat}&lng=${lng}&name=${encodeURIComponent(merchant?.name || offer.title)}`)
                             }}
                             className="w-full flex items-center gap-4 py-4 border-b text-left" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <MapPin className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                            <MapPin className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
                                 <p className="text-sm text-white">{offer.address || offer.city}{merchant?.address ? `, ${merchant.address}` : ''}</p>
@@ -363,7 +363,7 @@ export default function OfferDetailPage() {
 
                         {/* Hours */}
                         <div className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <Clock className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                            <Clock className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-[#6a6a80] mb-0.5">Horaires</p>
                                 <p className="text-sm text-white">Lun – Dim : 11h – 23h</p>
@@ -374,7 +374,7 @@ export default function OfferDetailPage() {
                         {/* Phone */}
                         {merchant?.phone && (
                             <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                                <Phone className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                                <Phone className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                                 <div className="flex-1">
                                     <p className="text-xs text-[#6a6a80] mb-0.5">Téléphone</p>
                                     <p className="text-sm text-white">{merchant.phone}</p>
@@ -386,7 +386,7 @@ export default function OfferDetailPage() {
                         {/* Email */}
                         {merchant?.email && (
                             <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 py-4">
-                                <Mail className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                                <Mail className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                                 <div className="flex-1">
                                     <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
                                     <p className="text-sm text-white">{merchant.email}</p>

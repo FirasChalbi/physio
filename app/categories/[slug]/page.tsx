@@ -46,7 +46,7 @@ export default function CategoryPage() {
 
     if (loading) return (
         <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
-            <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+            <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
         </div>
     )
 
@@ -71,7 +71,7 @@ export default function CategoryPage() {
                     </div>
                     <h1 className="text-3xl font-bold text-white mb-2">{category?.name || 'Catégorie'}</h1>
                     <p className="text-[#8888a0] max-w-xl">{category?.description || `Découvrez les meilleures offres dans la catégorie ${category?.name}`}</p>
-                    <p className="text-sm text-emerald-400 mt-3">{filtered.length} offre{filtered.length !== 1 ? 's' : ''} disponible{filtered.length !== 1 ? 's' : ''}</p>
+                    <p className="text-sm text-[#FF2D55] mt-3">{filtered.length} offre{filtered.length !== 1 ? 's' : ''} disponible{filtered.length !== 1 ? 's' : ''}</p>
                 </div>
             </div>
 
@@ -80,9 +80,9 @@ export default function CategoryPage() {
                 {/* City filter */}
                 {cities.length > 1 && (
                     <div className="flex gap-2 mb-6 overflow-x-auto pb-2 scrollbar-hide">
-                        <button onClick={() => setCityFilter("")} className={`px-4 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${!cityFilter ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={!cityFilter ? { background: 'rgba(16, 185, 129, 0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>Toutes les villes</button>
+                        <button onClick={() => setCityFilter("")} className={`px-4 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${!cityFilter ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={!cityFilter ? { background: 'rgba(255, 45, 85, 0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>Toutes les villes</button>
                         {cities.map(city => (
-                            <button key={city} onClick={() => setCityFilter(city)} className={`px-4 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${cityFilter === city ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={cityFilter === city ? { background: 'rgba(16, 185, 129, 0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>
+                            <button key={city} onClick={() => setCityFilter(city)} className={`px-4 py-2 rounded-xl text-xs font-medium whitespace-nowrap transition-colors ${cityFilter === city ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={cityFilter === city ? { background: 'rgba(255, 45, 85, 0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>
                                 <MapPin className="w-3 h-3 inline mr-1" />{city}
                             </button>
                         ))}
@@ -103,12 +103,12 @@ export default function CategoryPage() {
                                 <div className="absolute bottom-3 left-3 flex items-center gap-1.5"><MapPin className="w-3 h-3 text-white/70" /><span className="text-xs text-white/80">{offer.city}</span></div>
                             </div>
                             <div className="p-4">
-                                <p className="text-[11px] text-emerald-400 font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
+                                <p className="text-[11px] text-[#FF2D55] font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
                                 <h3 className="text-sm font-semibold text-white mb-1.5 line-clamp-2">{offer.title}</h3>
                                 <p className="text-xs text-[#6a6a80] mb-3 line-clamp-1">{offer.shortDescription}</p>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-baseline gap-2">
-                                        <span className="text-lg font-bold text-emerald-400">{offer.dealPrice} €</span>
+                                        <span className="text-lg font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                         <span className="text-xs text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                     </div>
                                     {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}

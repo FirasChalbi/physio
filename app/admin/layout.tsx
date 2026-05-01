@@ -64,7 +64,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             <p className="text-[10px] text-[#6a6a80] uppercase tracking-wider pl-7">Admin Panel</p>
                         </div>
                     ) : (
-                        <MapPin className="w-6 h-6 text-emerald-400 fill-emerald-400" />
+                        <MapPin className="w-6 h-6 text-[#FF2D55] fill-[#FF2D55]" />
                     )}
                     <button
                         onClick={() => {
@@ -102,12 +102,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                                     ${collapsed ? 'justify-center px-2' : ''}
                                 `}
                                 style={active ? {
-                                    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15))',
-                                    boxShadow: '0 0 20px rgba(16, 185, 129, 0.1)',
+                                    background: 'linear-gradient(135deg, rgba(255, 45, 85, 0.15), rgba(6, 182, 212, 0.15))',
+                                    boxShadow: '0 0 20px rgba(255, 45, 85, 0.1)',
                                 } : {}}
                                 title={collapsed ? item.label : undefined}
                             >
-                                <Icon className={`w-[18px] h-[18px] flex-shrink-0 ${active ? 'text-emerald-400' : ''}`} />
+                                <Icon className={`w-[18px] h-[18px] flex-shrink-0 ${active ? 'text-[#FF2D55]' : ''}`} />
                                 {!collapsed && <span>{item.label}</span>}
                             </Link>
                         )
@@ -160,7 +160,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     <div className="flex items-center gap-3">
                         <AdminNotificationPanel />
                         <div className="flex items-center gap-2.5 pl-3 border-l" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>
                                 {session?.user?.name?.[0]?.toUpperCase() || 'A'}
                             </div>
                             <div className="hidden md:block">

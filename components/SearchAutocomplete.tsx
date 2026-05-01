@@ -226,9 +226,9 @@ export default function SearchAutocomplete({
         style={{
           background: 'rgba(255,255,255,0.05)',
           border: open
-            ? '1px solid rgba(16, 185, 129, 0.3)'
+            ? '1px solid rgba(255, 45, 85, 0.3)'
             : '1px solid rgba(255,255,255,0.08)',
-          boxShadow: open ? '0 0 20px rgba(16, 185, 129, 0.08)' : 'none',
+          boxShadow: open ? '0 0 20px rgba(255, 45, 85, 0.08)' : 'none',
           ...wrapperStyle,
         }}
       >
@@ -251,7 +251,7 @@ export default function SearchAutocomplete({
 
         {/* Loading spinner */}
         {loading && (
-          <Loader2 className="w-4 h-4 text-emerald-400 shrink-0 animate-spin" />
+          <Loader2 className="w-4 h-4 text-[#FF2D55] shrink-0 animate-spin" />
         )}
 
         {/* Clear button */}
@@ -269,8 +269,8 @@ export default function SearchAutocomplete({
         {!query && placeholders.length > 0 && (
           <div className="absolute left-10 right-3 top-0 bottom-0 flex items-center pointer-events-none overflow-hidden">
             <span className="text-sm text-[#6a6a80] mr-1">Rechercher</span>
-            <span className="text-sm text-emerald-400 font-medium">{twText}</span>
-            <span className="text-sm text-emerald-400 animate-pulse ml-px">|</span>
+            <span className="text-sm text-[#FF2D55] font-medium">{twText}</span>
+            <span className="text-sm text-[#FF2D55] animate-pulse ml-px">|</span>
           </div>
         )}
       </div>
@@ -314,7 +314,7 @@ export default function SearchAutocomplete({
                 className={`w-full flex items-center gap-3 px-4 py-2.5 transition-colors text-left ${
                   isActive ? '' : 'hover:bg-white/5'
                 }`}
-                style={isActive ? { background: 'rgba(16, 185, 129, 0.08)' } : undefined}
+                style={isActive ? { background: 'rgba(255, 45, 85, 0.08)' } : undefined}
               >
                 {/* Avatar */}
                 <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 flex items-center justify-center"
@@ -331,7 +331,7 @@ export default function SearchAutocomplete({
                   <div className="flex items-center gap-1.5">
                     <span className="text-sm font-semibold text-white truncate">{m.name}</span>
                     {m.verified && (
-                      <BadgeCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                      <BadgeCheck className="w-3.5 h-3.5 text-[#FF2D55] shrink-0" />
                     )}
                   </div>
                   <div className="flex items-center gap-2 mt-0.5">
@@ -345,8 +345,8 @@ export default function SearchAutocomplete({
                       </span>
                     )}
                     {rating && (
-                      <span className="text-[11px] text-emerald-400 flex items-center gap-0.5">
-                        <Star className="w-2.5 h-2.5 fill-emerald-400" />
+                      <span className="text-[11px] text-[#FF2D55] flex items-center gap-0.5">
+                        <Star className="w-2.5 h-2.5 fill-[#FF2D55]" />
                         {rating}
                       </span>
                     )}
@@ -371,8 +371,8 @@ export default function SearchAutocomplete({
               }`}
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
-                color: '#10b981',
-                background: activeIndex === results.merchants.length ? 'rgba(16, 185, 129, 0.08)' : undefined,
+                color: '#FF2D55',
+                background: activeIndex === results.merchants.length ? 'rgba(255, 45, 85, 0.08)' : undefined,
               }}
             >
               Voir tous les résultats ({results.total})
@@ -393,8 +393,8 @@ export default function SearchAutocomplete({
               }`}
               style={{
                 borderColor: 'rgba(255,255,255,0.06)',
-                color: '#10b981',
-                background: activeIndex === results.merchants.length ? 'rgba(16, 185, 129, 0.08)' : undefined,
+                color: '#FF2D55',
+                background: activeIndex === results.merchants.length ? 'rgba(255, 45, 85, 0.08)' : undefined,
               }}
             >
               Voir la page de résultats
@@ -422,7 +422,7 @@ export default function SearchAutocomplete({
             </p>
             <button
               onClick={goToSearch}
-              className="mt-3 text-sm text-emerald-400 font-medium hover:underline"
+              className="mt-3 text-sm text-[#FF2D55] font-medium hover:underline"
             >
               Rechercher dans toutes les offres
             </button>

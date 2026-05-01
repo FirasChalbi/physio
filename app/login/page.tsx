@@ -61,7 +61,7 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center p-4" style={{ background: '#0a0a0f' }}>
             {/* Background effects */}
-            <div className="fixed top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'rgba(16, 185, 129, 0.05)' }} />
+            <div className="fixed top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'rgba(255, 45, 85, 0.05)' }} />
             <div className="fixed bottom-1/4 right-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'rgba(6, 182, 212, 0.05)' }} />
 
             <div className="w-full max-w-md relative z-10">
@@ -99,7 +99,7 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        <button type="submit" disabled={loading} className="w-full py-3.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50" style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}>
+                        <button type="submit" disabled={loading} className="w-full py-3.5 rounded-xl text-sm font-semibold text-white flex items-center justify-center gap-2 transition-all hover:opacity-90 disabled:opacity-50" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
                             {loading ? <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><span>Se connecter</span><ArrowRight className="w-4 h-4" /></>}
                         </button>
                     </form>
@@ -126,7 +126,7 @@ export default function LoginPage() {
 
                 {/* Footer */}
                 <p className="text-center text-xs text-[#6a6a80] mt-6">
-                    <Link href="/" className="text-emerald-400 hover:underline">← Retour au site</Link>
+                    <Link href="/" className="text-[#FF2D55] hover:underline">← Retour au site</Link>
                 </p>
             </div>
         </div>

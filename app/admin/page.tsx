@@ -43,11 +43,11 @@ type AnalyticsData = {
 const statusColors: Record<string, { bg: string; text: string; label: string }> = {
     pending: { bg: 'rgba(245, 158, 11, 0.1)', text: '#f59e0b', label: 'En attente' },
     paid: { bg: 'rgba(6, 182, 212, 0.1)', text: '#06b6d4', label: 'Payé' },
-    confirmed: { bg: 'rgba(16, 185, 129, 0.1)', text: '#10b981', label: 'Confirmé' },
+    confirmed: { bg: 'rgba(255, 45, 85, 0.1)', text: '#FF2D55', label: 'Confirmé' },
     cancelled: { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444', label: 'Annulé' },
 }
 
-const categoryColors = ['#10b981', '#06b6d4', '#8b5cf6', '#f59e0b', '#f43f5e', '#ec4899', '#14b8a6', '#6366f1']
+const categoryColors = ['#FF2D55', '#06b6d4', '#8b5cf6', '#f59e0b', '#f43f5e', '#ec4899', '#14b8a6', '#6366f1']
 
 export default function AdminDashboard() {
     const [data, setData] = useState<AnalyticsData | null>(null)
@@ -64,7 +64,7 @@ export default function AdminDashboard() {
         return (
             <div className="flex items-center justify-center min-h-[60vh]">
                 <div className="flex flex-col items-center gap-3">
-                    <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+                    <Loader2 className="w-8 h-8 text-[#FF2D55] animate-spin" />
                     <p className="text-sm text-[#6a6a80]">Chargement du tableau de bord...</p>
                 </div>
             </div>
@@ -80,12 +80,12 @@ export default function AdminDashboard() {
     }
 
     const statCards = [
-        { label: "Offres", value: data.totalOffers.toString(), sub: `${data.activeOffers} actives`, icon: Gift, color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', href: '/admin/offers' },
+        { label: "Offres", value: data.totalOffers.toString(), sub: `${data.activeOffers} actives`, icon: Gift, color: '#FF2D55', glow: 'rgba(255, 45, 85, 0.15)', href: '/admin/offers' },
         { label: "Catégories", value: data.totalCategories.toString(), sub: 'actives', icon: Tag, color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.15)', href: '/admin/categories' },
         { label: "Marchands", value: data.totalMerchants.toString(), sub: 'actifs', icon: Store, color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.15)', href: '/admin/merchants' },
         { label: "Utilisateurs", value: data.totalUsers.toString(), sub: 'inscrits', icon: Users, color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', href: '/admin/users' },
         { label: "Réservations", value: data.totalReservations.toString(), sub: `${data.confirmedReservations} confirmées`, icon: Calendar, color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.15)', href: '/admin/orders' },
-        { label: "Revenue", value: `${data.totalRevenue.toLocaleString('fr-FR')} €`, sub: 'total', icon: DollarSign, color: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', href: '/admin/analytics' },
+        { label: "Revenue", value: `${data.totalRevenue.toLocaleString('fr-FR')} €`, sub: 'total', icon: DollarSign, color: '#FF2D55', glow: 'rgba(255, 45, 85, 0.15)', href: '/admin/analytics' },
     ]
 
     const maxCategoryCount = Math.max(...(data.categoryBreakdown.map(c => c.count)), 1)
@@ -105,7 +105,7 @@ export default function AdminDashboard() {
                 <Link
                     href="/admin/offers"
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
-                    style={{ background: 'linear-gradient(135deg, #10b981, #059669)' }}
+                    style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}
                 >
                     <Gift className="w-4 h-4" />
                     Nouvelle offre
@@ -149,15 +149,15 @@ export default function AdminDashboard() {
                             <p className="text-sm text-[#6a6a80] mt-0.5">{data.totalRevenue.toLocaleString('fr-FR')} € total</p>
                         </div>
                         <div className="flex items-center gap-4 text-xs text-[#6a6a80]">
-                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-500" />Revenus</span>
+                            <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-[#FF2D55]" />Revenus</span>
                         </div>
                     </div>
                     <ResponsiveContainer width="100%" height={240}>
                         <AreaChart data={data.monthlyRevenue}>
                             <defs>
                                 <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.3} />
-                                    <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                                    <stop offset="0%" stopColor="#FF2D55" stopOpacity={0.3} />
+                                    <stop offset="100%" stopColor="#FF2D55" stopOpacity={0} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
@@ -168,7 +168,7 @@ export default function AdminDashboard() {
                                 labelStyle={{ color: '#8888a0' }}
                                 formatter={(value: number) => [`${value.toLocaleString('fr-FR')} €`, 'Revenu']}
                             />
-                            <Area type="monotone" dataKey="revenue" stroke="#10b981" strokeWidth={2} fill="url(#colorRevenue)" />
+                            <Area type="monotone" dataKey="revenue" stroke="#FF2D55" strokeWidth={2} fill="url(#colorRevenue)" />
                         </AreaChart>
                     </ResponsiveContainer>
                 </div>
@@ -245,7 +245,7 @@ export default function AdminDashboard() {
                 <div className="lg:col-span-2 rounded-2xl border overflow-hidden" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                     <div className="p-5 flex items-center justify-between border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                         <h2 className="text-base font-semibold text-white">Réservations récentes</h2>
-                        <Link href="/admin/orders" className="text-sm text-emerald-400 hover:text-emerald-300 font-medium transition-colors">
+                        <Link href="/admin/orders" className="text-sm text-[#FF2D55] hover:text-[#FF4D7A] font-medium transition-colors">
                             Voir tout →
                         </Link>
                     </div>
@@ -269,7 +269,7 @@ export default function AdminDashboard() {
                                         <tr key={res._id} className="table-row-hover border-b last:border-0" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
                                             <td className="py-3.5 px-5">
                                                 <div className="flex items-center gap-2.5">
-                                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>
+                                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>
                                                         {res.customer?.[0]?.toUpperCase() || '?'}
                                                     </div>
                                                     <span className="text-sm text-white font-medium">{res.customer}</span>

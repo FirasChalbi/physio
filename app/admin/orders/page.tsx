@@ -8,7 +8,7 @@ type Order = { _id: string; userId: string; offerId: string; merchantId: string;
 const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
     pending: { bg: 'rgba(245, 158, 11, 0.1)', text: '#f59e0b', label: 'En attente' },
     paid: { bg: 'rgba(6, 182, 212, 0.1)', text: '#06b6d4', label: 'Payé' },
-    confirmed: { bg: 'rgba(16, 185, 129, 0.1)', text: '#10b981', label: 'Confirmé' },
+    confirmed: { bg: 'rgba(255, 45, 85, 0.1)', text: '#FF2D55', label: 'Confirmé' },
     cancelled: { bg: 'rgba(239, 68, 68, 0.1)', text: '#ef4444', label: 'Annulé' },
 }
 
@@ -32,7 +32,7 @@ export default function OrdersPage() {
                 <div className="flex items-center gap-2 px-3 py-2.5 rounded-xl flex-1 max-w-sm" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)' }}><Search className="w-4 h-4 text-[#6a6a80]" /><input type="text" placeholder="Rechercher par client..." value={search} onChange={e => setSearch(e.target.value)} className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full" /></div>
                 <div className="flex gap-2">
                     {['all', 'pending', 'paid', 'confirmed', 'cancelled'].map(s => (
-                        <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-colors ${statusFilter === s ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={statusFilter === s ? { background: 'rgba(16, 185, 129, 0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>
+                        <button key={s} onClick={() => setStatusFilter(s)} className={`px-3 py-2 rounded-xl text-xs font-medium transition-colors ${statusFilter === s ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`} style={statusFilter === s ? { background: 'rgba(255, 45, 85, 0.15)' } : { background: 'rgba(255,255,255,0.04)' }}>
                             {s === 'all' ? 'Toutes' : statusConfig[s]?.label || s}
                         </button>
                     ))}
@@ -46,7 +46,7 @@ export default function OrdersPage() {
                             const st = statusConfig[o.status] || statusConfig.pending
                             return (
                                 <tr key={o._id} className="table-row-hover border-b last:border-0" style={{ borderColor: 'rgba(255,255,255,0.04)' }}>
-                                    <td className="py-3.5 px-5"><div className="flex items-center gap-2.5"><div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #10b981, #06b6d4)' }}>{(o.customerName || '?')[0]}</div><span className="text-sm font-medium text-white">{o.customerName || 'N/A'}</span></div></td>
+                                    <td className="py-3.5 px-5"><div className="flex items-center gap-2.5"><div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>{(o.customerName || '?')[0]}</div><span className="text-sm font-medium text-white">{o.customerName || 'N/A'}</span></div></td>
                                     <td className="py-3.5 px-5 text-sm text-[#8888a0] hidden md:table-cell">{o.customerEmail || '—'}</td>
                                     <td className="py-3.5 px-5 text-sm text-[#a0a0b8]">{o.quantity}</td>
                                     <td className="py-3.5 px-5 text-sm font-semibold text-white">{o.totalPrice} €</td>
