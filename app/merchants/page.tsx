@@ -11,7 +11,7 @@ type Category = { _id: string; name: string; slug: string }
 type Merchant = {
   _id: string; name: string; slug: string; coverImage?: string; logo?: string
   city?: string; categories?: string[]; rating?: number; average_rating?: string
-  reviewCount?: number; review_count?: string
+  reviewCount?: number; review_count?: string; active?: boolean
 }
 type Offer = {
   _id: string; title: string; slug: string; shortDescription: string; coverImage: string
