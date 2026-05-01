@@ -123,7 +123,7 @@ export default function MerchantsPage() {
             </div>
 
             {showForm && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowForm(false)}>
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex justify-center p-4" onClick={() => setShowForm(false)}>
                     <div className="w-full max-w-2xl rounded-2xl p-6 border max-h-[90vh] overflow-y-auto" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.08)' }} onClick={e => e.stopPropagation()}>
                         <h2 className="text-lg font-semibold text-white mb-4">{editing ? 'Modifier' : 'Ajouter'} un marchand</h2>
                         <div className="flex flex-wrap gap-1.5 mb-5 p-1 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
