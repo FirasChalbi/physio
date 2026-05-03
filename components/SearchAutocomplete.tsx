@@ -222,7 +222,7 @@ export default function SearchAutocomplete({
     <div ref={wrapperRef} className={`relative ${className}`} id={`${idPrefix}-autocomplete`}>
       {/* ─── Input ─── */}
       <div
-        className={`flex items-center gap-2 px-4 ${py} rounded-2xl relative overflow-hidden transition-all duration-200`}
+        className={`flex items-center gap-2 px-4 ${py} rounded-3xl relative overflow-hidden transition-all duration-200`}
         style={{
           background: 'rgba(255,255,255,0.05)',
           border: open

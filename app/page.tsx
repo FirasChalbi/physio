@@ -801,17 +801,18 @@ export default function HomePage() {
                 ) : (
                 <>
                 <div className="px-4 pt-4 pb-6 md:hidden">
-                    <h1 className="text-3xl font-extrabold text-white mb-5 leading-tight tracking-tight text-center">
-                        Les meilleures offres<br />
-                        <span style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                            près de chez vous
-                        </span>
+                       <p className="text-sm text-[#8888a0]">
+                        Bonjour {userName ? <span className="text-[#FF2D55] font-medium">{userName}</span> : <span className="text-[#FF2D55]"></span>}
+                    </p>
+                    <h1 className="text-xl font-bold text-white mt-0.5 mb-4">
+                        Que cherchez-vous<br />en Yvelines ?
                     </h1>
                     <SearchAutocomplete
                         placeholders={defaultPlaceholders}
                         idPrefix="mobile-search"
                     />
                 </div>
+                
 
                 {/* ═══════════ DESKTOP HERO ═══════════ */}
                 <section className="hidden md:block py-20 px-4 relative overflow-hidden">
@@ -924,7 +925,35 @@ export default function HomePage() {
 
                 {/* ═══════════ LES PLUS POPULAIRES ═══════════ */}
                 <MerchantHorizontalSection title="Les plus populaires" href="/merchants?sort=popular" merchants={popularMerchants} categories={categories} offers={offers} />
-
+                 {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
+                <section className="px-4 mb-8">
+                    {/* <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-base md:text-xl font-bold text-white">📍 Bon plans par ville</h2>
+                    </div> */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {[
+                            { name: 'Plaisir', slug: 'plaisir' },
+                            { name: 'Versailles', slug: 'versailles' },
+                            { name: 'Trappes', slug: 'trappes' },
+                            { name: 'Rambouillet', slug: 'rambouillet' },
+                        ].map(city => {
+                            const cityOffers = offers.filter(o => o.city.toLowerCase() === city.name.toLowerCase()).slice(0, 1)
+                            const bgImage = cityOffers[0]?.coverImage || popularOffers[0]?.coverImage || ''
+                            return (
+                                <Link key={city.slug} href={`/offers?city=${city.slug}`}
+                                    className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-28 md:h-36"
+                                    style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                    {bgImage && <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-60" />}
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
+                                    <div className="relative z-10 p-4 flex flex-col justify-end h-full">
+                                        <p className="text-xs text-[#FF2D55] font-medium mb-0.5">Bon plans à</p>
+                                        <h3 className="text-lg md:text-xl font-bold text-white">{city.name}</h3>
+                                    </div>
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </section>
                 {/* ═══════════ LES MIEUX NOTÉS ═══════════ */}
                 <MerchantHorizontalSection title="Les mieux notés" href="/merchants?sort=rating" merchants={bestRatedMerchants} categories={categories} offers={offers} />
 
@@ -1049,35 +1078,7 @@ export default function HomePage() {
                 </section>
                 
 
-                         {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
-                <section className="px-4 mb-8">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-base md:text-xl font-bold text-white">📍 Bon plans par ville</h2>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                        {[
-                            { name: 'Plaisir', slug: 'plaisir' },
-                            { name: 'Versailles', slug: 'versailles' },
-                            { name: 'Trappes', slug: 'trappes' },
-                            { name: 'Rambouillet', slug: 'rambouillet' },
-                        ].map(city => {
-                            const cityOffers = offers.filter(o => o.city.toLowerCase() === city.name.toLowerCase()).slice(0, 1)
-                            const bgImage = cityOffers[0]?.coverImage || popularOffers[0]?.coverImage || ''
-                            return (
-                                <Link key={city.slug} href={`/offers?city=${city.slug}`}
-                                    className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-28 md:h-36"
-                                    style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
-                                    {bgImage && <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-60" />}
-                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
-                                    <div className="relative z-10 p-4 flex flex-col justify-end h-full">
-                                        <p className="text-xs text-[#FF2D55] font-medium mb-0.5">Bon plans à</p>
-                                        <h3 className="text-lg md:text-xl font-bold text-white">{city.name}</h3>
-                                    </div>
-                                </Link>
-                            )
-                        })}
-                    </div>
-                </section>
+        
 
                 {/* ═══════════ PAR CATÉGORIE ═══════════ */}
                 <section className="px-4 mb-8">
