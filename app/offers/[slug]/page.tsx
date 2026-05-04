@@ -75,8 +75,8 @@ export default function OfferDetailPage() {
         setIsFav(!isFav)
     }
 
-    if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}><div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" /></div>
-    if (!offer) return <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: '#0a0a0f' }}><p className="text-white text-lg">Offre introuvable</p><Link href="/" className="text-[#FF2D55] hover:underline text-sm">Retour à l'accueil</Link></div>
+    if (loading) return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--surface-0)' }}><div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" /></div>
+    if (!offer) return <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: 'var(--surface-0)' }}><p className="text-lg" style={{ color: 'var(--text-primary)' }}>Offre introuvable</p><Link href="/" className="text-[#FF2D55] hover:underline text-sm">Retour à l'accueil</Link></div>
 
     const allImages = [offer.coverImage, ...(offer.galleryImages || [])]
 
@@ -114,12 +114,12 @@ export default function OfferDetailPage() {
     ]
 
     return (
-        <div className="min-h-screen pb-24" style={{ background: '#0a0a0f' }}>
+        <div className="min-h-screen pb-24" style={{ background: 'var(--surface-0)' }}>
             {/* ═══════════ HERO IMAGE ═══════════ */}
             <div className="relative">
                 <div className="h-72 md:h-96 relative overflow-hidden">
                     <img src={offer.coverImage} alt={offer.title} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-black/30 to-black/20" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
                 </div>
 
                 {/* Top bar */}
@@ -152,7 +152,7 @@ export default function OfferDetailPage() {
 
             {/* ═══════════ MERCHANT NAME + INFO ═══════════ */}
             <div className="px-4 -mt-6 relative z-10">
-                <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">{offer.title || merchant?.name}</h1>
+                <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{offer.title || merchant?.name}</h1>
                 <div className="flex items-center gap-1.5 text-[#8888a0] text-sm mb-5">
                     <MapPin className="w-3.5 h-3.5 text-[#FF2D55]" />
                     <span>{offer.city}{offer.address ? ` · ${offer.address}` : ''}</span>
@@ -177,7 +177,7 @@ export default function OfferDetailPage() {
                 <div className="flex items-center gap-6 mb-6">
                     <div className="flex items-center gap-1.5">
                         <Star className="w-4 h-4 text-[#FF2D55]" />
-                        <span className="text-white font-semibold text-sm">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
+                        <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
                         <span className="text-[#6a6a80] text-xs">({offer.reviewCount || 0} avis)</span>
                     </div>
                     <div className="flex items-center gap-1.5">
@@ -206,7 +206,7 @@ export default function OfferDetailPage() {
                             if (lat && lng) router.push(`/map?lat=${lat}&lng=${lng}&name=${encodeURIComponent(merchant?.name || offer.title)}`)
                         }}
                         className="px-6 py-3.5 rounded-xl text-sm font-medium text-[#a0a0b8] flex items-center gap-2 border"
-                        style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+                        style={{ borderColor: 'var(--border)' }}>
                         <Navigation className="w-4 h-4" />
                         Itinéraire
                     </button>
@@ -220,7 +220,7 @@ export default function OfferDetailPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="text-xs text-[#FF2D55] font-semibold mb-0.5">Offre exclusive</p>
-                        <p className="text-sm text-white font-medium">-{offer.discountPercent}% · {offer.dealPrice} € au lieu de {offer.originalPrice} €</p>
+                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>-{offer.discountPercent}% · {offer.dealPrice} € au lieu de {offer.originalPrice} €</p>
                         {endDateStr && <p className="text-xs text-[#6a6a80] mt-0.5">Valable jusqu'au {endDateStr}</p>}
                         {offer.perks && offer.perks.length > 0 && (
                             <div className="mt-4 pt-3.5 border-t" style={{ borderColor: 'rgba(16, 185, 129, 0.12)' }}>
@@ -231,8 +231,8 @@ export default function OfferDetailPage() {
                                 <div className="flex flex-wrap gap-2">
                                     {offer.perks.map((perk, i) => (
                                         <span key={i}
-                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-white/90 border"
-                                            style={{ background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' }}>
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border"
+                                            style={{ background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' }}>
                                             <Check className="w-3 h-3 text-[#FF2D55] flex-shrink-0" />
                                             {perk}
                                         </span>
@@ -246,7 +246,7 @@ export default function OfferDetailPage() {
 
                 {/* ═══════════ À PROPOS ═══════════ */}
                 <section className="mb-8">
-                    <h2 className="text-lg font-bold text-white mb-3">À propos</h2>
+                    <h2 className="text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>À propos</h2>
                     <p className="text-sm text-[#a0a0b8] leading-relaxed mb-5">{offer.description}</p>
 
                     {/* Feature icons */}
@@ -256,7 +256,7 @@ export default function OfferDetailPage() {
                             return (
                                 <div key={f.label} className="flex flex-col items-center gap-2">
                                     <div className="w-12 h-12 rounded-2xl flex items-center justify-center border"
-                                        style={{ borderColor: 'rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)' }}>
+                                        style={{ borderColor: 'var(--border)', background: 'var(--surface-2)' }}>
                                         <Icon className="w-5 h-5 text-[#FF2D55]" />
                                     </div>
                                     <span className="text-[10px] text-[#8888a0] text-center">{f.label}</span>
@@ -270,7 +270,7 @@ export default function OfferDetailPage() {
                 {allImages.length > 0 && (
                     <section className="mb-8">
                         <div className="flex items-center justify-between mb-3">
-                            <h2 className="text-lg font-bold text-white">Photos</h2>
+                            <h2 className="text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Photos</h2>
                             {allImages.length > 3 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
                         </div>
                         <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
@@ -286,7 +286,7 @@ export default function OfferDetailPage() {
                 {/* ═══════════ AVIS CLIENTS ═══════════ */}
                 <section className="mb-8">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-bold text-white">Avis clients</h2>
+                        <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Avis clients</h2>
                         {reviews.length > 2 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
                     </div>
 
@@ -294,8 +294,8 @@ export default function OfferDetailPage() {
                     <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                         {/* Big rating card */}
                         <div className="flex-shrink-0 w-32 rounded-2xl p-4 flex flex-col items-center justify-center border"
-                            style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <span className="text-4xl font-bold text-white mb-1">{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
+                            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
+                            <span className="text-4xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>{avgRating > 0 ? avgRating.toFixed(1) : '—'}</span>
                             <div className="flex gap-0.5 mb-1.5">
                                 {Array.from({ length: 5 }).map((_, i) => (
                                     <Star key={i} className={`w-3.5 h-3.5 ${i < Math.round(avgRating) ? 'text-[#FF2D55] fill-[#FF2D55]' : 'text-[#333]'}`} />
@@ -307,7 +307,7 @@ export default function OfferDetailPage() {
                         {/* Review cards */}
                         {allReviews.length > 0 ? allReviews.slice(0, 5).map(rev => (
                             <div key={rev._id} className="flex-shrink-0 w-64 rounded-2xl p-4 border"
-                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                 <div className="flex items-center gap-2.5 mb-3">
                                     {rev.userAvatar ? (
                                         <img src={rev.userAvatar} alt="" className="w-9 h-9 rounded-full object-cover" />
@@ -318,7 +318,7 @@ export default function OfferDetailPage() {
                                         </div>
                                     )}
                                     <div className="flex-1">
-                                        <p className="text-sm font-medium text-white">{rev.userName || 'Anonyme'}</p>
+                                        <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{rev.userName || 'Anonyme'}</p>
                                         <p className="text-[10px] text-[#6a6a80]">
                                             {rev.dateLabel ||
                                                 (rev.createdAt ? `Il y a ${Math.ceil((Date.now() - new Date(rev.createdAt).getTime()) / 86400000)} jours` : '')}
@@ -334,7 +334,7 @@ export default function OfferDetailPage() {
                             </div>
                         )) : (
                             <div className="flex-shrink-0 w-64 rounded-2xl p-4 border flex items-center justify-center"
-                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                 <p className="text-xs text-[#6a6a80]">Pas encore d'avis</p>
                             </div>
                         )}
@@ -343,7 +343,7 @@ export default function OfferDetailPage() {
 
                 {/* ═══════════ INFORMATIONS ═══════════ */}
                 <section className="mb-8">
-                    <h2 className="text-lg font-bold text-white mb-4">Informations</h2>
+                    <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--text-primary)' }}>Informations</h2>
                     <div className="space-y-0">
                         {/* Address */}
                         <button
@@ -352,32 +352,32 @@ export default function OfferDetailPage() {
                                 const lng = merchant?.longitude ? parseFloat(merchant.longitude.replace(',', '.')) : 0
                                 if (lat && lng) router.push(`/map?lat=${lat}&lng=${lng}&name=${encodeURIComponent(merchant?.name || offer.title)}`)
                             }}
-                            className="w-full flex items-center gap-4 py-4 border-b text-left" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                            className="w-full flex items-center gap-4 py-4 border-b text-left" style={{ borderColor: 'var(--border)' }}>
                             <MapPin className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
-                                <p className="text-sm text-white">{offer.address || offer.city}{merchant?.address ? `, ${merchant.address}` : ''}</p>
+                                <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{offer.address || offer.city}{merchant?.address ? `, ${merchant.address}` : ''}</p>
                             </div>
                             <ChevronRight className="w-4 h-4 text-[#333]" />
                         </button>
 
                         {/* Hours */}
-                        <div className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                        <div className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
                             <Clock className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                             <div className="flex-1">
                                 <p className="text-xs text-[#6a6a80] mb-0.5">Horaires</p>
-                                <p className="text-sm text-white">Lun – Dim : 11h – 23h</p>
+                                <p className="text-sm" style={{ color: 'var(--text-primary)' }}>Lun – Dim : 11h – 23h</p>
                             </div>
                             <ChevronRight className="w-4 h-4 text-[#333]" />
                         </div>
 
                         {/* Phone */}
                         {merchant?.phone && (
-                            <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+                            <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
                                 <Phone className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                                 <div className="flex-1">
                                     <p className="text-xs text-[#6a6a80] mb-0.5">Téléphone</p>
-                                    <p className="text-sm text-white">{merchant.phone}</p>
+                                    <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.phone}</p>
                                 </div>
                                 <ChevronRight className="w-4 h-4 text-[#333]" />
                             </a>
@@ -389,7 +389,7 @@ export default function OfferDetailPage() {
                                 <Mail className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
                                 <div className="flex-1">
                                     <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
-                                    <p className="text-sm text-white">{merchant.email}</p>
+                                    <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.email}</p>
                                 </div>
                                 <ChevronRight className="w-4 h-4 text-[#333]" />
                             </a>

@@ -15,7 +15,7 @@ type Offer = {
 }
 type Merchant = { _id: string; name: string; slug: string; coverImage?: string; logo?: string; city?: string; categories?: string[]; rating?: number; average_rating?: string; reviewCount?: number; review_count?: string }
 
-const CITIES = ["Versailles","Saint-Germain-en-Laye","Poissy","Mantes-la-Jolie","Rambouillet","Les Mureaux","Sartrouville","Plaisir","Trappes","Conflans-Sainte-Honorine","Vélizy-Villacoublay","Élancourt"]
+const CITIES = ["Versailles", "Saint-Germain-en-Laye", "Poissy", "Mantes-la-Jolie", "Rambouillet", "Les Mureaux", "Sartrouville", "Plaisir", "Trappes", "Conflans-Sainte-Honorine", "Vélizy-Villacoublay", "Élancourt"]
 
 function OffersContent() {
   const searchParams = useSearchParams()
@@ -196,7 +196,7 @@ function OffersContent() {
               <div>
                 <p className="text-[10px] font-semibold text-[#6a6a80] uppercase tracking-wider mb-2">Trier par</p>
                 <div className="flex flex-wrap gap-2">
-                  {([["newest","Plus récent"],["price_asc","Prix ↑"],["price_desc","Prix ↓"],["rating","Note"]] as const).map(([val, label]) => (
+                  {([["newest", "Plus récent"], ["price_asc", "Prix ↑"], ["price_desc", "Prix ↓"], ["rating", "Note"]] as const).map(([val, label]) => (
                     <button key={val} onClick={() => setSortBy(val)}
                       className="px-3 py-1.5 rounded-full text-xs font-medium"
                       style={{

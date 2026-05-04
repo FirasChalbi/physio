@@ -19,7 +19,7 @@ type Offer = {
   reviewCount?: number; city: string; merchantId: string; categoryId: string; featured?: boolean
 }
 
-const CITIES = ["Versailles","Saint-Germain-en-Laye","Poissy","Mantes-la-Jolie","Rambouillet","Les Mureaux","Sartrouville","Plaisir","Trappes","Conflans-Sainte-Honorine","Vélizy-Villacoublay","Élancourt"]
+const CITIES = ["Versailles", "Saint-Germain-en-Laye", "Poissy", "Mantes-la-Jolie", "Rambouillet", "Les Mureaux", "Sartrouville", "Plaisir", "Trappes", "Conflans-Sainte-Honorine", "Vélizy-Villacoublay", "Élancourt"]
 
 function MerchantsContent() {
   const searchParams = useSearchParams()

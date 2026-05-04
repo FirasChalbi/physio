@@ -99,7 +99,7 @@ function HoursCard({ hours }: { hours: Record<string, string> }) {
   const isOpen = todayVal !== "Fermé" && todayVal !== "—"
 
   return (
-    <div className="rounded-2xl border overflow-hidden" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+    <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
       <button
         className="w-full flex items-center gap-4 px-5 py-4"
         onClick={() => setExpanded(e => !e)}
@@ -118,7 +118,7 @@ function HoursCard({ hours }: { hours: Record<string, string> }) {
       </button>
 
       {expanded && (
-        <div className="border-t" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        <div className="border-t" style={{ borderColor: "var(--border)" }}>
           {DAY_ORDER.map(day => {
             const val = hours[day]
             if (!val) return null
@@ -126,12 +126,12 @@ function HoursCard({ hours }: { hours: Record<string, string> }) {
             return (
               <div key={day}
                 className="flex items-center justify-between px-5 py-3 border-b last:border-b-0"
-                style={{ borderColor: "rgba(255,255,255,0.04)", background: isToday ? "rgba(16,185,129,0.04)" : "transparent" }}
+                style={{ borderColor: "var(--border)", background: isToday ? "rgba(255,45,85,0.04)" : "transparent" }}
               >
                 <span className={`text-sm capitalize ${isToday ? "text-[#FF2D55] font-semibold" : "text-[#a0a0b8]"}`}>
                   {isToday && "→ "}{DAY_LABELS[day]}
                 </span>
-                <span className={`text-sm ${val === "Fermé" ? "text-[#ef4444]" : isToday ? "text-white font-medium" : "text-[#a0a0b8]"}`}>
+                <span className={`text-sm ${val === "Fermé" ? "text-[#ef4444]" : isToday ? "text-[#FF2D55] font-medium" : "text-[#a0a0b8]"}`}>
                   {val}
                 </span>
               </div>
@@ -185,13 +185,13 @@ export default function MerchantPage() {
   }
 
   if (loading) return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a0f" }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--surface-0)" }}>
       <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
     </div>
   )
   if (!merchant) return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: "#0a0a0f" }}>
-      <p className="text-white">Marchand introuvable</p>
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4" style={{ background: "var(--surface-0)" }}>
+      <p className="" style={{ color: 'var(--text-primary)' }}>Marchand introuvable</p>
       <Link href="/" className="text-[#FF2D55] hover:underline text-sm">Retour à l'accueil</Link>
     </div>
   )
@@ -210,14 +210,14 @@ export default function MerchantPage() {
   const displayAddress = merchant.full_address || merchant.address || `${merchant.street ? merchant.street + ", " : ""}${merchant.municipality || merchant.city || ""}`
 
   return (
-    <div className="min-h-screen pb-24 md:pb-0" style={{ background: "#0a0a0f" }}>
+    <div className="min-h-screen pb-24 md:pb-0" style={{ background: "var(--surface-0)" }}>
 
       {/* ══ DESKTOP FLOATING NAVBAR — hidden on mobile ══ */}
       <div className="hidden md:block fixed top-0 left-0 right-0 z-50 transition-all duration-300"
         style={{
-          background: heroScrolled ? "rgba(10,10,15,0.85)" : "transparent",
+          background: heroScrolled ? "var(--header-bg)" : "transparent",
           backdropFilter: heroScrolled ? "blur(20px)" : "none",
-          borderBottom: heroScrolled ? "1px solid rgba(255,255,255,0.05)" : "1px solid transparent",
+          borderBottom: heroScrolled ? "1px solid var(--border)" : "1px solid transparent",
         }}>
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <button onClick={() => router.back()}
@@ -241,7 +241,7 @@ export default function MerchantPage() {
       </div>
 
       {/* ══ HERO ══ */}
-      <div className="relative h-64 md:h-[38vh] overflow-hidden bg-[#12121a]">
+      <div className="relative h-64 md:h-[38vh] overflow-hidden" style={{ backgroundColor: 'var(--surface-1)' }}>
         {merchant.coverImage ? (
           <>
             <img
@@ -250,17 +250,17 @@ export default function MerchantPage() {
               className="w-full h-full object-cover"
             />
             {/* Mobile gradient — exactly original */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-black/20 to-black/30 md:hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 md:hidden" />
             {/* Desktop gradient — richer fade so identity text reads clearly */}
             <div className="absolute inset-0 hidden md:block" style={{
-              background: "linear-gradient(to top, #0a0a0f 0%, rgba(10,10,15,0.65) 45%, rgba(10,10,15,0.15) 75%, rgba(10,10,15,0.3) 100%)"
+              background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(10,10,15,0.65) 45%, rgba(10,10,15,0.15) 75%, rgba(10,10,15,0.3) 100%)"
             }} />
             <div className="absolute inset-0 hidden md:block" style={{
               background: "radial-gradient(ellipse at center, transparent 45%, rgba(10,10,15,0.5) 100%)"
             }} />
           </>
         ) : (
-          <div className="w-full h-full flex items-center justify-center" style={{ background: "linear-gradient(135deg, #1a1a2e, #12121a)" }}>
+          <div className="w-full h-full flex items-center justify-center" style={{ background: "var(--surface-2)" }}>
             <Store className="w-16 h-16 text-[#333]" />
           </div>
         )}
@@ -288,10 +288,10 @@ export default function MerchantPage() {
             <div className="flex items-end gap-4">
               {merchant.logo ? (
                 <img src={merchant.logo} alt="" className="w-20 h-20 rounded-2xl object-cover border-2 shadow-2xl shrink-0"
-                  style={{ borderColor: "rgba(255,255,255,0.12)" }} />
+                  style={{ borderColor: "var(--surface-0)" }} />
               ) : (
                 <div className="w-20 h-20 rounded-2xl flex items-center justify-center border-4 shrink-0"
-                  style={{ borderColor: "#0a0a0f", background: "rgba(139,92,246,0.12)" }}>
+                  style={{ borderColor: "var(--surface-0)", background: "rgba(139,92,246,0.12)" }}>
                   {isResto ? <Utensils className="w-8 h-8 text-violet-400" /> : <Store className="w-8 h-8 text-violet-400" />}
                 </div>
               )}
@@ -332,10 +332,10 @@ export default function MerchantPage() {
           <div className="flex items-end gap-3 mb-4 md:hidden">
             {merchant.logo ? (
               <img src={merchant.logo} alt="" className="w-16 h-16 rounded-2xl object-cover border-4 shadow-lg shrink-0"
-                style={{ borderColor: "#0a0a0f" }} />
+                style={{ borderColor: "var(--surface-0)" }} />
             ) : (
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-4 shrink-0"
-                style={{ borderColor: "#0a0a0f", background: "rgba(139,92,246,0.12)" }}>
+                style={{ borderColor: "var(--surface-0)", background: "rgba(139,92,246,0.12)" }}>
                 {isResto ? <Utensils className="w-7 h-7 text-violet-400" /> : <Store className="w-7 h-7 text-violet-400" />}
               </div>
             )}
@@ -377,16 +377,16 @@ export default function MerchantPage() {
           {/* Desktop rating strip — hidden on mobile */}
           {numRating > 0 && (
             <div className="hidden md:flex items-center gap-4 mb-5 px-5 py-4 rounded-2xl border"
-              style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+              style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
               <div className="flex flex-col items-center">
-                <span className="text-3xl font-bold text-white leading-none">
+                <span className="text-3xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>
                   {typeof numRating === "number" ? numRating.toFixed(1) : numRating}
                 </span>
                 <StarRow rating={numRating} size={11} />
               </div>
-              <div className="w-px h-8 self-center" style={{ background: "rgba(255,255,255,0.08)" }} />
+              <div className="w-px h-8 self-center" style={{ background: "var(--border)" }} />
               <div>
-                <p className="text-sm font-semibold text-white">{reviewCount} avis clients</p>
+                <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{reviewCount} avis clients</p>
                 <p className="text-[11px] text-[#6a6a80] mt-0.5">Avis vérifiés</p>
               </div>
               <TrendingUp className="w-4 h-4 text-[#FF2D55]/50 ml-auto" />
@@ -407,39 +407,39 @@ export default function MerchantPage() {
             {merchant.phone && (
               <a href={`tel:${merchant.phone}`}
                 className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
-                style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
+                style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}>
                 <Phone className="w-4 h-4" />
               </a>
             )}
             {mapPageUrl && (
               <button onClick={() => router.push(mapPageUrl)}
                 className="flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl text-sm font-medium border"
-                style={{ borderColor: "rgba(255,255,255,0.1)", color: "#a0a0b8" }}>
+                style={{ borderColor: "var(--border)", color: "var(--text-secondary)" }}>
                 <Navigation className="w-4 h-4" />
               </button>
             )}
           </div>
 
           {/* Divider — mobile only */}
-          <div className="border-b mb-6 md:hidden" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
+          <div className="border-b mb-6 md:hidden" style={{ borderColor: "var(--border)" }} />
 
           {/* Desktop-only sidebar sections */}
           <div className="hidden md:block">
             {merchant.opening_hours && Object.keys(merchant.opening_hours).length > 0 && (
               <div className="mb-5">
-                <h2 className="text-sm font-bold text-white mb-2">Horaires</h2>
+                <h2 className="text-sm font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Horaires</h2>
                 <HoursCard hours={merchant.opening_hours} />
               </div>
             )}
             <div className="mb-5">
-              <h2 className="text-sm font-bold text-white mb-2">Localisation</h2>
-              <div className="rounded-2xl border overflow-hidden" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+              <h2 className="text-sm font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Localisation</h2>
+              <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                 {displayAddress && (
-                  <div className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                  <div className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                     <MapPin className="w-5 h-5 text-[#FF2D55] shrink-0" />
                     <div className="flex-1">
                       <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
-                      <p className="text-sm text-white">{displayAddress}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{displayAddress}</p>
                     </div>
                     {mapPageUrl && (
                       <button onClick={() => router.push(mapPageUrl)} className="flex items-center justify-center">
@@ -449,21 +449,21 @@ export default function MerchantPage() {
                   </div>
                 )}
                 {merchant.phone && (
-                  <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                  <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                     <Phone className="w-5 h-5 text-[#FF2D55] shrink-0" />
                     <div className="flex-1">
                       <p className="text-xs text-[#6a6a80] mb-0.5">Téléphone</p>
-                      <p className="text-sm text-white">{merchant.phone}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.phone}</p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-[#333]" />
                   </a>
                 )}
                 {merchant.email && (
-                  <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+                  <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
                     <Mail className="w-5 h-5 text-[#FF2D55] shrink-0" />
                     <div className="flex-1">
                       <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
-                      <p className="text-sm text-white">{merchant.email}</p>
+                      <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.email}</p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-[#333]" />
                   </a>
@@ -474,7 +474,7 @@ export default function MerchantPage() {
                     <Globe className="w-5 h-5 text-[#FF2D55] shrink-0" />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs text-[#6a6a80] mb-0.5">Site web</p>
-                      <p className="text-sm text-white truncate">{merchant.website || merchant.domain}</p>
+                      <p className="text-sm truncate" style={{ color: 'var(--text-primary)' }}>{merchant.website || merchant.domain}</p>
                     </div>
                     <ChevronRight className="w-4 h-4 text-[#333]" />
                   </a>
@@ -488,7 +488,7 @@ export default function MerchantPage() {
                   {Object.entries(merchant.social_media).map(([platform, url]) => url ? (
                     <a key={platform} href={url} target="_blank" rel="noopener noreferrer"
                       className="flex items-center gap-2 px-3 py-2 rounded-xl border text-xs font-medium transition-all"
-                      style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)", color: "#a0a0b8" }}>
+                      style={{ background: "var(--surface-2)", borderColor: "var(--border)", color: "var(--text-secondary)" }}>
                       <ExternalLink className="w-3 h-3" />
                       {platform.charAt(0).toUpperCase() + platform.slice(1)}
                     </a>
@@ -499,7 +499,7 @@ export default function MerchantPage() {
             {mapPageUrl && (
               <button onClick={() => router.push(mapPageUrl)}
                 className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl text-sm font-semibold border transition-all mb-4"
-                style={{ borderColor: "rgba(255,45,85,0.2)", color: "#FF2D55", background: "rgba(16,185,129,0.06)" }}>
+                style={{ borderColor: "rgba(255,45,85,0.2)", color: "#FF2D55", background: "rgba(255,45,85,0.06)" }}>
                 <Navigation className="w-4 h-4" />
                 Obtenir l'itinéraire
               </button>
@@ -513,8 +513,8 @@ export default function MerchantPage() {
       {/* ══ ABOUT ══ */}
       {aboutText && (
         <section className="mb-8">
-          <h2 className="text-base md:text-lg font-bold text-white mb-3">À propos</h2>
-          <div className="rounded-2xl p-5 border" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+          <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>À propos</h2>
+          <div className="rounded-2xl p-5 border" style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
             <p className="text-sm text-[#a0a0b8] leading-relaxed">{aboutText}</p>
           </div>
         </section>
@@ -529,7 +529,7 @@ export default function MerchantPage() {
 
         return (
           <section className="mb-8">
-            <h2 className="text-base md:text-lg font-bold text-white mb-3">Découvrir</h2>
+            <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Découvrir</h2>
             <div className="grid gap-3" style={{ gridTemplateColumns: (hasMenu && hasServices) ? "1fr 1fr" : "1fr" }}>
               {hasMenu && (
                 <button
@@ -543,7 +543,7 @@ export default function MerchantPage() {
                     </div>
                     <ChevronRight className="w-4 h-4 text-[#FF2D55]/50 ml-auto" />
                   </div>
-                  <h3 className="text-sm font-bold text-white">Menu</h3>
+                  <h3 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Menu</h3>
                   <p className="text-[10px] text-[#6a6a80] mt-0.5">{merchant.menu!.length} articles</p>
                 </button>
               )}
@@ -559,7 +559,7 @@ export default function MerchantPage() {
                     </div>
                     <ChevronRight className="w-4 h-4 text-violet-400/50 ml-auto" />
                   </div>
-                  <h3 className="text-sm font-bold text-white">Services</h3>
+                  <h3 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Services</h3>
                   <p className="text-[10px] text-[#6a6a80] mt-0.5">{merchant.services!.length} prestations</p>
                 </button>
               )}
@@ -569,7 +569,7 @@ export default function MerchantPage() {
               <div className="mt-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Tag className="w-4 h-4 text-[#FF2D55]" />
-                  <h3 className="text-sm font-bold text-white">Offres</h3>
+                  <h3 className="text-sm font-bold" style={{ color: 'var(--text-primary)' }}>Offres</h3>
                   <span className="text-[10px] text-[#6a6a80]">({offers.length})</span>
                 </div>
                 {/* Mobile — horizontal scroll */}
@@ -577,7 +577,7 @@ export default function MerchantPage() {
                   {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                       className="shrink-0 w-48 rounded-2xl overflow-hidden border block transition-all hover:border-[#FF2D55]/20"
-                      style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                      style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                       <div className="relative h-32 overflow-hidden">
                         <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                         <span className="absolute top-2 left-2 discount-badge px-2 py-0.5 rounded-lg text-[10px] font-bold text-white">
@@ -590,7 +590,7 @@ export default function MerchantPage() {
                         </button>
                       </div>
                       <div className="p-3">
-                        <h3 className="text-xs font-semibold text-white mb-1 line-clamp-2">{offer.title}</h3>
+                        <h3 className="text-xs font-semibold mb-1 line-clamp-2" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                         <div className="flex items-baseline gap-1.5">
                           <span className="text-sm font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                           <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
@@ -604,7 +604,7 @@ export default function MerchantPage() {
                   {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                       className="group rounded-2xl overflow-hidden border block transition-all hover:border-[#FF2D55]/20 hover:shadow-lg hover:shadow-emerald-500/5"
-                      style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                      style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                       <div className="relative h-44 overflow-hidden">
                         <img src={offer.coverImage} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -624,7 +624,7 @@ export default function MerchantPage() {
                         </div>
                       </div>
                       <div className="p-4">
-                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-2 group-hover:text-[#FF4D7A] transition-colors">{offer.title}</h3>
+                        <h3 className="text-sm font-semibold mb-1 line-clamp-2 group-hover:text-[#FF4D7A] transition-colors" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                         <p className="text-xs text-[#6a6a80] line-clamp-1">{offer.shortDescription}</p>
                       </div>
                     </Link>
@@ -640,7 +640,7 @@ export default function MerchantPage() {
       {merchant.images && merchant.images.length > 0 && (
         <section className="mb-8">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base md:text-lg font-bold text-white">Photos</h2>
+            <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Photos</h2>
             {merchant.images.length > 3 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
           </div>
           {/* Mobile — horizontal scroll */}
@@ -675,8 +675,8 @@ export default function MerchantPage() {
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide md:hidden">
             {numRating > 0 && (
               <div className="shrink-0 w-28 rounded-2xl p-4 flex flex-col items-center justify-center border"
-                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
-                <span className="text-3xl font-bold text-white mb-1">
+                style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
+                <span className="text-3xl font-bold mb-1" style={{ color: 'var(--text-primary)' }}>
                   {typeof numRating === "number" ? numRating.toFixed(1) : numRating}
                 </span>
                 <StarRow rating={typeof numRating === "number" ? numRating : parseFloat(numRating)} size={11} />
@@ -685,7 +685,7 @@ export default function MerchantPage() {
             )}
             {merchant.user_reviews.map((rev, i) => (
               <div key={i} className="shrink-0 w-64 rounded-2xl p-4 border"
-                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                 <div className="flex items-center gap-2.5 mb-3">
                   {rev.reviewer_photo ? (
                     <img src={rev.reviewer_photo} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
@@ -696,7 +696,7 @@ export default function MerchantPage() {
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{rev.reviewer_name}</p>
+                    <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{rev.reviewer_name}</p>
                     <p className="text-[10px] text-[#6a6a80]">{rev.date}</p>
                   </div>
                   <div className="flex gap-0.5 shrink-0">
@@ -713,9 +713,9 @@ export default function MerchantPage() {
           <div className="hidden md:block">
             {numRating > 0 && (
               <div className="flex items-center gap-6 mb-5 px-5 py-4 rounded-2xl border"
-                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                 <div className="flex flex-col items-center">
-                  <span className="text-4xl font-bold text-white leading-none">
+                  <span className="text-4xl font-bold leading-none" style={{ color: 'var(--text-primary)' }}>
                     {typeof numRating === "number" ? numRating.toFixed(1) : numRating}
                   </span>
                   <StarRow rating={numRating} size={13} />
@@ -728,7 +728,7 @@ export default function MerchantPage() {
                     return (
                       <div key={star} className="flex items-center gap-2">
                         <span className="text-xs text-[#6a6a80] w-3">{star}</span>
-                        <div className="flex-1 h-1.5 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
+                        <div className="flex-1 h-1.5 rounded-full" style={{ background: "var(--surface-3)" }}>
                           <div className="h-full rounded-full bg-amber-400" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
@@ -740,7 +740,7 @@ export default function MerchantPage() {
             <div className="grid md:grid-cols-2 gap-4">
               {merchant.user_reviews.map((rev, i) => (
                 <div key={i} className="rounded-2xl p-5 border"
-                  style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                  style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                   <div className="flex items-center gap-3 mb-3">
                     {rev.reviewer_photo ? (
                       <img src={rev.reviewer_photo} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
@@ -751,7 +751,7 @@ export default function MerchantPage() {
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-white truncate">{rev.reviewer_name}</p>
+                      <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{rev.reviewer_name}</p>
                       <p className="text-[11px] text-[#6a6a80]">{rev.date}</p>
                     </div>
                     <div className="flex gap-0.5 shrink-0">
@@ -771,23 +771,23 @@ export default function MerchantPage() {
       {/* ══ OPENING HOURS — mobile only ══ */}
       {merchant.opening_hours && Object.keys(merchant.opening_hours).length > 0 && (
         <section className="px-4 mb-6 md:hidden">
-          <h2 className="text-base font-bold text-white mb-3">Horaires</h2>
+          <h2 className="text-base font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Horaires</h2>
           <HoursCard hours={merchant.opening_hours} />
         </section>
       )}
 
       {/* ══ ADDRESS & LOCATION — mobile only ══ */}
       <section className="px-4 mb-6 md:hidden">
-        <h2 className="text-base font-bold text-white mb-3">Localisation</h2>
-        <div className="rounded-2xl border overflow-hidden" style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+        <h2 className="text-base font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Localisation</h2>
+        <div className="rounded-2xl border overflow-hidden" style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
 
           {/* Address row */}
           {displayAddress && (
-            <div className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+            <div className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
               <MapPin className="w-5 h-5 text-[#FF2D55] shrink-0" />
               <div className="flex-1">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Adresse</p>
-                <p className="text-sm text-white">{displayAddress}</p>
+                <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{displayAddress}</p>
               </div>
               {mapPageUrl && (
                 <button onClick={() => router.push(mapPageUrl)} className="flex items-center justify-center">
@@ -799,11 +799,11 @@ export default function MerchantPage() {
 
           {/* Phone */}
           {merchant.phone && (
-            <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+            <a href={`tel:${merchant.phone}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
               <Phone className="w-5 h-5 text-[#FF2D55] shrink-0" />
               <div className="flex-1">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Téléphone</p>
-                <p className="text-sm text-white">{merchant.phone}</p>
+                <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.phone}</p>
               </div>
               <ChevronRight className="w-4 h-4 text-[#333]" />
             </a>
@@ -811,11 +811,11 @@ export default function MerchantPage() {
 
           {/* Email */}
           {merchant.email && (
-            <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+            <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
               <Mail className="w-5 h-5 text-[#FF2D55] shrink-0" />
               <div className="flex-1">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
-                <p className="text-sm text-white">{merchant.email}</p>
+                <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.email}</p>
               </div>
               <ChevronRight className="w-4 h-4 text-[#333]" />
             </a>
@@ -828,7 +828,7 @@ export default function MerchantPage() {
               <Globe className="w-5 h-5 text-[#FF2D55] shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-xs text-[#6a6a80] mb-0.5">Site web</p>
-                <p className="text-sm text-white truncate">{merchant.website || merchant.domain}</p>
+                <p className="text-sm truncate" style={{ color: 'var(--text-primary)' }}>{merchant.website || merchant.domain}</p>
               </div>
               <ChevronRight className="w-4 h-4 text-[#333]" />
             </a>
@@ -839,12 +839,12 @@ export default function MerchantPage() {
       {/* ══ SOCIAL MEDIA — mobile only ══ */}
       {merchant.social_media && Object.keys(merchant.social_media).length > 0 && (
         <section className="px-4 mb-6 md:hidden">
-          <h2 className="text-base font-bold text-white mb-3">Réseaux sociaux</h2>
+          <h2 className="text-base font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Réseaux sociaux</h2>
           <div className="flex flex-wrap gap-2">
             {Object.entries(merchant.social_media).map(([platform, url]) => url ? (
               <a key={platform} href={url} target="_blank" rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl border text-sm font-medium transition-all"
-                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)", color: "#a0a0b8" }}>
+                style={{ background: "var(--surface-2)", borderColor: "var(--border)", color: "var(--text-secondary)" }}>
                 <ExternalLink className="w-3.5 h-3.5" />
                 {platform.charAt(0).toUpperCase() + platform.slice(1)}
               </a>
