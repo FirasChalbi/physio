@@ -68,10 +68,10 @@ function SearchContent() {
     m.reviewCount || parseInt(m.review_count || '0') || 0
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8" style={{ background: '#0a0a0f' }}>
+    <div className="min-h-screen pb-24 md:pb-8" style={{ background: 'var(--surface-0)' }}>
       {/* ─── Header ─── */}
       <header className="sticky top-0 z-50 px-4 pt-4 pb-3"
-        style={{ background: 'rgba(10, 10, 15, 0.9)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        style={{ background: 'var(--header-bg)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)' }}>
         <div className="max-w-5xl mx-auto">
           {/* Top row: back + logo */}
           <div className="flex items-center gap-3 mb-3">
@@ -90,7 +90,7 @@ function SearchContent() {
         {q && !loading && (
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-lg md:text-2xl font-bold text-white">
+              <h1 className="text-lg md:text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>
                 Résultats pour « <span className="text-[#FF2D55]">{q}</span> »
               </h1>
               <p className="text-sm text-[#6a6a80] mt-1">
@@ -103,19 +103,19 @@ function SearchContent() {
         {/* Loading state */}
         {loading && (
           <div className="space-y-4">
-            <div className="h-8 w-64 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
-            <div className="h-4 w-32 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
+            <div className="h-8 w-64 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
+            <div className="h-4 w-32 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
               {Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="rounded-2xl overflow-hidden border"
-                  style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                  <div className="h-44 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                  style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
+                  <div className="h-44 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
                   <div className="p-4 space-y-3">
-                    <div className="h-4 w-3/4 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                    <div className="h-3 w-1/2 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                    <div className="h-4 w-3/4 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
+                    <div className="h-3 w-1/2 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
                     <div className="flex justify-between">
-                      <div className="h-3 w-20 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                      <div className="h-3 w-12 rounded-lg animate-pulse" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                      <div className="h-3 w-20 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
+                      <div className="h-3 w-12 rounded-lg animate-pulse" style={{ background: 'var(--surface-2)' }} />
                     </div>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ function SearchContent() {
               style={{ background: 'rgba(255, 45, 85, 0.1)' }}>
               <Search className="w-8 h-8 text-[#FF2D55]" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Rechercher un marchand</h2>
+            <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Rechercher un marchand</h2>
             <p className="text-sm text-[#6a6a80] max-w-sm">
               Tapez le nom d'un restaurant, salon de beauté, artisan ou tout autre commerce dans les Yvelines.
             </p>
@@ -145,9 +145,9 @@ function SearchContent() {
               style={{ background: 'rgba(255,255,255,0.04)' }}>
               <Store className="w-8 h-8 text-[#6a6a80]" />
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Aucun résultat</h2>
+            <h2 className="text-xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>Aucun résultat</h2>
             <p className="text-sm text-[#6a6a80] max-w-sm">
-              Aucun marchand ne correspond à « <span className="text-white">{q}</span> ».
+              Aucun marchand ne correspond à « <span style={{ color: 'var(--text-primary)' }}>{q}</span> ».
               Essayez avec d'autres mots-clés.
             </p>
             <Link href="/" className="mt-6 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90"
@@ -169,7 +169,7 @@ function SearchContent() {
                   key={m._id}
                   href={`/merchants/${m.slug}`}
                   className="group rounded-2xl overflow-hidden border transition-all duration-200 hover:border-[#FF2D55]/20 hover:shadow-lg hover:shadow-emerald-500/5"
-                  style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}
+                  style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}
                 >
                   {/* Image */}
                   <div className="relative h-44 overflow-hidden">
@@ -206,7 +206,7 @@ function SearchContent() {
 
                   {/* Info */}
                   <div className="p-4">
-                    <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1 group-hover:text-[#FF2D55] transition-colors">
+                    <h3 className="text-sm font-semibold mb-1 line-clamp-1 group-hover:text-[#FF2D55] transition-colors" style={{ color: 'var(--text-primary)' }}>
                       {m.name}
                     </h3>
                     <div className="flex items-center gap-2 mb-3">

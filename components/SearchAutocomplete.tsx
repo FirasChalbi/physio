@@ -224,10 +224,10 @@ export default function SearchAutocomplete({
       <div
         className={`flex items-center gap-2 px-4 ${py} rounded-3xl relative overflow-hidden transition-all duration-200`}
         style={{
-          background: 'rgba(255,255,255,0.05)',
+          background: 'var(--surface-2)',
           border: open
             ? '1px solid rgba(255, 45, 85, 0.3)'
-            : '1px solid rgba(255,255,255,0.08)',
+            : '1px solid var(--border)',
           boxShadow: open ? '0 0 20px rgba(255, 45, 85, 0.08)' : 'none',
           ...wrapperStyle,
         }}
@@ -241,7 +241,7 @@ export default function SearchAutocomplete({
           onChange={e => setQuery(e.target.value)}
           onFocus={() => { if (results && results.merchants.length > 0) setOpen(true) }}
           onKeyDown={handleKeyDown}
-          className="bg-transparent text-sm text-white outline-none w-full"
+          className="bg-transparent text-sm outline-none w-full" style={{ color: 'var(--text-primary)' }}
           autoComplete="off"
           role="combobox"
           aria-expanded={open}

@@ -14,6 +14,7 @@ import Logo from "@/components/Logo"
 import ImageCarousel from "@/components/ImageCarousel"
 import SearchAutocomplete from "@/components/SearchAutocomplete"
 import Footer from "@/components/Footer"
+import ThemeToggle from "@/components/ThemeToggle"
 
 type Category = { _id: string; name: string; slug: string; icon?: string }
 type Offer = {
@@ -49,14 +50,14 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
     return (
         <section className="mb-8">
             <div className="flex items-center justify-between px-4 mb-4">
-                <h2 className="text-base md:text-xl font-bold text-white">{title}</h2>
+                <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{title}</h2>
                 <Link href={href} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -70,7 +71,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                                 style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
-                            <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                            <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                             <p className="text-[11px] text-[#6a6a80] mb-2">
                                 {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
                             </p>
@@ -93,7 +94,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border group"
-                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -107,7 +108,7 @@ function HorizontalSection({ title, href, offers, categories, merchants, favorit
                                 style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
-                            <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                            <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                             <p className="text-[11px] text-[#6a6a80] mb-2">
                                 {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
                             </p>
@@ -145,7 +146,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
     return (
         <section className="mb-8">
             <div className="flex items-center justify-between px-4 mb-4">
-                <h2 className="text-base md:text-xl font-bold text-white">{title}</h2>
+                <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{title}</h2>
                 <Link href={href} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
             </div>
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
@@ -153,7 +154,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                 {merchants.map(m => (
                     <Link key={m._id} href={`/merchants/${m.slug}`}
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-1 pointer-events-none" />
@@ -172,7 +173,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                             )}
                         </div>
                         <div className="p-3.5">
-                            <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{m.name}</h3>
+                            <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{m.name}</h3>
                             <p className="text-[11px] text-[#6a6a80] mb-2">
                                 {m.categories?.[0] || 'Marchand'} · {m.city}
                             </p>
@@ -198,7 +199,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                 {merchants.map(m => (
                     <Link key={m._id} href={`/merchants/${m.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border group"
-                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent z-1 pointer-events-none" />
@@ -217,7 +218,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                             )}
                         </div>
                         <div className="p-3.5">
-                            <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{m.name}</h3>
+                            <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{m.name}</h3>
                             <p className="text-[11px] text-[#6a6a80] mb-2">{m.categories?.[0] || 'Marchand'} · {m.city}</p>
                             <div className="flex items-center justify-between">
                                 {getMaxDiscount(m._id) != null && (
@@ -254,7 +255,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -268,7 +269,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                                 style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
-                            <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                            <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                             <p className="text-[11px] text-[#6a6a80] mb-2">
                                 {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
                             </p>
@@ -291,7 +292,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                 {offers.map(offer => (
                     <Link key={offer._id} href={`/offers/${offer.slug}`}
                         className="deal-card rounded-2xl overflow-hidden border group"
-                        style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}
+                        style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}
                         onClick={() => saveViewed?.(offer.slug)}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
@@ -305,7 +306,7 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
                                 style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                         </div>
                         <div className="p-3.5">
-                            <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                            <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                             <p className="text-[11px] text-[#6a6a80] mb-2">
                                 {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
                             </p>
@@ -330,12 +331,12 @@ function OfferGrid({ offers, categories, merchants, favorites, toggleFav, saveVi
 
 /* ─── Skeleton components ─────────────────────────────────── */
 const skelBase = "rounded-lg animate-pulse"
-const skelBg = { background: 'rgba(255,255,255,0.06)' }
+const skelBg = { background: 'var(--surface-2)' }
 
 function SkeletonOfferCard() {
     return (
         <div className={`shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border`}
-            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
             <div className={`h-40 ${skelBase}`} style={skelBg} />
             <div className="p-3.5 space-y-2.5">
                 <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
@@ -352,7 +353,7 @@ function SkeletonOfferCard() {
 function SkeletonMerchantCard() {
     return (
         <div className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border"
-            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
             <div className={`h-40 ${skelBase}`} style={skelBg} />
             <div className="p-3.5 space-y-2.5">
                 <div className={`h-3.5 w-3/4 ${skelBase}`} style={skelBg} />
@@ -369,7 +370,7 @@ function SkeletonMerchantCard() {
 function SkeletonCategory() {
     return (
         <div className="shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl"
-            style={{ background: 'linear-gradient(145deg, #161620, #111118)', border: '1px solid rgba(255,255,255,0.07)', minWidth: '76px' }}>
+            style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)', minWidth: '76px' }}>
             <div className={`w-6 h-6 ${skelBase} rounded-full`} style={skelBg} />
             <div className={`h-2.5 w-12 ${skelBase}`} style={skelBg} />
         </div>
@@ -379,7 +380,7 @@ function SkeletonCategory() {
 function SkeletonFamilyCard() {
     return (
         <div className="shrink-0 w-40 md:w-auto rounded-2xl overflow-hidden border"
-            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
             <div className={`h-28 ${skelBase}`} style={skelBg} />
             <div className="p-2.5 space-y-2">
                 <div className={`h-3 w-3/4 ${skelBase}`} style={skelBg} />
@@ -395,7 +396,7 @@ function SkeletonFamilyCard() {
 function SkeletonCityCard() {
     return (
         <div className="relative rounded-2xl overflow-hidden h-28 md:h-36"
-            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
             <div className={`absolute inset-0 ${skelBase}`} style={skelBg} />
             <div className="relative z-10 p-4 flex flex-col justify-end h-full space-y-1.5">
                 <div className={`h-2.5 w-16 ${skelBase}`} style={skelBg} />
@@ -408,7 +409,7 @@ function SkeletonCityCard() {
 function SkeletonListCard() {
     return (
         <div className="flex gap-3 rounded-2xl border p-3"
-            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
             <div className={`w-24 h-24 rounded-xl shrink-0 ${skelBase}`} style={skelBg} />
             <div className="flex-1 space-y-2 py-0.5">
                 <div className={`h-2.5 w-20 ${skelBase}`} style={skelBg} />
@@ -425,7 +426,7 @@ function SkeletonListCard() {
 function SkeletonDesktopGridCard() {
     return (
         <div className="rounded-2xl overflow-hidden border"
-            style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+            style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
             <div className={`h-44 ${skelBase}`} style={skelBg} />
             <div className="p-4 space-y-2.5">
                 <div className={`h-2.5 w-20 ${skelBase}`} style={skelBg} />
@@ -630,26 +631,29 @@ export default function HomePage() {
         .filter((o): o is Offer => !!o)
 
     return (
-        <div className="min-h-screen pb-24 md:pb-0" style={{ background: '#0E0E0F' }}>
+        <div className="min-h-screen pb-24 md:pb-0" style={{ background: 'var(--surface-0)' }}>
 
             {/* ═══════════ MOBILE HEADER ═══════════ */}
-            <header className="sticky top-0 z-50 px-4 pt-4 pb-3 md:hidden" style={{ background: '#0E0E0F' }}>
+            <header className="sticky top-0 z-50 px-4 pt-4 pb-3 md:hidden" style={{ background: 'var(--header-bg)', backdropFilter: 'blur(12px)', borderBottom: '1px solid var(--border)' }}>
                 <div className="flex items-center justify-between">
                     <Logo size="lg" />
-                    <button onClick={() => setNotifOpen(true)} className="relative p-2">
-                        <Bell className="w-5 h-5 text-[#8888a0]" />
-                        {unreadNotifCount > 0 && (
-                            <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
-                                {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
-                            </span>
-                        )}
-                    </button>
+                    <div className="flex items-center gap-1">
+                        <ThemeToggle />
+                        <button onClick={() => setNotifOpen(true)} className="relative p-2">
+                            <Bell className="w-5 h-5" style={{ color: 'var(--text-secondary)' }} />
+                            {unreadNotifCount > 0 && (
+                                <span className="absolute top-1 right-1 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
+                                    {unreadNotifCount > 9 ? '9+' : unreadNotifCount}
+                                </span>
+                            )}
+                        </button>
+                    </div>
                 </div>
             </header>
 
             {/* ═══════════ DESKTOP NAVBAR ═══════════ */}
             <nav className="hidden md:block sticky top-0 z-50 transition-all duration-300"
-                style={{ background: heroScrolled ? 'rgba(10, 10, 15, 0.9)' : 'transparent', backdropFilter: heroScrolled ? 'blur(12px)' : 'none', borderBottom: heroScrolled ? '1px solid rgba(255,255,255,0.06)' : '1px solid transparent' }}>
+                style={{ background: heroScrolled ? 'var(--header-bg)' : 'transparent', backdropFilter: heroScrolled ? 'blur(12px)' : 'none', borderBottom: heroScrolled ? '1px solid var(--border)' : '1px solid transparent' }}>
                 <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-6">
                     <Logo size="lg" />
                     {/* Search bar — only visible when scrolled past hero */}
@@ -662,14 +666,15 @@ export default function HomePage() {
                         />
                     )}
                     {!heroScrolled && <div className="flex-1" />}
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-4">
                         <Link href="/" className="text-sm text-[#FF2D55] hover:text-[#FF4D7A] transition-colors font-medium">
                             Explore
                         </Link>
-                        <Link href="/map" className="text-sm text-[#8888a0] hover:text-white transition-colors">
+                        <Link href="/map" className="text-sm transition-colors" style={{ color: 'var(--text-secondary)' }}>
                             Map
                         </Link>
-                        <button onClick={() => setNotifOpen(true)} className="relative text-[#8888a0] hover:text-white transition-colors">
+                        <ThemeToggle />
+                        <button onClick={() => setNotifOpen(true)} className="relative transition-colors" style={{ color: 'var(--text-secondary)' }}>
                             <Bell className="w-5 h-5" />
                             {unreadNotifCount > 0 && (
                                 <span className="absolute -top-1 -right-1.5 min-w-[16px] h-4 px-1 rounded-full text-[9px] font-bold text-white flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #FF2D55, #CC2444)' }}>
@@ -677,7 +682,7 @@ export default function HomePage() {
                                 </span>
                             )}
                         </button>
-                        <Link href="/favoris" className="text-[#8888a0] hover:text-white transition-colors">
+                        <Link href="/favoris" className="transition-colors" style={{ color: 'var(--text-secondary)' }}>
                             <Heart className="w-5 h-5" />
                         </Link>
                         {session ? (
@@ -685,19 +690,19 @@ export default function HomePage() {
                                 const role = (session.user as any)?.role
                                 if (role === "admin" || role === "merchant") {
                                     return (
-                                        <Link href="/admin" className="text-[#8888a0] hover:text-white transition-colors">
+                                        <Link href="/admin" className="transition-colors" style={{ color: 'var(--text-secondary)' }}>
                                             <UserIcon className="w-5 h-5" />
                                         </Link>
                                     )
                                 }
                                 return (
-                                    <Link href="/account" className="text-[#8888a0] hover:text-white transition-colors">
+                                    <Link href="/account" className="transition-colors" style={{ color: 'var(--text-secondary)' }}>
                                         <UserIcon className="w-5 h-5" />
                                     </Link>
                                 )
                             })()
                         ) : (
-                            <Link href="/login" className="text-[#8888a0] hover:text-white transition-colors">
+                            <Link href="/login" className="transition-colors" style={{ color: 'var(--text-secondary)' }}>
                                 <UserIcon className="w-5 h-5" />
                             </Link>
                         )}
@@ -749,8 +754,8 @@ export default function HomePage() {
                         <section className="px-4 mb-8">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 {Array.from({ length: 2 }).map((_, i) => (
-                                    <div key={i} className="relative rounded-2xl overflow-hidden h-32 md:h-40"
-                                        style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                    <div key={i} className="relative rounded-2xl overflow-hidden h-32 md:h-40 animate-pulse"
+                                        style={{ background: 'var(--surface-2)', border: '1px solid var(--card-border)' }}>
                                         <div className={`absolute inset-0 ${skelBase}`} style={skelBg} />
                                     </div>
                                 ))}
@@ -804,7 +809,7 @@ export default function HomePage() {
                        <p className="text-sm text-[#8888a0]">
                         Bonjour {userName ? <span className="text-[#FF2D55] font-medium">{userName}</span> : <span className="text-[#FF2D55]"></span>}
                     </p>
-                    <h1 className="text-xl font-bold text-white mt-0.5 mb-4">
+                    <h1 className="text-xl font-bold mt-0.5 mb-4" style={{ color: 'var(--text-primary)' }}>
                         Que cherchez-vous<br />en Yvelines ?
                     </h1>
                     <SearchAutocomplete
@@ -825,7 +830,7 @@ export default function HomePage() {
                             <LucideIcons.Percent className="w-3.5 h-3.5" />
                             Jusqu'à -70% sur vos activités favorites
                         </div>
-                        <h1 className="text-4xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                        <h1 className="text-4xl lg:text-6xl font-extrabold mb-6 leading-tight tracking-tight" style={{ color: 'var(--text-primary)' }}>
                             Les meilleures offres<br />
                             <span style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
                                 près de chez vous
@@ -849,7 +854,7 @@ export default function HomePage() {
                 {/* ═══════════ CATÉGORIES POPULAIRES ═══════════ */}
                 <section className="px-4 mb-8">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-base md:text-xl font-bold text-white">Catégories populaires</h2>
+                        <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Catégories populaires</h2>
                         <Link href="/offers" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
 
@@ -869,13 +874,13 @@ export default function HomePage() {
                                 <Link key={cat.slug} href={`/offers?category=${cat.slug}`}
                                     className="shrink-0 flex flex-col items-center gap-2.5 pt-4 pb-3 px-3 rounded-2xl transition-all active:scale-95 group"
                                     style={{
-                                        background: 'linear-gradient(145deg, #1C1C1E, #0E0E0F)',
-                                        border: '1px solid rgba(255,255,255,0.07)',
-                                        boxShadow: '0 4px 20px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.15), inset 0 0 20px rgba(255,45,85,0.18)',
+                                        background: 'var(--surface-1)',
+                                        border: '1px solid var(--card-border)',
+                                        boxShadow: '0 4px 20px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.6), inset 0 0 20px rgba(255,45,85,0.06)',
                                         minWidth: '76px',
                                     }}>
                                     <IconComp className="w-6 h-6 text-[#FF2D55] transition-transform group-hover:scale-110" />
-                                    <span className="text-[10px] text-[#c0c0d0] font-medium text-center leading-tight whitespace-nowrap group-hover:text-white transition-colors">
+                                    <span className="text-[10px] font-medium text-center leading-tight whitespace-nowrap transition-colors" style={{ color: 'var(--text-secondary)' }}>
                                         {cat.name}
                                     </span>
                                 </Link>
@@ -887,13 +892,14 @@ export default function HomePage() {
                 {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
                 <section className="mb-8">
                     <div className="flex items-center justify-between px-4 mb-3">
-                        <h2 className="text-base md:text-xl font-bold text-white">📍 Bon plans par ville</h2>
+                        <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>📍 Bon plans par ville</h2>
                         <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
                     <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
                         {cities.map(city => (
                             <button key={city.slug} onClick={() => setActiveCity(city.slug)}
-                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-[#FF2D55] text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
+                                style={activeCity !== city.slug ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
                                 {city.name}
                             </button>
                         ))}
@@ -908,7 +914,7 @@ export default function HomePage() {
                     categories={categories}
                     featuredCard={popularOffers.length > 0 ? (
                         <Link href="/offers?sort=discount" className="shrink-0 w-56 md:w-auto rounded-2xl relative overflow-hidden group active:scale-[0.98] transition-transform md:col-span-1 flex flex-col justify-end h-64 md:h-auto"
-                            style={{ background: '#1C1C1E' }}>
+                            style={{ background: 'var(--surface-2)' }}>
                             <img src={popularOffers[0]?.coverImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/40 to-transparent" />
                             <div className="relative z-10 p-4 flex flex-col justify-end h-full">
@@ -942,7 +948,7 @@ export default function HomePage() {
                             return (
                                 <Link key={city.slug} href={`/offers?city=${city.slug}`}
                                     className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-28 md:h-36"
-                                    style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+                                    style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
                                     {bgImage && <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-60" />}
                                     <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
                                     <div className="relative z-10 p-4 flex flex-col justify-end h-full">
@@ -961,7 +967,7 @@ export default function HomePage() {
                 {featuredOffers.length > 0 && (
                     <section className="mb-8">
                         <div className="flex items-center justify-between px-4 mb-4">
-                            <h2 className="text-base md:text-xl font-bold text-white">Recommandé pour vous</h2>
+                            <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Recommandé pour vous</h2>
                             <Link href="/offers?featured=1" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                         </div>
 
@@ -970,7 +976,7 @@ export default function HomePage() {
                             {featuredOffers.map(offer => (
                                 <Link key={offer._id} href={`/offers/${offer.slug}`}
                                     className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -983,7 +989,7 @@ export default function HomePage() {
                                             style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                                     </div>
                                     <div className="p-3.5">
-                                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                                        <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                                         <p className="text-[11px] text-[#6a6a80] mb-2">
                                             {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
                                         </p>
@@ -1008,7 +1014,7 @@ export default function HomePage() {
                             {featuredOffers.map(offer => (
                                 <Link key={offer._id} href={`/offers/${offer.slug}`}
                                     className="deal-card rounded-2xl overflow-hidden border group"
-                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[offer.coverImage, ...(offer.galleryImages || [])].filter(Boolean)} alt={offer.title} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -1021,7 +1027,7 @@ export default function HomePage() {
                                             style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
                                     </div>
                                     <div className="p-3.5">
-                                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{offer.title}</h3>
+                                        <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                                         <p className="text-[11px] text-[#6a6a80] mb-2">
                                             {getMerchantName(offer.merchantId) || categories.find(c => c._id === offer.categoryId)?.name || 'Offre'} · {offer.city}
                                         </p>
@@ -1047,7 +1053,7 @@ export default function HomePage() {
                 {popularOffers.length > 0 && (
                     <section className="px-4 mb-8">
                         <Link href="/offers?sort=popular" className="block relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-46 md:h-64"
-                            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
                             <img src={popularOffers[0]?.coverImage || ''} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/50 to-transparent" />
                             <div className="relative z-10 p-6 md:p-8 flex flex-col justify-end h-full">
@@ -1063,13 +1069,14 @@ export default function HomePage() {
                 {/* ═══════════ PAR CATÉGORIE ═══════════ */}
                 <section className="mb-8">
                     <div className="flex items-center justify-between px-4 mb-3">
-                        <h2 className="text-base md:text-xl font-bold text-white">Par catégorie</h2>
+                        <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Par catégorie</h2>
                         <Link href={`/offers?category=${activeCategoryTab}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
                     <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
                         {categoryTabs.map(cat => (
                             <button key={cat.slug} onClick={() => setActiveCategoryTab(cat.slug)}
-                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCategoryTab === cat.slug ? 'bg-[#FF2D55] text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCategoryTab === cat.slug ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
+                                style={activeCategoryTab !== cat.slug ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
                                 {cat.name}
                             </button>
                         ))}
@@ -1087,7 +1094,7 @@ export default function HomePage() {
                         {/* Meilleurs restaurants */}
                         <Link href="/offers?category=restaurant"
                             className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-32 md:h-40"
-                            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
                             {(() => {
                                 const restoOffers = offers.filter(o => {
                                     const cat = categories.find(c => c._id === o.categoryId)
@@ -1107,7 +1114,7 @@ export default function HomePage() {
                         {/* Beauté & Santé */}
                         <Link href="/offers?category=beaute-sante"
                             className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-32 md:h-40"
-                            style={{ background: '#1C1C1E', border: '1px solid rgba(255,255,255,0.06)' }}>
+                            style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
                             {(() => {
                                 const beautyOffers = offers.filter(o => {
                                     const cat = categories.find(c => c._id === o.categoryId)
@@ -1178,7 +1185,7 @@ export default function HomePage() {
                 {/* ═══════════ TOUTES LES OFFRES ═══════════ */}
                 <section className="px-4 mb-8">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-base md:text-xl font-bold text-white">Toutes les offres</h2>
+                        <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>Toutes les offres</h2>
                         <span className="text-xs text-[#6a6a80]">{filteredOffers.length} offre{filteredOffers.length > 1 ? 's' : ''}</span>
                     </div>
 
@@ -1187,7 +1194,8 @@ export default function HomePage() {
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                             {allCitiesFilter.map(c => (
                                 <button key={c.slug} onClick={() => setAllOffersCity(c.slug)}
-                                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${allOffersCity === c.slug ? 'bg-[#FF2D55] text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${allOffersCity === c.slug ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
+                                    style={allOffersCity !== c.slug ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
                                     {c.name}
                                 </button>
                             ))}
@@ -1195,7 +1203,8 @@ export default function HomePage() {
                         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
                             {allCategoriesFilter.map(c => (
                                 <button key={c._id} onClick={() => setAllOffersCategory(c._id)}
-                                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${allOffersCategory === c._id ? 'bg-violet-500 text-white' : 'bg-white/5 text-[#8888a0] border border-white/10 hover:bg-white/10 hover:text-white'}`}>
+                                    className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${allOffersCategory === c._id ? 'bg-violet-500 text-white' : 'border hover:bg-violet-500/10 hover:text-violet-500'}`}
+                                    style={allOffersCategory !== c._id ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
                                     {c.name}
                                 </button>
                             ))}
@@ -1207,7 +1216,7 @@ export default function HomePage() {
                         {filteredOffers.map(offer => (
                             <Link key={offer._id} href={`/merchants/${getMerchantSlug(offer.merchantId)}`}
                                 className="flex gap-3 rounded-2xl border p-3 active:scale-[0.98] transition-transform"
-                                style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                 <div className="w-24 h-24 rounded-xl overflow-hidden shrink-0 relative">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
@@ -1216,7 +1225,7 @@ export default function HomePage() {
                                 <div className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                                     <div>
                                         <p className="text-[10px] text-[#FF2D55] font-medium">{getMerchantName(offer.merchantId)}</p>
-                                        <h3 className="text-sm font-semibold text-white line-clamp-2 mt-0.5">{offer.title}</h3>
+                                        <h3 className="text-sm font-semibold line-clamp-2 mt-0.5" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                                     </div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-1.5">
@@ -1242,7 +1251,7 @@ export default function HomePage() {
                         {filteredOffers.map(offer => (
                             <Link key={offer._id} href={`/merchants/${getMerchantSlug(offer.merchantId)}`}
                                 className="deal-card rounded-2xl overflow-hidden border"
-                                style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                 <div className="relative h-44 overflow-hidden">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -1256,7 +1265,7 @@ export default function HomePage() {
                                 </div>
                                 <div className="p-4">
                                     <p className="text-[11px] text-[#FF2D55] font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
-                                    <h3 className="text-sm font-semibold text-white mb-1.5 line-clamp-2">{offer.title}</h3>
+                                    <h3 className="text-sm font-semibold mb-1.5 line-clamp-2" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                                     <p className="text-xs text-[#6a6a80] mb-3 line-clamp-1">{offer.shortDescription}</p>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-baseline gap-2">
@@ -1279,7 +1288,7 @@ export default function HomePage() {
                 {merchants.length > 0 && (
                     <section className="px-4 mb-8">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-base md:text-xl font-bold text-white">🏪 Marchands populaires</h2>
+                            <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>🏪 Marchands populaires</h2>
                             <Link href="/merchants" className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                         </div>
 
@@ -1291,7 +1300,7 @@ export default function HomePage() {
                                 return (
                                 <Link key={m._id} href={`/merchants/${m.slug}`}
                                     className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
-                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -1308,7 +1317,7 @@ export default function HomePage() {
                                         )}
                                     </div>
                                     <div className="p-3.5">
-                                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{m.name}</h3>
+                                        <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{m.name}</h3>
                                         <p className="text-[11px] text-[#6a6a80] mb-2">{m.categories?.[0] || 'Marchand'} · {m.city}</p>
                                         <div className="flex items-center justify-between">
                                             {maxDisc > 0 && (
@@ -1335,7 +1344,7 @@ export default function HomePage() {
                                 return (
                                 <Link key={m._id} href={`/merchants/${m.slug}`}
                                     className="deal-card rounded-2xl overflow-hidden border group"
-                                    style={{ background: '#1C1C1E', borderColor: 'rgba(255,255,255,0.06)' }}>
+                                    style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                                     <div className="relative h-40 overflow-hidden">
                                         <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
                                         <div className="absolute inset-0 bg-linear-to-t from-black/50 via-transparent to-transparent" />
@@ -1352,7 +1361,7 @@ export default function HomePage() {
                                         )}
                                     </div>
                                     <div className="p-3.5">
-                                        <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{m.name}</h3>
+                                        <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{m.name}</h3>
                                         <p className="text-[11px] text-[#6a6a80] mb-2">{m.categories?.[0] || 'Marchand'} · {m.city}</p>
                                         <div className="flex items-center justify-between">
                                             {maxDisc > 0 && (

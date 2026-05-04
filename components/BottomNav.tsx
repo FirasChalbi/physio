@@ -29,9 +29,9 @@ export default function BottomNav() {
         <nav
             className="fixed bottom-0 left-0 right-0 z-50 border-t md:hidden"
             style={{
-                background: "rgba(14, 14, 15, 0.95)",
+                background: "var(--header-bg)",
                 backdropFilter: "blur(16px)",
-                borderColor: "rgba(255,255,255,0.06)",
+                borderColor: "var(--border)",
             }}
         >
             <div className="flex items-center justify-around py-2.5">

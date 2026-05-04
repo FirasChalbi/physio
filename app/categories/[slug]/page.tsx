@@ -45,15 +45,15 @@ export default function CategoryPage() {
     const filtered = cityFilter ? offers.filter(o => o.city === cityFilter) : offers
 
     if (loading) return (
-        <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
+        <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--surface-0)' }}>
             <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
         </div>
     )
 
     return (
-        <div className="min-h-screen" style={{ background: '#0a0a0f' }}>
+        <div className="min-h-screen" style={{ background: 'var(--surface-0)' }}>
             {/* Navbar */}
-            <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(10, 10, 15, 0.9)', backdropFilter: 'blur(12px)', borderColor: 'rgba(255,255,255,0.06)' }}>
+            <nav className="sticky top-0 z-50 border-b" style={{ background: 'var(--header-bg)', backdropFilter: 'blur(12px)', borderColor: 'var(--border)' }}>
                 <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
                     <Logo size="lg" />
                     <div className="flex-1" />
@@ -62,14 +62,14 @@ export default function CategoryPage() {
             </nav>
 
             {/* Header */}
-            <div className="py-10 border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
+            <div className="py-10 border-b" style={{ borderColor: 'var(--border)' }}>
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="flex items-center gap-2 text-sm text-[#6a6a80] mb-4">
                         <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
                         <span>/</span>
-                        <span className="text-white">{category?.name || slug}</span>
+                        <span style={{ color: 'var(--text-primary)' }}>{category?.name || slug}</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">{category?.name || 'Catégorie'}</h1>
+                    <h1 className="text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{category?.name || 'Catégorie'}</h1>
                     <p className="text-[#8888a0] max-w-xl">{category?.description || `Découvrez les meilleures offres dans la catégorie ${category?.name}`}</p>
                     <p className="text-sm text-[#FF2D55] mt-3">{filtered.length} offre{filtered.length !== 1 ? 's' : ''} disponible{filtered.length !== 1 ? 's' : ''}</p>
                 </div>
@@ -92,7 +92,7 @@ export default function CategoryPage() {
                 {/* Offers grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {filtered.map(offer => (
-                        <Link key={offer._id} href={`/offers/${offer.slug}`} className="deal-card rounded-2xl overflow-hidden border block" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+                        <Link key={offer._id} href={`/offers/${offer.slug}`} className="deal-card rounded-2xl overflow-hidden border block" style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                             <div className="relative h-44 overflow-hidden">
                                 <img src={offer.coverImage} alt={offer.title} className="w-full h-full object-cover" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -104,14 +104,14 @@ export default function CategoryPage() {
                             </div>
                             <div className="p-4">
                                 <p className="text-[11px] text-[#FF2D55] font-medium mb-1">{getMerchantName(offer.merchantId)}</p>
-                                <h3 className="text-sm font-semibold text-white mb-1.5 line-clamp-2">{offer.title}</h3>
+                                <h3 className="text-sm font-semibold mb-1.5 line-clamp-2" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                                 <p className="text-xs text-[#6a6a80] mb-3 line-clamp-1">{offer.shortDescription}</p>
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-baseline gap-2">
                                         <span className="text-lg font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
                                         <span className="text-xs text-[#6a6a80] line-through">{offer.originalPrice} €</span>
                                     </div>
-                                    {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /><span className="text-xs text-white font-medium">{offer.rating.toFixed(1)}</span></div>}
+                                    {offer.rating && offer.rating > 0 && <div className="flex items-center gap-1"><Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" /><span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{offer.rating.toFixed(1)}</span></div>}
                                 </div>
                             </div>
                         </Link>

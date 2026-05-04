@@ -43,42 +43,42 @@
 }
 
 /* ═══════════════════════════════════════════════════════════
-   DARK-FIRST DESIGN SYSTEM — Groupon-like Deals Platform
+   DESIGN SYSTEM — Light mode default, Dark mode via .dark
    ═══════════════════════════════════════════════════════════ */
 
 :root {
   --radius: 0.75rem;
 
-  /* Core dark palette — Noir Profond */
-  --background: #0E0E0F;
-  --foreground: #f0f0f5;
-  --card: #1C1C1E;
-  --card-foreground: #f0f0f5;
-  --popover: #1C1C1E;
-  --popover-foreground: #f0f0f5;
+  /* Core light palette */
+  --background: #F8F8FA;
+  --foreground: #1a1a2e;
+  --card: #ffffff;
+  --card-foreground: #1a1a2e;
+  --popover: #ffffff;
+  --popover-foreground: #1a1a2e;
 
   /* Primary — Rouge Framboise */
   --primary: #FF2D55;
   --primary-foreground: #ffffff;
 
-  /* Secondary — subtle elevated surface */
-  --secondary: #2C2C2E;
-  --secondary-foreground: #e0e0ea;
+  /* Secondary */
+  --secondary: #f0f0f5;
+  --secondary-foreground: #3a3a5c;
 
-  /* Muted — subdued text/surfaces */
-  --muted: #2C2C2E;
-  --muted-foreground: #8E8E93;
+  /* Muted */
+  --muted: #f0f0f5;
+  --muted-foreground: #6a6a8a;
 
-  /* Accent — hover surfaces */
-  --accent: #2C2C2E;
-  --accent-foreground: #f0f0f5;
+  /* Accent */
+  --accent: #f0f0f5;
+  --accent-foreground: #1a1a2e;
 
   /* Destructive */
   --destructive: #ef4444;
 
   /* Borders & inputs */
-  --border: rgba(255, 255, 255, 0.08);
-  --input: rgba(255, 255, 255, 0.08);
+  --border: rgba(0, 0, 0, 0.08);
+  --input: rgba(0, 0, 0, 0.06);
   --ring: #FF2D55;
 
   /* Charts */
@@ -89,16 +89,58 @@
   --chart-5: #ef4444;
 
   /* Sidebar */
-  --sidebar: #0E0E0F;
-  --sidebar-foreground: #e0e0ea;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #3a3a5c;
   --sidebar-primary: #FF2D55;
   --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f0f0f5;
+  --sidebar-accent-foreground: #3a3a5c;
+  --sidebar-border: rgba(0, 0, 0, 0.06);
+  --sidebar-ring: #FF2D55;
+
+  /* Extended palette — light surfaces */
+  --surface-0: #F8F8FA;
+  --surface-1: #ffffff;
+  --surface-2: #f0f0f5;
+  --surface-3: #e4e4ec;
+  --text-primary: #1a1a2e;
+  --text-secondary: #6a6a8a;
+  --text-tertiary: #9a9ab0;
+  --accent-framboise: #FF2D55;
+  --accent-corail: #FF4D7A;
+  --accent-poudre: #FF7FA3;
+  --accent-bordeaux: #8A1C3A;
+  --accent-rose: #FF4D7A;
+  --glow-framboise: rgba(255, 45, 85, 0.12);
+  --glow-corail: rgba(255, 77, 122, 0.12);
+  --glow-bordeaux: rgba(138, 28, 58, 0.12);
+  /* Card border for light mode */
+  --card-border: rgba(0, 0, 0, 0.07);
+  /* Nav / header bg */
+  --header-bg: rgba(248, 248, 250, 0.95);
+}
+
+/* ═══ DARK MODE OVERRIDES ═══ */
+.dark {
+  --background: #0E0E0F;
+  --foreground: #f0f0f5;
+  --card: #1C1C1E;
+  --card-foreground: #f0f0f5;
+  --popover: #1C1C1E;
+  --popover-foreground: #f0f0f5;
+  --secondary: #2C2C2E;
+  --secondary-foreground: #e0e0ea;
+  --muted: #2C2C2E;
+  --muted-foreground: #8E8E93;
+  --accent: #2C2C2E;
+  --accent-foreground: #f0f0f5;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --sidebar: #0E0E0F;
+  --sidebar-foreground: #e0e0ea;
   --sidebar-accent: #2C2C2E;
   --sidebar-accent-foreground: #e0e0ea;
   --sidebar-border: rgba(255, 255, 255, 0.06);
-  --sidebar-ring: #FF2D55;
-
-  /* Extended palette — Rouge Framboise system */
   --surface-0: #0E0E0F;
   --surface-1: #1C1C1E;
   --surface-2: #2C2C2E;
@@ -106,14 +148,8 @@
   --text-primary: #f0f0f5;
   --text-secondary: #8E8E93;
   --text-tertiary: #6a6a80;
-  --accent-framboise: #FF2D55;
-  --accent-corail: #FF4D7A;
-  --accent-poudre: #FF7FA3;
-  --accent-bordeaux: #8A1C3A;
-  --accent-rose: #FF4D7A;
-  --glow-framboise: rgba(255, 45, 85, 0.15);
-  --glow-corail: rgba(255, 77, 122, 0.15);
-  --glow-bordeaux: rgba(138, 28, 58, 0.15);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --header-bg: rgba(10, 10, 15, 0.95);
 }
 
 @layer base {
@@ -134,8 +170,12 @@
 
 /* Glass card effect */
 .glass-card {
-  background: rgba(18, 18, 26, 0.8);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(12px);
+  border: 1px solid var(--card-border);
+}
+.dark .glass-card {
+  background: rgba(18, 18, 26, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -185,11 +225,11 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(128, 128, 128, 0.2);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(128, 128, 128, 0.35);
 }
 
 /* Hide scrollbar utility */
@@ -249,6 +289,9 @@
 }
 .deal-card:hover {
   transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(255, 45, 85, 0.1);
+}
+.dark .deal-card:hover {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 45, 85, 0.1);
 }
 
@@ -257,13 +300,17 @@
   transition: background-color 0.15s ease;
 }
 .table-row-hover:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+.dark .table-row-hover:hover {
   background-color: rgba(255, 255, 255, 0.03);
 }
 
 /* Input focus ring */
 .input-dark {
   background: var(--surface-2);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   transition: all 0.2s ease;
 }
 .input-dark:focus {

@@ -139,8 +139,8 @@ export default function NotificationDrawer({ open, onClose }: Props) {
       <div
         className="absolute right-0 top-0 bottom-0 w-full max-w-sm flex flex-col transition-transform duration-300 ease-out md:block hidden"
         style={{
-          background: "#0e0e16",
-          borderLeft: "1px solid rgba(255,255,255,0.08)",
+          background: "var(--surface-1)",
+          borderLeft: "1px solid var(--border)",
           transform: animating ? "translateX(0)" : "translateX(100%)",
         }}
       >
@@ -159,8 +159,8 @@ export default function NotificationDrawer({ open, onClose }: Props) {
       <div
         className="absolute left-0 right-0 bottom-0 rounded-t-3xl overflow-hidden transition-transform duration-300 ease-out md:hidden"
         style={{
-          background: "#0e0e16",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: "var(--surface-1)",
+          border: "1px solid var(--border)",
           borderBottom: "none",
           maxHeight: "85vh",
           transform: animating ? "translateY(0)" : "translateY(100%)",
@@ -193,10 +193,10 @@ function NotificationContent({
     <div className="flex flex-col h-full overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b flex-shrink-0"
-        style={{ borderColor: "rgba(255,255,255,0.06)" }}>
+        style={{ borderColor: "var(--border)" }}>
         <div className="flex items-center gap-2">
           <Bell className="w-4 h-4 text-[#FF2D55]" />
-          <h2 className="text-base font-bold text-white">Notifications</h2>
+          <h2 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Notifications</h2>
           {unreadCount > 0 && (
             <span className="px-2 py-0.5 rounded-full text-[10px] font-bold text-white"
               style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>
@@ -210,8 +210,8 @@ function NotificationContent({
               Tout lire
             </button>
           )}
-          <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-white/5 transition-colors"
-            style={{ background: "rgba(255,255,255,0.06)" }}>
+          <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+            style={{ background: "var(--surface-2)" }}>
             <X className="w-4 h-4 text-[#8888a0]" />
           </button>
         </div>
@@ -227,7 +227,7 @@ function NotificationContent({
         ) : notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3">
             <div className="w-14 h-14 rounded-full flex items-center justify-center"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
+              style={{ background: "var(--surface-2)", border: "1px solid var(--card-border)" }}>
               <Bell className="w-6 h-6 text-[#333]" />
             </div>
             <p className="text-sm text-[#6a6a80]">Aucune notification</p>
@@ -258,7 +258,7 @@ function NotificationContent({
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-white leading-tight mb-0.5">{n.title}</p>
+                    <p className="text-sm font-semibold leading-tight mb-0.5" style={{ color: 'var(--text-primary)' }}>{n.title}</p>
                     <p className="text-xs text-[#8888a0] leading-relaxed line-clamp-2">{n.body}</p>
                     <p className="text-[10px] text-[#555] mt-1">{timeAgo(n.createdAt)}</p>
                   </div>

@@ -3,9 +3,7 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import {
-    Heart, Star, MapPin, Trash2, ArrowLeft, ShoppingBag
-} from "lucide-react"
+import { Heart, Star, MapPin, Trash2, ArrowLeft, ShoppingBag } from "lucide-react"
 import Logo from "@/components/Logo"
 
 type Offer = {
@@ -24,18 +22,12 @@ export default function FavorisPage() {
     useEffect(() => {
         const slugs: string[] = JSON.parse(localStorage.getItem('life_favorites') || '[]')
         setFavSlugs(slugs)
-
-        if (slugs.length === 0) {
-            setLoading(false)
-            return
-        }
-
+        if (slugs.length === 0) { setLoading(false); return }
         Promise.all([
             fetch('/api/offers').then(r => r.json()),
             fetch('/api/merchants').then(r => r.json()),
         ]).then(([allOffers, merch]) => {
-            const offs = (Array.isArray(allOffers) ? allOffers : []).filter((o: Offer) => slugs.includes(o.slug))
-            setOffers(offs)
+            setOffers((Array.isArray(allOffers) ? allOffers : []).filter((o: Offer) => slugs.includes(o.slug)))
             setMerchants(Array.isArray(merch) ? merch : [])
             setLoading(false)
         }).catch(() => setLoading(false))
@@ -47,31 +39,27 @@ export default function FavorisPage() {
         setFavSlugs(updated)
         setOffers(prev => prev.filter(o => o.slug !== slug))
     }
-
     const clearAll = () => {
         localStorage.setItem('life_favorites', JSON.stringify([]))
-        setFavSlugs([])
-        setOffers([])
+        setFavSlugs([]); setOffers([])
     }
-
     const getMerchantName = (id: string) => merchants.find(m => m._id === id)?.name || ''
 
     return (
-        <div className="min-h-screen pb-24 md:pb-8" style={{ background: '#0a0a0f' }}>
-            {/* ═══════════ HEADER ═══════════ */}
+        <div className="min-h-screen pb-24 md:pb-8" style={{ background: 'var(--surface-0)' }}>
+            {/* Header */}
             <header className="sticky top-0 z-50 border-b"
-                style={{ background: 'rgba(10, 10, 15, 0.95)', backdropFilter: 'blur(16px)', borderColor: 'rgba(255,255,255,0.06)' }}>
+                style={{ background: 'var(--header-bg)', backdropFilter: 'blur(16px)', borderColor: 'var(--border)' }}>
                 <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <Link href="/" className="p-1 text-[#8888a0] hover:text-white transition-colors md:hidden">
+                        <Link href="/" className="p-1 transition-colors md:hidden" style={{ color: 'var(--text-secondary)' }}>
                             <ArrowLeft className="w-5 h-5" />
                         </Link>
                         <Logo size="lg" />
-                        <h1 className="text-base font-bold text-white">Mes favoris</h1>
+                        <h1 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Mes favoris</h1>
                     </div>
                     {offers.length > 0 && (
-                        <button onClick={clearAll}
-                            className="text-xs text-red-400 hover:text-red-300 font-medium transition-colors">
+                        <button onClick={clearAll} className="text-xs text-red-500 hover:text-red-400 font-medium transition-colors">
                             Tout effacer
                         </button>
                     )}
@@ -79,8 +67,7 @@ export default function FavorisPage() {
             </header>
 
             <div className="max-w-3xl mx-auto px-4 py-6">
-                {/* Count */}
-                <p className="text-sm text-[#6a6a80] mb-5">
+                <p className="text-sm mb-5" style={{ color: 'var(--text-secondary)' }}>
                     {loading ? 'Chargement...' : `${offers.length} offre${offers.length !== 1 ? 's' : ''} sauvegardée${offers.length !== 1 ? 's' : ''}`}
                 </p>
 
@@ -89,12 +76,12 @@ export default function FavorisPage() {
                     <div className="space-y-3">
                         {Array.from({ length: 3 }).map((_, i) => (
                             <div key={i} className="flex gap-3 rounded-2xl p-3 animate-pulse"
-                                style={{ background: '#12121a' }}>
-                                <div className="w-24 h-24 rounded-xl bg-[#1a1a2e]" />
+                                style={{ background: 'var(--surface-1)' }}>
+                                <div className="w-24 h-24 rounded-xl" style={{ background: 'var(--surface-2)' }} />
                                 <div className="flex-1 space-y-2 py-1">
-                                    <div className="h-3 bg-[#1a1a2e] rounded w-20" />
-                                    <div className="h-4 bg-[#1a1a2e] rounded w-40" />
-                                    <div className="h-3 bg-[#1a1a2e] rounded w-24" />
+                                    <div className="h-3 rounded w-20" style={{ background: 'var(--surface-2)' }} />
+                                    <div className="h-4 rounded w-40" style={{ background: 'var(--surface-2)' }} />
+                                    <div className="h-3 rounded w-24" style={{ background: 'var(--surface-2)' }} />
                                 </div>
                             </div>
                         ))}
@@ -105,11 +92,11 @@ export default function FavorisPage() {
                 {!loading && offers.length === 0 && (
                     <div className="text-center py-20">
                         <div className="w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center"
-                            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                            <Heart className="w-8 h-8 text-[#333]" />
+                            style={{ background: 'var(--surface-2)', border: '1px solid var(--card-border)' }}>
+                            <Heart className="w-8 h-8" style={{ color: 'var(--text-tertiary)' }} />
                         </div>
-                        <h2 className="text-lg font-semibold text-white mb-2">Aucun favori</h2>
-                        <p className="text-sm text-[#6a6a80] max-w-xs mx-auto mb-6">
+                        <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Aucun favori</h2>
+                        <p className="text-sm max-w-xs mx-auto mb-6" style={{ color: 'var(--text-secondary)' }}>
                             Explorez les offres et appuyez sur le ❤️ pour sauvegarder vos coups de cœur ici.
                         </p>
                         <Link href="/"
@@ -126,9 +113,8 @@ export default function FavorisPage() {
                     <div className="space-y-3">
                         {offers.map(offer => (
                             <div key={offer._id} className="flex gap-3 rounded-2xl border p-3 group transition-all"
-                                style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
-                                <Link href={`/offers/${offer.slug}`}
-                                    className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
+                                style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
+                                <Link href={`/offers/${offer.slug}`} className="w-24 h-24 rounded-xl overflow-hidden flex-shrink-0 relative">
                                     <img src={offer.coverImage} alt="" className="w-full h-full object-cover" />
                                     <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded text-[9px] font-bold text-white"
                                         style={{ background: 'rgba(255, 45, 85, 0.85)' }}>-{offer.discountPercent}%</span>
@@ -137,18 +123,18 @@ export default function FavorisPage() {
                                 <Link href={`/offers/${offer.slug}`} className="flex-1 min-w-0 flex flex-col justify-between py-0.5">
                                     <div>
                                         <p className="text-[10px] text-[#FF2D55] font-medium">{getMerchantName(offer.merchantId)}</p>
-                                        <h3 className="text-sm font-semibold text-white line-clamp-2 mt-0.5">{offer.title}</h3>
+                                        <h3 className="text-sm font-semibold line-clamp-2 mt-0.5" style={{ color: 'var(--text-primary)' }}>{offer.title}</h3>
                                     </div>
                                     <div className="flex items-center gap-3">
                                         <div className="flex items-baseline gap-1.5">
                                             <span className="text-base font-bold text-[#FF2D55]">{offer.dealPrice} €</span>
-                                            <span className="text-[10px] text-[#6a6a80] line-through">{offer.originalPrice} €</span>
+                                            <span className="text-[10px] line-through" style={{ color: 'var(--text-tertiary)' }}>{offer.originalPrice} €</span>
                                         </div>
                                         <div className="flex items-center gap-1">
                                             <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
-                                            <span className="text-[11px] text-white">{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
+                                            <span className="text-[11px] font-medium" style={{ color: 'var(--text-primary)' }}>{offer.rating ? offer.rating.toFixed(1) : '—'}</span>
                                         </div>
-                                        <span className="flex items-center gap-0.5 text-[10px] text-[#6a6a80]">
+                                        <span className="flex items-center gap-0.5 text-[10px]" style={{ color: 'var(--text-secondary)' }}>
                                             <MapPin className="w-3 h-3" />{offer.city}
                                         </span>
                                     </div>

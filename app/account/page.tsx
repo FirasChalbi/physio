@@ -19,7 +19,7 @@ export default function AccountPage() {
   }, [status, router])
 
   if (status === "loading") return (
-    <div className="min-h-screen flex items-center justify-center" style={{ background: '#0a0a0f' }}>
+    <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--surface-0)' }}>
       <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
     </div>
   )
@@ -33,7 +33,7 @@ export default function AccountPage() {
   const roleConfig: Record<string, { label: string; icon: any; color: string }> = {
     admin: { label: 'Administrateur', icon: ShieldCheck, color: '#ef4444' },
     merchant: { label: 'Marchand', icon: Store, color: '#8b5cf6' },
-    client: { label: 'Client', icon: User, color: '#06b6d4' },
+    client: { label: 'Client', icon: User, color: '#FF2D55' },
   }
   const rc = roleConfig[role] || roleConfig.client
   const RoleIcon = rc.icon
@@ -48,29 +48,31 @@ export default function AccountPage() {
   ]
 
   return (
-    <div className="min-h-screen" style={{ background: '#0a0a0f' }}>
+    <div className="min-h-screen" style={{ background: 'var(--surface-0)' }}>
       {/* Navbar */}
-      <nav className="sticky top-0 z-50 border-b" style={{ background: 'rgba(10, 10, 15, 0.9)', backdropFilter: 'blur(12px)', borderColor: 'rgba(255,255,255,0.06)' }}>
+      <nav className="sticky top-0 z-50 border-b" style={{ background: 'var(--header-bg)', backdropFilter: 'blur(12px)', borderColor: 'var(--border)' }}>
         <div className="max-w-7xl mx-auto px-4 h-16 flex items-center gap-4">
             <Logo size="lg" />
           <div className="flex-1" />
-          <Link href="/" className="text-sm text-[#8888a0] hover:text-white transition-colors flex items-center gap-1"><ArrowLeft className="w-4 h-4" /> Accueil</Link>
+          <Link href="/" className="text-sm transition-colors flex items-center gap-1" style={{ color: 'var(--text-secondary)' }}>
+            <ArrowLeft className="w-4 h-4" /> Accueil
+          </Link>
         </div>
       </nav>
 
       {/* Header */}
       <section className="relative py-16 overflow-hidden">
-        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl" style={{ background: 'rgba(16, 185, 129, 0.06)' }} />
+        <div className="absolute top-0 left-1/4 w-96 h-96 rounded-full blur-3xl pointer-events-none" style={{ background: 'rgba(255, 45, 85, 0.05)' }} />
         <div className="max-w-3xl mx-auto px-6 relative z-10">
           <div className="flex items-center gap-5">
             {user.image ? (
-              <img src={user.image} alt="" className="w-20 h-20 rounded-2xl object-cover border-2" style={{ borderColor: 'rgba(255,255,255,0.1)' }} />
+              <img src={user.image} alt="" className="w-20 h-20 rounded-2xl object-cover border-2" style={{ borderColor: 'var(--border)' }} />
             ) : (
               <div className="w-20 h-20 rounded-2xl flex items-center justify-center text-2xl font-bold text-white" style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>{initials}</div>
             )}
             <div>
-              <h1 className="text-2xl font-bold text-white">{user.name}</h1>
-              <p className="text-[#6a6a80] text-sm mt-0.5">{user.email}</p>
+              <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{user.name}</h1>
+              <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>{user.email}</p>
               <div className="flex items-center gap-1.5 mt-2">
                 <RoleIcon className="w-3.5 h-3.5" style={{ color: rc.color }} />
                 <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: rc.color }}>{rc.label}</span>
@@ -86,21 +88,25 @@ export default function AccountPage() {
           {menuItems.map(item => {
             const Icon = item.icon
             return (
-              <Link key={item.label} href={item.href} className="flex items-center gap-4 p-5 rounded-2xl border transition-all hover:border-[#FF2D55]/30 group" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
+              <Link key={item.label} href={item.href}
+                className="flex items-center gap-4 p-5 rounded-2xl border transition-all hover:border-[#FF2D55]/30 group"
+                style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                 <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(255, 45, 85, 0.1)' }}>
                   <Icon className="w-5 h-5 text-[#FF2D55]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-white text-sm">{item.label}</p>
-                  <p className="text-[#6a6a80] text-xs mt-0.5">{item.desc}</p>
+                  <p className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{item.label}</p>
+                  <p className="text-xs mt-0.5" style={{ color: 'var(--text-secondary)' }}>{item.desc}</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#333] group-hover:text-[#FF2D55] transition-colors" />
+                <ChevronRight className="w-4 h-4 group-hover:text-[#FF2D55] transition-colors" style={{ color: 'var(--text-tertiary)' }} />
               </Link>
             )
           })}
         </div>
 
-        <button onClick={() => signOut({ callbackUrl: "/" })} className="w-full mt-8 flex items-center justify-center gap-2 py-4 rounded-2xl border text-red-400 hover:bg-red-500/5 transition-all text-sm font-semibold" style={{ borderColor: 'rgba(239, 68, 68, 0.2)' }}>
+        <button onClick={() => signOut({ callbackUrl: "/" })}
+          className="w-full mt-8 flex items-center justify-center gap-2 py-4 rounded-2xl border text-red-500 hover:bg-red-500/5 transition-all text-sm font-semibold"
+          style={{ borderColor: 'rgba(239, 68, 68, 0.2)' }}>
           <LogOut className="w-4 h-4" />
           Se déconnecter
         </button>

@@ -131,9 +131,9 @@ function MerchantsContent() {
   const activeFilters = [selCat, selCity, sortBy].filter(Boolean).length
 
   return (
-    <div className="min-h-screen pb-24 md:pb-8" style={{ background: "#0a0a0f" }}>
+    <div className="min-h-screen pb-24 md:pb-8" style={{ background: "var(--surface-0)" }}>
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b" style={{ background: "rgba(10,10,15,0.95)", backdropFilter: "blur(16px)", borderColor: "rgba(255,255,255,0.06)" }}>
+      <header className="sticky top-0 z-50 border-b" style={{ background: "var(--header-bg)", backdropFilter: "blur(16px)", borderColor: "var(--border)" }}>
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center gap-3">
           <Link href="/" className="p-1 text-[#8888a0] hover:text-white md:hidden">
             <ChevronLeft className="w-5 h-5" />
@@ -141,14 +141,14 @@ function MerchantsContent() {
           <Logo size="lg" className="hidden md:flex" />
 
           <div className="flex-1 flex items-center gap-2 px-3 py-2 rounded-xl"
-            style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
+            style={{ background: "var(--surface-2)", border: "1px solid var(--border)" }}>
             <Search className="w-4 h-4 text-[#6a6a80] flex-shrink-0" />
             <input
               type="text"
               placeholder="Rechercher un marchand..."
               value={searchQ}
               onChange={e => setSearchQ(e.target.value)}
-              className="bg-transparent text-sm text-white placeholder-[#6a6a80] outline-none w-full"
+              className="bg-transparent text-sm placeholder-[#6a6a80] outline-none w-full" style={{ color: 'var(--text-primary)' }}
             />
             {searchQ && <button onClick={() => setSearchQ("")}><X className="w-4 h-4 text-[#6a6a80]" /></button>}
           </div>
@@ -173,7 +173,7 @@ function MerchantsContent() {
 
         {/* Filter panel */}
         {filtersOpen && (
-          <div className="border-t px-4 py-4" style={{ borderColor: "rgba(255,255,255,0.06)", background: "rgba(10,10,15,0.98)" }}>
+          <div className="border-t px-4 py-4" style={{ borderColor: "var(--border)", background: "var(--surface-1)" }}>
             <div className="max-w-7xl mx-auto space-y-4">
               {/* Categories */}
               <div>
@@ -181,16 +181,16 @@ function MerchantsContent() {
                 <div className="flex flex-wrap gap-2">
                   <button onClick={() => setSelCat("")}
                     className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
-                    style={{ background: !selCat ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "rgba(255,255,255,0.05)", color: !selCat ? "#fff" : "#8888a0" }}>
+                    style={{ background: !selCat ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "var(--surface-2)", color: !selCat ? "#fff" : 'var(--text-secondary)' }}>
                     Tout
                   </button>
                   {categories.map(c => (
                     <button key={c._id} onClick={() => setSelCat(selCat === c.slug ? "" : c.slug)}
                       className="px-3 py-1.5 rounded-full text-xs font-medium transition-all"
                       style={{
-                        background: selCat === c.slug ? "rgba(16,185,129,0.12)" : "rgba(255,255,255,0.05)",
+                        background: selCat === c.slug ? "rgba(255,45,85,0.1)" : "var(--surface-2)",
                         border: `1px solid ${selCat === c.slug ? "rgba(255,45,85,0.3)" : "transparent"}`,
-                        color: selCat === c.slug ? "#FF2D55" : "#8888a0"
+                        color: selCat === c.slug ? "#FF2D55" : 'var(--text-secondary)'
                       }}>
                       {c.name}
                     </button>
@@ -204,16 +204,16 @@ function MerchantsContent() {
                 <div className="flex flex-wrap gap-2">
                   <button onClick={() => setSelCity("")}
                     className="px-3 py-1.5 rounded-full text-xs font-medium"
-                    style={{ background: !selCity ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "rgba(255,255,255,0.05)", color: !selCity ? "#fff" : "#8888a0" }}>
+                    style={{ background: !selCity ? "linear-gradient(135deg,#FF2D55,#CC2444)" : "var(--surface-2)", color: !selCity ? "#fff" : 'var(--text-secondary)' }}>
                     Toutes
                   </button>
                   {CITIES.map(c => (
                     <button key={c} onClick={() => setSelCity(selCity === c ? "" : c)}
                       className="px-3 py-1.5 rounded-full text-xs font-medium"
                       style={{
-                        background: selCity === c ? "rgba(16,185,129,0.12)" : "rgba(255,255,255,0.05)",
+                        background: selCity === c ? "rgba(255,45,85,0.1)" : "var(--surface-2)",
                         border: `1px solid ${selCity === c ? "rgba(255,45,85,0.3)" : "transparent"}`,
-                        color: selCity === c ? "#FF2D55" : "#8888a0"
+                        color: selCity === c ? "#FF2D55" : 'var(--text-secondary)'
                       }}>
                       {c}
                     </button>
@@ -229,9 +229,9 @@ function MerchantsContent() {
                     <button key={val} onClick={() => setSortBy(val)}
                       className="px-3 py-1.5 rounded-full text-xs font-medium"
                       style={{
-                        background: sortBy === val ? "rgba(16,185,129,0.12)" : "rgba(255,255,255,0.05)",
+                        background: sortBy === val ? "rgba(255,45,85,0.1)" : "var(--surface-2)",
                         border: `1px solid ${sortBy === val ? "rgba(255,45,85,0.3)" : "transparent"}`,
-                        color: sortBy === val ? "#FF2D55" : "#8888a0"
+                        color: sortBy === val ? "#FF2D55" : 'var(--text-secondary)'
                       }}>
                       {val === "" ? "Nom" : val === "popular" ? "Populaire" : "Note"}
                     </button>
@@ -254,7 +254,7 @@ function MerchantsContent() {
         {/* Count */}
         <div className="flex items-center justify-between mb-5">
           <p className="text-sm text-[#6a6a80]">
-            <span className="text-white font-semibold">{filtered.length}</span> marchand{filtered.length !== 1 ? "s" : ""}
+            <span className="font-semibold" style={{ color: 'var(--text-primary)' }}>{filtered.length}</span> marchand{filtered.length !== 1 ? "s" : ""}
             {(searchQ || selCat || selCity) && <span className="text-[#FF2D55] ml-1">· filtré{filtered.length !== 1 ? "s" : ""}</span>}
           </p>
         </div>
@@ -263,12 +263,12 @@ function MerchantsContent() {
         {loading && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="rounded-2xl overflow-hidden animate-pulse" style={{ background: "#12121a" }}>
-                <div className="h-36 bg-[#1a1a2e]" />
+              <div key={i} className="rounded-2xl overflow-hidden animate-pulse" style={{ background: "var(--surface-1)" }}>
+                <div className="h-36" style={{ background: 'var(--surface-2)' }} />
                 <div className="p-3 space-y-2">
-                  <div className="h-3 bg-[#1a1a2e] rounded w-20" />
-                  <div className="h-4 bg-[#1a1a2e] rounded w-full" />
-                  <div className="h-3 bg-[#1a1a2e] rounded w-3/4" />
+                  <div className="h-3 rounded w-20" style={{ background: 'var(--surface-2)' }} />
+                  <div className="h-4 rounded w-full" style={{ background: 'var(--surface-2)' }} />
+                  <div className="h-3 rounded w-3/4" style={{ background: 'var(--surface-2)' }} />
                 </div>
               </div>
             ))}
@@ -281,7 +281,7 @@ function MerchantsContent() {
             {filtered.map(m => (
               <Link key={m._id} href={`/merchants/${m.slug}`}
                 className="rounded-2xl overflow-hidden border block transition-all hover:border-[#FF2D55]/20 group"
-                style={{ background: "#12121a", borderColor: "rgba(255,255,255,0.06)" }}>
+                style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                 <div className="relative h-36 overflow-hidden">
                   {m.coverImage ? (
                     <img src={m.coverImage} alt={m.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -311,7 +311,7 @@ function MerchantsContent() {
                   )}
                 </div>
                 <div className="p-3">
-                  <h3 className="text-sm font-semibold text-white mb-1 line-clamp-1">{m.name}</h3>
+                  <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{m.name}</h3>
                   <p className="text-[11px] text-[#6a6a80] mb-1.5">
                     {m.categories?.[0] || "Marchand"} · {m.city || ""}
                   </p>
@@ -335,7 +335,7 @@ function MerchantsContent() {
               style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
               <Store className="w-8 h-8 text-[#333]" />
             </div>
-            <h2 className="text-lg font-semibold text-white mb-2">Aucun marchand trouvé</h2>
+            <h2 className="text-lg font-semibold mb-2" style={{ color: 'var(--text-primary)' }}>Aucun marchand trouvé</h2>
             <p className="text-sm text-[#6a6a80] max-w-xs mx-auto mb-6">Essayez de modifier vos filtres ou votre recherche.</p>
             <button
               onClick={() => { setSearchQ(""); setSelCat(""); setSelCity(""); setSortBy("") }}
@@ -353,7 +353,7 @@ function MerchantsContent() {
 export default function MerchantsPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a0a0f" }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--surface-0)" }}>
         <div className="w-8 h-8 border-2 border-[#FF2D55] border-t-transparent rounded-full animate-spin" />
       </div>
     }>

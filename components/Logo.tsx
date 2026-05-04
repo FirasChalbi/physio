@@ -23,8 +23,8 @@ export default function Logo({ size = "md", href = "/", className = "" }: LogoPr
         className={`${s.icon} object-contain flex-shrink-0 mb-0`}
       />
       <span className="flex items-baseline gap-0.5 tracking-tight">
-        <span className={`${s.life} font-bold text-white`}
-        style={{ letterSpacing: "0.03em", fontSize: "1.7em" }}
+        <span className={`${s.life} font-bold`}
+        style={{ letterSpacing: "0.03em", fontSize: "1.7em", color: 'var(--text-primary)' }}
         >Life</span>
         {/* <span
           className={`${s.yvelines} font-semibold`}

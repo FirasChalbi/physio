@@ -26,7 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className="dark">
+    <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${fredoka.variable} font-sans antialiased`}>
         <Providers>
           {children}
