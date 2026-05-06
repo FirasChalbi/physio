@@ -851,6 +851,25 @@ export default function HomePage() {
                     </div>
                 </section>
 
+                {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
+                <section className="mb-8">
+                    <div className="flex items-center justify-between px-4 mb-3">
+                        <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>📍 Bon plans par ville</h2>
+                        <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
+                    </div>
+                    <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
+                        {cities.map(city => (
+                            <button key={city.slug} onClick={() => setActiveCity(city.slug)}
+                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
+                                style={activeCity !== city.slug ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
+                                {city.name}
+                            </button>
+                        ))}
+                    </div>
+                    <OfferGrid offers={cityOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
+                </section>
+
+                
                 {/* ═══════════ CATÉGORIES POPULAIRES ═══════════ */}
                 <section className="px-4 mb-8">
                     <div className="flex items-center justify-between mb-4">
@@ -889,23 +908,6 @@ export default function HomePage() {
                     </div>
                 </section>
 
-                {/* ═══════════ BON PLANS PAR VILLE ═══════════ */}
-                <section className="mb-8">
-                    <div className="flex items-center justify-between px-4 mb-3">
-                        <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>📍 Bon plans par ville</h2>
-                        <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
-                    </div>
-                    <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
-                        {cities.map(city => (
-                            <button key={city.slug} onClick={() => setActiveCity(city.slug)}
-                                className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
-                                style={activeCity !== city.slug ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
-                                {city.name}
-                            </button>
-                        ))}
-                    </div>
-                    <OfferGrid offers={cityOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
-                </section>
                 {/* ═══════════ NOS RECOMMANDATIONS ═══════════ */}
                 <MerchantHorizontalSection
                     title="Nos recommandations"
