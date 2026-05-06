@@ -952,8 +952,8 @@ export default function HomePage() {
                                 <Link key={city.slug} href={`/offers?city=${city.slug}`}
                                     className="relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-28 md:h-36"
                                     style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
-                                    {bgImage && <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-60" />}
-                                    <div className="absolute inset-0 bg-linear-to-t from-black/80 via-black/30 to-transparent" />
+                                    {bgImage && <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 dark:opacity-60" />}
+                                    <div className="absolute inset-0 bg-linear-to-t from-black/90 to-transparent dark:from-black/80 dark:via-black/30" />
                                     <div className="relative z-10 p-4 flex flex-col justify-end h-full">
                                         <p className="text-xs text-[#FF2D55] font-medium mb-0.5">Bon plans à</p>
                                         <h3 className="text-lg md:text-xl font-bold text-white">{city.name}</h3>
@@ -1107,7 +1107,7 @@ export default function HomePage() {
                                     return cat && /restau|restaurant|cuisine|gastronomie/i.test(cat.name)
                                 })
                                 const bgImage = restoOffers[0]?.coverImage || popularOffers[0]?.coverImage || ''
-                                return bgImage ? <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-50" /> : null
+                                return bgImage ? <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 dark:opacity-50" /> : null
                             })()}
                             <div className="absolute inset-0 bg-linear-to-r from-rose-900/80 via-rose-800/40 to-transparent" />
                             <div className="relative z-10 p-5 flex flex-col justify-center h-full">
@@ -1127,7 +1127,7 @@ export default function HomePage() {
                                     return cat && /beauté|beaute|santé|sante|spa|bien-être|wellness|soin/i.test(cat.name)
                                 })
                                 const bgImage = beautyOffers[0]?.coverImage || popularOffers[0]?.coverImage || ''
-                                return bgImage ? <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-50" /> : null
+                                return bgImage ? <img src={bgImage} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 dark:opacity-50" /> : null
                             })()}
                             <div className="absolute inset-0 bg-linear-to-r from-violet-900/80 via-violet-800/40 to-transparent" />
                             <div className="relative z-10 p-5 flex flex-col justify-center h-full">

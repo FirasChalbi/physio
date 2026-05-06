@@ -151,7 +151,7 @@ export default function OfferDetailPage() {
             </div>
 
             {/* ═══════════ MERCHANT NAME + INFO ═══════════ */}
-            <div className="px-4 -mt-6 relative z-10">
+            <div className="px-4 mt-6 relative z-10">
                 <h1 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: 'var(--text-primary)' }}>{offer.title || merchant?.name}</h1>
                 <div className="flex items-center gap-1.5 text-[#8888a0] text-sm mb-5">
                     <MapPin className="w-3.5 h-3.5 text-[#FF2D55]" />
