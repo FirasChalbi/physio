@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import { getReservationModel } from '@/lib/models/Reservation'
 import { getNotificationModel } from '@/lib/models/Notification'
+import { getMerchantModel } from '@/lib/models/Merchant'
+import { sendReservationEmail } from '@/lib/email'
 
 export async function GET(req: NextRequest) {
   try {
@@ -51,6 +53,31 @@ export async function POST(req: NextRequest) {
         link: '/admin/orders',
       })
     } catch { }
+
+    // Send reservation email to merchant
+    try {
+      const Merchant = getMerchantModel()
+      const merchant = await Merchant.findById(merchantId).lean() as any
+      if (merchant?.email) {
+        await sendReservationEmail({
+          to: merchant.email,
+          merchantName,
+          name,
+          phone,
+          date,
+          time,
+          status: 'pending',
+          selectedItems,
+          totalPrice,
+          offerTitle,
+          offerImage,
+          sessionId,
+          createdAt: reservation.createdAt?.toISOString(),
+        })
+      }
+    } catch (e: any) {
+      console.error('[reservations POST] email error:', e?.message || e)
+    }
 
     return NextResponse.json(reservation, { status: 201 })
   } catch (e: any) {

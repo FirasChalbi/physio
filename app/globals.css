@@ -99,8 +99,8 @@
   --sidebar-ring: #FF2D55;
 
   /* Extended palette — light surfaces */
-  --surface-0: #F8F8FA;
-  --surface-1: #ffffff;
+  --surface-0: #ffffff;
+  --surface-1: #F8F8FA;
   --surface-2: #f0f0f5;
   --surface-3: #e4e4ec;
   --text-primary: #1a1a2e;
@@ -117,7 +117,7 @@
   /* Card border for light mode */
   --card-border: rgba(0, 0, 0, 0.07);
   /* Nav / header bg */
-  --header-bg: rgba(248, 248, 250, 0.95);
+  --header-bg: rgba(255, 255, 255, 0.95);
 }
 
 /* ═══ DARK MODE OVERRIDES ═══ */
@@ -141,15 +141,15 @@
   --sidebar-accent: #2C2C2E;
   --sidebar-accent-foreground: #e0e0ea;
   --sidebar-border: rgba(255, 255, 255, 0.06);
-  --surface-0: #0E0E0F;
-  --surface-1: #1C1C1E;
+  --surface-0: #1C1C1E;
+  --surface-1: #0E0E0F;
   --surface-2: #2C2C2E;
   --surface-3: #3A3A3C;
   --text-primary: #f0f0f5;
   --text-secondary: #8E8E93;
   --text-tertiary: #6a6a80;
   --card-border: rgba(255, 255, 255, 0.06);
-  --header-bg: rgba(10, 10, 15, 0.95);
+  --header-bg: rgba(28, 28, 30, 0.95);
 }
 
 @layer base {
