@@ -1,20 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const BANNER_DISMISSED_KEY = "app-install-banner-dismissed";
 
 export default function AppInstallBanner() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const [hiding, setHiding] = useState(false);
 
   useEffect(() => {
+    if (pathname !== "/") return;
     const dismissed = localStorage.getItem(BANNER_DISMISSED_KEY);
     if (!dismissed) {
       const t = setTimeout(() => setVisible(true), 300);
       return () => clearTimeout(t);
     }
-  }, []);
+  }, [pathname]);
 
   const dismiss = () => {
     setHiding(true);
@@ -24,7 +27,7 @@ export default function AppInstallBanner() {
     }, 350);
   };
 
-  if (!visible) return null;
+  if (pathname !== "/" || !visible) return null;
 
   return (
     <>
