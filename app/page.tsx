@@ -1053,10 +1053,10 @@ export default function HomePage() {
                 )}
 
                 {/* ═══════════ PROMO SLIDER ═══════════ */}
-                <PromoSlider />
+                {/* <PromoSlider /> */}
 
                      {/* ═══════════ BANNER PROMO ═══════════ */}
-                {/* {popularOffers.length > 0 && (
+                {popularOffers.length > 0 && (
                     <section className="px-4 mb-8">
                         <Link href="/offers?sort=popular" className="block relative rounded-2xl overflow-hidden group active:scale-[0.98] transition-transform h-46 md:h-64"
                             style={{ background: 'var(--surface-1)', border: '1px solid var(--card-border)' }}>
@@ -1069,7 +1069,7 @@ export default function HomePage() {
                             </div>
                         </Link>
                     </section>
-                )} */}
+                )}
 
 
                 {/* ═══════════ PAR CATÉGORIE ═══════════ */}
