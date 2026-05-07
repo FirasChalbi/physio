@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Fredoka } from "next/font/google";
 import { Providers } from "./providers";
 import BottomNav from "@/components/BottomNav";
+import AppInstallBanner from "@/components/AppInstallBanner";
 import "./globals.css";
 
 const inter = Inter({
@@ -46,6 +47,7 @@ export default function RootLayout({
     <html lang="fr" suppressHydrationWarning>
       <body className={`${inter.variable} ${fredoka.variable} font-sans antialiased`}>
         <Providers>
+          <AppInstallBanner />
           {children}
           <BottomNav />
         </Providers>
