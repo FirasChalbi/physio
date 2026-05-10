@@ -858,7 +858,8 @@ export default function HomePage() {
                 <section className="mb-8">
                     <div className="flex items-center justify-between px-4 mb-3">
                         <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>📍 Bon plans par ville</h2>
-                        <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
+                        {/* <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link> */}
+                        <Link href={`/merchants`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
                     <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
                         <button onClick={() => setActiveCity('all')}
