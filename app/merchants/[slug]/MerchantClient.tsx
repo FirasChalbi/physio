@@ -159,6 +159,8 @@ export default function MerchantClient({ merchant, offers }: Props) {
   const [activeTab, setActiveTab] = useState<"menu" | "services" | "offres">("menu")
   const [drawerType, setDrawerType] = useState<"menu" | "services" | null>(null)
   const [heroScrolled, setHeroScrolled] = useState(false)
+  const [showGallery, setShowGallery] = useState(false)
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
 
   useEffect(() => {
     const onScroll = () => setHeroScrolled(window.scrollY > 60)
@@ -616,29 +618,131 @@ export default function MerchantClient({ merchant, offers }: Props) {
       {/* ══ PHOTOS ══ */}
       {merchant.images && merchant.images.length > 0 && (
         <section className="mb-8">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Photos</h2>
-            {merchant.images.length > 3 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
+          <div className="flex items-center justify-between mb-3 px-0">
+            <h2 className="text-base md:text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Photos</h2>
+            <button onClick={() => setShowGallery(true)} className="text-sm text-[#FF2D55] font-medium">
+              Voir tout ({merchant.images.length})
+            </button>
           </div>
-          {/* Mobile — horizontal scroll */}
-          <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide md:hidden">
-            {merchant.images.map((img, i) => (
-              <div key={i} className="w-28 h-28 rounded-2xl overflow-hidden shrink-0">
-                <img src={img} alt="" className="w-full h-full object-cover" />
-              </div>
-            ))}
-          </div>
-          {/* Desktop — masonry grid, first image spans 2x2 */}
-          <div className="hidden md:grid md:grid-cols-4 gap-3 auto-rows-[140px]">
-            {merchant.images.slice(0, 8).map((img, i) => (
-              <div key={i}
-                className={`rounded-2xl overflow-hidden ${i === 0 ? "md:col-span-2 md:row-span-2" : ""}`}>
-                <img src={img} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            ))}
+
+          {/* Mosaic grid: groups of [1 large + 2 stacked] */}
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {Array.from({ length: Math.ceil(merchant.images.length / 3) }).map((_, gi) => {
+              const base = gi * 3
+              const [img0, img1, img2] = merchant.images!.slice(base, base + 3)
+              return (
+                <div key={gi} className="flex gap-2 shrink-0">
+                  {/* Large image */}
+                  {img0 && (
+                    <button onClick={() => setShowGallery(true)}
+                      className="w-52 h-52 md:w-64 md:h-64 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
+                      <img src={img0} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                    </button>
+                  )}
+                  {/* Two stacked small images */}
+                  {(img1 || img2) && (
+                    <div className="flex flex-col gap-2 shrink-0 h-52 md:h-64">
+                      {img1 && (
+                        <button onClick={() => setShowGallery(true)}
+                          className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform">
+                          <img src={img1} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                        </button>
+                      )}
+                      {img2 && (
+                        <button onClick={() => setShowGallery(true)}
+                          className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform relative">
+                          <img src={img2} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                          {/* "+ more" overlay on last visible group if there are more images */}
+                          {gi === Math.ceil(merchant.images!.length / 3) - 1 && merchant.images!.length > (base + 3) && (
+                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
+                              <span className="text-white font-bold text-sm">+{merchant.images!.length - (base + 3)}</span>
+                            </div>
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         </section>
       )}
+
+      {/* ══ GALLERY DRAWER ══ */}
+      {showGallery && (
+        <div className="fixed inset-0 z-[200] flex flex-col justify-end" onClick={() => setShowGallery(false)}>
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          {/* Sheet */}
+          <div
+            onClick={e => e.stopPropagation()}
+            className="relative rounded-t-3xl overflow-hidden flex flex-col"
+            style={{ background: 'var(--surface-0)', maxHeight: '80vh', height: '80vh' }}
+          >
+            {/* Handle + header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+              <div className="w-10 h-1 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-3" style={{ background: 'var(--border)' }} />
+              <h3 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Photos · {merchant.images!.length}</h3>
+              <button onClick={() => setShowGallery(false)}
+                className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                style={{ background: 'var(--surface-2)', color: 'var(--text-secondary)' }}>✕</button>
+            </div>
+            {/* Scrollable grid */}
+            <div className="overflow-y-auto p-4">
+              <div className="grid grid-cols-3 gap-2">
+                {merchant.images!.map((img, i) => (
+                  <button key={i} className="aspect-square rounded-xl overflow-hidden active:scale-[0.97] transition-transform"
+                    onClick={() => setSelectedIdx(i)}>
+                    <img src={img} alt="" className="w-full h-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ══ LIGHTBOX ══ */}
+      {selectedIdx !== null && (() => {
+        const imgs = merchant.images!
+        const total = imgs.length
+        const prev = () => setSelectedIdx((selectedIdx - 1 + total) % total)
+        const next = () => setSelectedIdx((selectedIdx + 1) % total)
+        return (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center"
+            onClick={() => setSelectedIdx(null)}>
+            <div className="absolute inset-0 bg-black/90" />
+            {/* Close */}
+            <button onClick={() => setSelectedIdx(null)}
+              className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center z-10 text-sm font-bold"
+              style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>✕</button>
+            {/* Counter */}
+            <span className="absolute top-4 left-1/2 -translate-x-1/2 z-10 text-white/70 text-sm font-medium">
+              {selectedIdx + 1} / {total}
+            </span>
+            {/* Prev */}
+            {total > 1 && (
+              <button onClick={e => { e.stopPropagation(); prev() }}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xl"
+                style={{ background: 'rgba(0,0,0,0.55)' }}>‹</button>
+            )}
+            {/* Image */}
+            <img
+              src={imgs[selectedIdx]}
+              alt=""
+              onClick={e => e.stopPropagation()}
+              className="relative max-w-[80vw] max-h-[80vh] rounded-2xl object-contain shadow-2xl"
+            />
+            {/* Next */}
+            {total > 1 && (
+              <button onClick={e => { e.stopPropagation(); next() }}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xl"
+                style={{ background: 'rgba(0,0,0,0.55)' }}>›</button>
+            )}
+          </div>
+        )
+      })()}
 
       {/* ══ USER REVIEWS ══ */}
       {merchant.user_reviews && merchant.user_reviews.length > 0 && (

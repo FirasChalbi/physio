@@ -40,6 +40,8 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
     })
     const [showReservation, setShowReservation] = useState(false)
     const [descExpanded, setDescExpanded] = useState(false)
+    const [showGallery, setShowGallery] = useState(false)
+    const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
 
     const toggleFavorite = () => {
         const favs: string[] = JSON.parse(localStorage.getItem("life_favorites") || "[]")
@@ -239,15 +241,48 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                     {allImages.length > 0 && (
                         <section className="mb-8">
                             <div className="flex items-center justify-between mb-3">
-                                <h2 className="text-lg font-bold mb-3" style={{ color: "var(--text-primary)" }}>Photos</h2>
-                                {allImages.length > 3 && <span className="text-sm text-[#FF2D55] font-medium">Voir tout</span>}
+                                <h2 className="text-lg font-bold" style={{ color: "var(--text-primary)" }}>Photos</h2>
+                                <button onClick={() => setShowGallery(true)} className="text-sm text-[#FF2D55] font-medium">
+                                    Voir tout ({allImages.length})
+                                </button>
                             </div>
-                            <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-hide">
-                                {allImages.map((img, i) => (
-                                    <div key={i} className="w-28 h-28 md:w-36 md:h-36 rounded-2xl overflow-hidden flex-shrink-0">
-                                        <img src={img} alt="" className="w-full h-full object-cover" />
-                                    </div>
-                                ))}
+                            {/* Mosaic: 1 large + 2 stacked, repeating */}
+                            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                {Array.from({ length: Math.ceil(allImages.length / 3) }).map((_, gi) => {
+                                    const base = gi * 3
+                                    const [img0, img1, img2] = allImages.slice(base, base + 3)
+                                    return (
+                                        <div key={gi} className="flex gap-2 shrink-0">
+                                            {img0 && (
+                                                <button onClick={() => setShowGallery(true)}
+                                                    className="w-52 h-52 md:w-64 md:h-64 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
+                                                    <img src={img0} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                </button>
+                                            )}
+                                            {(img1 || img2) && (
+                                                <div className="flex flex-col gap-2 shrink-0 h-52 md:h-64">
+                                                    {img1 && (
+                                                        <button onClick={() => setShowGallery(true)}
+                                                            className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform">
+                                                            <img src={img1} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                        </button>
+                                                    )}
+                                                    {img2 && (
+                                                        <button onClick={() => setShowGallery(true)}
+                                                            className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform relative">
+                                                            <img src={img2} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                                            {gi === Math.ceil(allImages.length / 3) - 1 && allImages.length > (base + 3) && (
+                                                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
+                                                                    <span className="text-white font-bold text-sm">+{allImages.length - (base + 3)}</span>
+                                                                </div>
+                                                            )}
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )
+                                })}
                             </div>
                         </section>
                     )}
@@ -366,7 +401,73 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                     merchantName={merchant?.name || offer.title}
                     merchantId={offer.merchantId}
                 />
+             </div>
+        
+
+        {/* ══ GALLERY DRAWER ══ */}
+        {showGallery && (
+            <div className="fixed inset-0 z-[200] flex flex-col justify-end" onClick={() => setShowGallery(false)}>
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+                <div
+                    onClick={e => e.stopPropagation()}
+                    className="relative rounded-t-3xl overflow-hidden flex flex-col"
+                    style={{ background: 'var(--surface-0)', maxHeight: '80vh', height: '80vh' }}
+                >
+                    <div className="flex items-center justify-between px-5 py-4 border-b" style={{ borderColor: 'var(--border)' }}>
+                        <div className="w-10 h-1 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-3" style={{ background: 'var(--border)' }} />
+                        <h3 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Photos · {allImages.length}</h3>
+                        <button onClick={() => setShowGallery(false)}
+                            className="w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                            style={{ background: 'var(--surface-2)', color: 'var(--text-secondary)' }}>✕</button>
+                    </div>
+                    <div className="overflow-y-auto p-4">
+                        <div className="grid grid-cols-3 gap-2">
+                            {allImages.map((img, i) => (
+                                <button key={i} className="aspect-square rounded-xl overflow-hidden active:scale-[0.97] transition-transform"
+                                    onClick={() => setSelectedIdx(i)}>
+                                    <img src={img} alt="" className="w-full h-full object-cover" />
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </div>
-        </>
+        )}
+
+        {/* ══ LIGHTBOX ══ */}
+        {selectedIdx !== null && (() => {
+            const total = allImages.length
+            const prev = () => setSelectedIdx((selectedIdx - 1 + total) % total)
+            const next = () => setSelectedIdx((selectedIdx + 1) % total)
+            return (
+                <div className="fixed inset-0 z-[300] flex items-center justify-center"
+                    onClick={() => setSelectedIdx(null)}>
+                    <div className="absolute inset-0 bg-black/90" />
+                    <button onClick={() => setSelectedIdx(null)}
+                        className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center z-10 text-sm font-bold"
+                        style={{ background: 'rgba(255,255,255,0.15)', color: '#fff' }}>✕</button>
+                    <span className="absolute top-4 left-1/2 -translate-x-1/2 z-10 text-white/70 text-sm font-medium">
+                        {selectedIdx + 1} / {total}
+                    </span>
+                    {total > 1 && (
+                        <button onClick={e => { e.stopPropagation(); prev() }}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xl"
+                            style={{ background: 'rgba(0,0,0,0.55)' }}>‹</button>
+                    )}
+                    <img
+                        src={allImages[selectedIdx]}
+                        alt=""
+                        onClick={e => e.stopPropagation()}
+                        className="relative max-w-[80vw] max-h-[80vh] rounded-2xl object-contain shadow-2xl"
+                    />
+                    {total > 1 && (
+                        <button onClick={e => { e.stopPropagation(); next() }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-xl"
+                            style={{ background: 'rgba(0,0,0,0.55)' }}>›</button>
+                    )}
+                </div>
+            )
+        })()}
+    </>
     )
 }

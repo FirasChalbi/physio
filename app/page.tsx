@@ -146,15 +146,17 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
     if (merchants.length === 0 && !featuredCard) return null
     return (
         <section className="mb-8">
-            <div className="flex items-center justify-between px-4 mb-4">
-                <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{title}</h2>
-                <Link href={href} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
-            </div>
+            {title && (
+                <div className="flex items-center justify-between px-4 mb-4">
+                    <h2 className="text-base md:text-xl font-bold" style={{ color: 'var(--text-primary)' }}>{title}</h2>
+                    <Link href={href} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
+                </div>
+            )}
             <div className="flex gap-3 overflow-x-auto px-4 pb-3 scrollbar-hide md:hidden">
                 {featuredCard}
                 {merchants.map(m => (
                     <Link key={m._id} href={`/merchants/${m.slug}`}
-                        className="shrink-0 w-64 md:w-auto rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
+                        className="shrink-0 w-64 rounded-2xl overflow-hidden border active:scale-[0.98] transition-transform group"
                         style={{ background: 'var(--surface-1)', borderColor: 'var(--card-border)' }}>
                         <div className="relative h-40 overflow-hidden">
                             <ImageCarousel images={[m.coverImage || '', ...(m.images || []), m.logo || ''].filter(Boolean)} alt={m.name} className="w-full h-full object-cover" />
@@ -175,9 +177,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                         </div>
                         <div className="p-3.5">
                             <h3 className="text-sm font-semibold mb-1 line-clamp-1" style={{ color: 'var(--text-primary)' }}>{m.name}</h3>
-                            <p className="text-[11px] text-[#6a6a80] mb-2">
-                                {m.categories?.[0] || 'Marchand'} · {m.city}
-                            </p>
+                            <p className="text-[11px] text-[#6a6a80] mb-2">{m.categories?.[0] || 'Marchand'} · {m.city}</p>
                             <div className="flex items-center justify-between">
                                 {getMaxDiscount(m._id) != null && (
                                     <span className="px-2 py-0.5 rounded-md text-xs font-bold text-white"
@@ -185,9 +185,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                                 )}
                                 <div className="flex items-center gap-1">
                                     <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
-                                    <span className="text-[11px] text-[#FF2D55] font-medium">
-                                        {m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}
-                                    </span>
+                                    <span className="text-[11px] text-[#FF2D55] font-medium">{m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}</span>
                                     <span className="text-[10px] text-[#6a6a80]">({m.reviewCount || m.review_count || 0})</span>
                                 </div>
                             </div>
@@ -228,9 +226,7 @@ function MerchantHorizontalSection({ title, href, merchants, categories, feature
                                 )}
                                 <div className="flex items-center gap-1">
                                     <Star className="w-3 h-3 text-[#FF2D55] fill-[#FF2D55]" />
-                                    <span className="text-xs text-[#FF2D55] font-medium">
-                                        {m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}
-                                    </span>
+                                    <span className="text-xs text-[#FF2D55] font-medium">{m.rating ? m.rating.toFixed(1) : (m.average_rating || '—')}</span>
                                     <span className="text-[10px] text-[#6a6a80]">({m.reviewCount || m.review_count || 0})</span>
                                 </div>
                             </div>
@@ -478,7 +474,7 @@ export default function HomePage() {
     const [notifOpen, setNotifOpen] = useState(false)
     const [unreadNotifCount, setUnreadNotifCount] = useState(0)
     const [recentlyViewed, setRecentlyViewed] = useState<string[]>([])
-    const [activeCity, setActiveCity] = useState("plaisir")
+    const [activeCity, setActiveCity] = useState("all")
     const [activeCategoryTab, setActiveCategoryTab] = useState("restaurant")
     const [allOffersCity, setAllOffersCity] = useState<string>("all")
     const [allOffersCategory, setAllOffersCategory] = useState<string>("all")
@@ -571,12 +567,18 @@ export default function HomePage() {
         { name: 'Sport & Fitness', slug: 'sport-fitness', match: /sport|fitness|gym|musculation/i },
         { name: 'Shopping & Mode', slug: 'shopping', match: /shopping|boutique|mode/i },
     ]
-    const activeCityData = cities.find(c => c.slug === activeCity)!
-    const cityOffers = offers.filter(o => {
+    const activeCityData = cities.find(c => c.slug === activeCity) || { name: 'Toutes', slug: 'all' }
+    const cityOffers = activeCity === 'all' ? offers.slice(0, 8) : offers.filter(o => {
         const city = o.city.toLowerCase()
         const name = activeCityData.name.toLowerCase()
         return city.includes(name) || name.includes(city)
     }).slice(0, 8)
+    const rankOrder = (m: Merchant) => m.rank === 1 ? 0 : m.rank === 2 ? 1 : 2
+    const cityMerchants = (activeCity === 'all' ? [...merchants] : merchants.filter(m => {
+        const mCity = (m.city || '').toLowerCase()
+        const name = activeCityData.name.toLowerCase()
+        return mCity.includes(name) || name.includes(mCity)
+    })).sort((a, b) => rankOrder(a) - rankOrder(b)).slice(0, 8)
     const activeCategoryData = categoryTabs.find(c => c.slug === activeCategoryTab)!
     const categoryOffers = offers.filter(o => {
         const cat = categories.find(c => c._id === o.categoryId)
@@ -859,6 +861,11 @@ export default function HomePage() {
                         <Link href={`/offers?city=${activeCity}`} className="text-sm text-[#FF2D55] font-medium">Voir tout</Link>
                     </div>
                     <div className="flex gap-2 overflow-x-auto px-4 pb-3 scrollbar-hide">
+                        <button onClick={() => setActiveCity('all')}
+                            className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === 'all' ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
+                            style={activeCity !== 'all' ? { background: 'var(--surface-2)', borderColor: 'var(--border)', color: 'var(--text-secondary)' } : undefined}>
+                            Tout
+                        </button>
                         {cities.map(city => (
                             <button key={city.slug} onClick={() => setActiveCity(city.slug)}
                                 className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${activeCity === city.slug ? 'bg-[#FF2D55] text-white' : 'border hover:bg-[#FF2D55]/10 hover:text-[#FF2D55]'}`}
@@ -867,7 +874,15 @@ export default function HomePage() {
                             </button>
                         ))}
                     </div>
-                    <OfferGrid offers={cityOffers} categories={categories} merchants={merchants} favorites={favorites} toggleFav={toggleFav} saveViewed={saveViewed} />
+                    <MerchantHorizontalSection
+                        title=""
+                        href={`/offers?city=${activeCity}`}
+                        merchants={cityMerchants}
+                        categories={categories}
+                        favorites={favorites}
+                        toggleFav={toggleFav}
+                        offers={offers}
+                    />
                 </section>
 
                 

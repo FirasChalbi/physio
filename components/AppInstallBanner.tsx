@@ -81,10 +81,13 @@ export default function AppInstallBanner() {
           opacity: 0.9;
           transform: scale(1.03);
         }
+        @media (min-width: 768px) {
+          .app-install-banner { display: none !important; }
+        }
       `}</style>
 
       <div
-        className={hiding ? "banner-exit" : "banner-enter"}
+        className={`app-install-banner ${hiding ? "banner-exit" : "banner-enter"}`}
         style={{
           position: "relative",
           zIndex: 9999,
