@@ -16,6 +16,7 @@ interface SendReservationEmailParams {
   totalPrice?: number
   offerTitle?: string
   offerImage?: string
+  merchantCover?: string
   sessionId?: string
   createdAt?: string
 }

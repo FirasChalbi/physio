@@ -71,6 +71,7 @@ export async function POST(req: NextRequest) {
           totalPrice,
           offerTitle,
           offerImage,
+          merchantCover: merchant.coverImage || undefined,
           sessionId,
           createdAt: reservation.createdAt?.toISOString(),
         })

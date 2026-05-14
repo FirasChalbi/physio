@@ -5,13 +5,13 @@ import {
   Head,
   Heading,
   Html,
-  Img,
   Link,
   Preview,
   Section,
   Text,
   Row,
   Column,
+  Img,
 } from '@react-email/components';
 
 interface ReservationEmailProps {
@@ -25,401 +25,172 @@ interface ReservationEmailProps {
   totalPrice?: number;
   offerTitle?: string;
   offerImage?: string;
+  merchantCover?: string;
   sessionId?: string;
   createdAt?: string;
 }
 
 const statusConfig = {
-  pending:   { label: 'En attente de confirmation', bg: '#FEF3C7', border: '#F59E0B', dot: '#F59E0B', text: '#92400E' },
-  confirmed: { label: 'Confirmée',                  bg: '#D1FAE5', border: '#10B981', dot: '#10B981', text: '#065F46' },
-  cancelled: { label: 'Annulée',                    bg: '#FEE2E2', border: '#EF4444', dot: '#EF4444', text: '#991B1B' },
+  pending:   { label: 'En attente de confirmation', bg: '#FFF7ED', border: '#FB923C', text: '#9A3412' },
+  confirmed: { label: 'Confirmée',                  bg: '#F0FDF4', border: '#4ADE80', text: '#166534' },
+  cancelled: { label: 'Annulée',                    bg: '#FEF2F2', border: '#FCA5A5', text: '#991B1B' },
 };
 
-const formatDate = (dateString: string) => {
-  const d = new Date(dateString);
-  return d.toLocaleDateString('fr-FR', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
+const formatDate = (d: string) =>
+  new Date(d).toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-const formatCreatedAt = (dateString: string) => {
-  const d = new Date(dateString);
-  return d.toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-};
+const formatCreatedAt = (d: string) =>
+  new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+
+const P   = '#FF2D55';   // framboise
+const C   = '#FF4D7A';   // corail
+const BD  = '#8A1C3A';   // bordeaux
+const RO  = '#FF7FA3';   // rose
+const DK  = '#1a1a2e';   // dark
+const TP  = '#1a1a2e';   // text primary
+const TS  = '#6a6a8a';   // text secondary
+const TT  = '#9a9ab0';   // text tertiary
+const SF  = '#F8F8FA';   // surface
+const WH  = '#ffffff';   // white
+const BL  = '#EBEBF0';   // border light
 
 export default function ReservationEmail(props: ReservationEmailProps) {
   const {
-    merchantName,
-    name,
-    phone,
-    date,
-    time,
-    status,
-    selectedItems = [],
-    totalPrice,
-    offerTitle,
-    offerImage,
-    sessionId,
-    createdAt,
+    merchantName, name, phone, date, time, status,
+    selectedItems = [], totalPrice,
+    offerTitle, offerImage, merchantCover,
+    sessionId, createdAt,
   } = props;
 
-  const st = statusConfig[status] ?? statusConfig.pending;
-  const shortSession = sessionId ? sessionId.slice(0, 13) : '';
-
-  const s: Record<string, React.CSSProperties> = {
-    body: {
-      backgroundColor: '#F0EDE6',
-      fontFamily: "'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-      margin: 0,
-      padding: '48px 16px',
-    },
-    container: {
-      backgroundColor: '#ffffff',
-      maxWidth: '600px',
-      margin: '0 auto',
-      borderRadius: '16px',
-      overflow: 'hidden',
-      border: '1px solid #E0DBD0',
-    },
-    header: {
-      backgroundColor: '#1C1C1C',
-      padding: '40px 48px 36px',
-      textAlign: 'center',
-    },
-    logoBadge: {
-      display: 'inline-block',
-      border: '1.5px solid #C9A84C',
-      borderRadius: '8px',
-      padding: '8px 20px',
-      color: '#C9A84C',
-      fontSize: '16px',
-      fontWeight: '600',
-      letterSpacing: '3px',
-      textTransform: 'uppercase',
-      marginBottom: '28px',
-    },
-    headerTitle: {
-      color: '#ffffff',
-      fontSize: '34px',
-      fontWeight: '400',
-      lineHeight: '1.2',
-      margin: '0 0 6px 0',
-      fontFamily: 'Georgia, "Times New Roman", serif',
-    },
-    headerSub: {
-      color: '#9A9A8A',
-      fontSize: '13px',
-      fontWeight: '300',
-      letterSpacing: '0.5px',
-      margin: 0,
-    },
-    statusBar: {
-      backgroundColor: '#F8F6F1',
-      padding: '14px 48px',
-      borderBottom: '1px solid #E8E4DA',
-    },
-    statusPill: {
-      display: 'inline-block',
-      backgroundColor: st.bg,
-      border: `1px solid ${st.border}`,
-      borderRadius: '100px',
-      padding: '6px 16px',
-      fontSize: '12px',
-      fontWeight: '500',
-      color: st.text,
-      letterSpacing: '0.3px',
-    },
-    sessionText: {
-      color: '#A09A8E',
-      fontSize: '11px',
-      fontFamily: 'monospace',
-      margin: 0,
-      textAlign: 'right',
-    },
-    bodyPad: {
-      padding: '40px 48px',
-    },
-    sectionLabel: {
-      fontSize: '10px',
-      fontWeight: '500',
-      color: '#A09A8E',
-      letterSpacing: '2px',
-      textTransform: 'uppercase',
-      margin: '0 0 16px 0',
-    },
-    card: {
-      backgroundColor: '#FAFAF7',
-      border: '1px solid #E8E4DA',
-      borderRadius: '12px',
-      padding: '24px',
-    },
-    infoKey: {
-      fontSize: '10px',
-      color: '#A09A8E',
-      fontWeight: '400',
-      margin: '0 0 4px 0',
-      textTransform: 'uppercase',
-      letterSpacing: '1px',
-    },
-    infoVal: {
-      fontSize: '16px',
-      color: '#1C1C1C',
-      fontWeight: '500',
-      margin: 0,
-    },
-    infoValAccent: {
-      fontSize: '20px',
-      color: '#C9A84C',
-      fontWeight: '600',
-      fontFamily: 'Georgia, serif',
-      margin: 0,
-    },
-    offerCard: {
-      backgroundColor: '#1C1C1C',
-      borderRadius: '12px',
-      overflow: 'hidden',
-    },
-    offerImg: {
-      width: '100%',
-      height: '140px',
-      objectFit: 'cover',
-      display: 'block',
-    },
-    offerInner: {
-      padding: '20px 24px',
-    },
-    offerTitle: {
-      color: '#ffffff',
-      fontFamily: 'Georgia, serif',
-      fontSize: '17px',
-      fontWeight: '600',
-      lineHeight: '1.35',
-      margin: 0,
-    },
-    offerAccent: {
-      color: '#C9A84C',
-      fontSize: '11px',
-      textTransform: 'uppercase',
-      letterSpacing: '1.5px',
-      margin: '0 0 8px 0',
-    },
-    itemsCard: {
-      backgroundColor: '#FAFAF7',
-      border: '1px solid #E8E4DA',
-      borderRadius: '12px',
-      overflow: 'hidden',
-    },
-    itemRow: {
-      padding: '14px 20px',
-      borderBottom: '1px solid #E8E4DA',
-    },
-    itemName: {
-      fontSize: '14px',
-      color: '#1C1C1C',
-      fontWeight: '400',
-      margin: '0 0 4px 0',
-      lineHeight: '1.4',
-    },
-    itemTypeBadge: {
-      display: 'inline-block',
-      fontSize: '10px',
-      color: '#A09A8E',
-      border: '1px solid #E0DBD0',
-      borderRadius: '4px',
-      padding: '2px 8px',
-      textTransform: 'uppercase',
-      letterSpacing: '0.5px',
-    },
-    itemPrice: {
-      fontSize: '16px',
-      color: '#1C1C1C',
-      fontWeight: '500',
-      margin: 0,
-      textAlign: 'right',
-      whiteSpace: 'nowrap',
-    },
-    totalRow: {
-      backgroundColor: '#1C1C1C',
-      padding: '16px 20px',
-    },
-    totalLabel: {
-      color: '#9A9A8A',
-      fontSize: '12px',
-      fontWeight: '300',
-      letterSpacing: '1.5px',
-      textTransform: 'uppercase',
-      margin: 0,
-    },
-    totalAmount: {
-      color: '#C9A84C',
-      fontFamily: 'Georgia, serif',
-      fontSize: '28px',
-      fontWeight: '600',
-      margin: 0,
-      textAlign: 'right',
-    },
-    actionBox: {
-      backgroundColor: '#FFFBEB',
-      border: '1px solid #F59E0B',
-      borderLeft: '3px solid #C9A84C',
-      borderRadius: '0 10px 10px 0',
-      padding: '20px 24px',
-      marginTop: '32px',
-    },
-    actionTitle: {
-      fontSize: '13px',
-      fontWeight: '500',
-      color: '#92400E',
-      margin: '0 0 6px 0',
-    },
-    actionText: {
-      fontSize: '13px',
-      color: '#A06030',
-      lineHeight: '1.6',
-      fontWeight: '300',
-      margin: 0,
-    },
-    footer: {
-      backgroundColor: '#1C1C1C',
-      padding: '28px 48px',
-      textAlign: 'center',
-    },
-    footerBrand: {
-      color: '#C9A84C',
-      fontFamily: 'Georgia, serif',
-      fontSize: '18px',
-      fontWeight: '600',
-      letterSpacing: '1px',
-      margin: '0 0 6px 0',
-    },
-    footerSub: {
-      color: '#6A6A5A',
-      fontSize: '11px',
-      fontWeight: '300',
-      letterSpacing: '0.3px',
-      margin: 0,
-    },
-  };
+  const st  = statusConfig[status] ?? statusConfig.pending;
+  const sid = sessionId ? sessionId.slice(0, 13) : '';
+  const hero = merchantCover || offerImage;
 
   return (
     <Html lang="fr" dir="ltr">
       <Head />
-      <Preview>
-        Nouvelle réservation — {name} · {merchantName} · {formatDate(date)} à {time}
-      </Preview>
+      <Preview>Nouvelle réservation — {name} · {merchantName} · {formatDate(date)} à {time}</Preview>
 
-      <Body style={s.body}>
-        <Container style={s.container}>
+      <Body style={{ backgroundColor: SF, fontFamily: "'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif", margin: 0, padding: '28px 16px' }}>
+        <Container style={{ backgroundColor: WH, maxWidth: '580px', margin: '0 auto', borderRadius: '18px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.07)' }}>
 
-          <Section style={s.header}>
-            <Text style={s.logoBadge}>LifeDeal</Text>
-            <Heading as="h1" style={s.headerTitle}>Nouvelle Réservation</Heading>
-            <Text style={s.headerSub}>
+          {/* ══ HERO — cover image with gradient overlay + text ══ */}
+          <Section style={{
+            backgroundImage: hero ? `url(${hero})` : `linear-gradient(135deg, ${P} 0%, ${C} 50%, ${BD} 100%)`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            padding: '36px 32px 28px',
+            minHeight: '200px',
+          }}>
+            {/* LifeDeal badge */}
+            <Text style={{ display: 'inline-block', backgroundColor: P, color: WH, fontSize: '10px', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', borderRadius: '6px', padding: '4px 11px', margin: '0 0 14px 0' }}>
+              LifeDeal
+            </Text>
+
+            {/* Title */}
+            <Heading as="h1" style={{ color: WH, fontSize: '24px', fontWeight: '700', lineHeight: '1.2', margin: '0 0 5px 0', letterSpacing: '-0.4px', textShadow: '0 1px 6px rgba(0,0,0,0.45)' }}>
+              Nouvelle Réservation
+            </Heading>
+
+            {/* Merchant · received date */}
+            <Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: '13px', fontWeight: '400', margin: 0, lineHeight: '1.4', textShadow: '0 1px 4px rgba(0,0,0,0.4)' }}>
               {merchantName}{createdAt ? ` · Reçu le ${formatCreatedAt(createdAt)}` : ''}
             </Text>
           </Section>
 
-          <Section style={s.statusBar}>
-            <Row>
-              <Column>
-                <Text style={s.statusPill}>● {st.label}</Text>
-              </Column>
-              {shortSession && (
-                <Column>
-                  <Text style={s.sessionText}>{shortSession}…</Text>
-                </Column>
-              )}
-            </Row>
-          </Section>
+          {/* ══ BODY ══ */}
+          <Section style={{ padding: '4px 28px 28px' }}>
 
-          <Section style={s.bodyPad}>
-
-            <Text style={s.sectionLabel}>Client</Text>
-            <Section style={s.card}>
+            {/* — Status pill — */}
+            {/* <Section style={{ marginBottom: '16px' }}>
               <Row>
-                <Column width="50%">
-                  <Text style={s.infoKey}>Nom</Text>
-                  <Text style={s.infoVal}>{name}</Text>
+                <Column>
+                  <Text style={{ display: 'inline-block', backgroundColor: st.bg, border: `1.5px solid ${st.border}`, borderRadius: '100px', padding: '5px 14px', fontSize: '12px', fontWeight: '600', color: st.text, margin: 0 }}>
+                    ● {st.label}
+                  </Text>
                 </Column>
-                <Column width="50%">
-                  <Text style={s.infoKey}>Téléphone</Text>
-                  <Link href={`tel:${phone}`} style={s.infoValAccent}>{phone}</Link>
+                {sid && (
+                  <Column>
+                    <Text style={{ color: TT, fontSize: '11px', fontFamily: 'monospace', margin: 0, textAlign: 'right', lineHeight: '28px' }}>
+                      {sid}…
+                    </Text>
+                  </Column>
+                )}
+              </Row>
+            </Section> */}
+
+            {/* ── Combined info card: 2×2 grid ── */}
+            <Section style={{ backgroundColor: SF, border: `1px solid ${BL}`, borderRadius: '14px', overflow: 'hidden', marginBottom: '0' }}>
+
+              {/* Row 1 — Nom | Téléphone */}
+              <Row>
+                <Column width="50%" style={{ padding: '14px 18px 10px' }}>
+                  <Text style={{ fontSize: '9px', color: TT, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 3px 0' }}>Nom</Text>
+                  <Text style={{ fontSize: '14px', color: TP, fontWeight: '600', margin: 0 }}>{name}</Text>
+                </Column>
+                <Column width="50%" style={{ padding: '14px 18px 10px', borderLeft: `1px solid ${BL}` }}>
+                  <Text style={{ fontSize: '9px', color: TT, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 3px 0' }}>Téléphone</Text>
+                  <Link href={`tel:${phone}`} style={{ fontSize: '14px', color: P, fontWeight: '700', textDecoration: 'none' }}>{phone}</Link>
+                </Column>
+              </Row>
+
+              {/* Inner divider */}
+              <Section style={{ height: '1px', backgroundColor: BL, margin: 0 }} />
+
+              {/* Row 2 — Date | Heure */}
+              <Row>
+                <Column width="50%" style={{ padding: '10px 18px 14px' }}>
+                  <Text style={{ fontSize: '9px', color: TT, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 3px 0' }}>Date</Text>
+                  <Text style={{ fontSize: '13px', color: TP, fontWeight: '600', margin: 0 }}>{formatDate(date)}</Text>
+                </Column>
+                <Column width="50%" style={{ padding: '10px 18px 14px', borderLeft: `1px solid ${BL}` }}>
+                  <Text style={{ fontSize: '9px', color: TT, fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 3px 0' }}>Heure</Text>
+                  <Text style={{ fontSize: '20px', color: TP, fontWeight: '700', margin: 0, letterSpacing: '-0.5px' }}>{time}</Text>
                 </Column>
               </Row>
             </Section>
 
-            <Section style={{ marginTop: '32px' }}>
-              <Text style={s.sectionLabel}>Réservation</Text>
-              <Section style={s.card}>
-                <Row>
-                  <Column width="50%">
-                    <Text style={s.infoKey}>Date</Text>
-                    <Text style={s.infoVal}>{formatDate(date)}</Text>
-                  </Column>
-                  <Column width="50%">
-                    <Text style={s.infoKey}>Heure</Text>
-                    <Text style={s.infoVal}>{time}</Text>
-                  </Column>
-                </Row>
-              </Section>
-            </Section>
-
+            {/* ── Offer (optional) ── */}
             {offerTitle && (
-              <Section style={{ marginTop: '32px' }}>
-                <Text style={s.sectionLabel}>Offre</Text>
-                <Section style={s.offerCard}>
+              <Section style={{ marginTop: '12px' }}>
+                <Section style={{ backgroundColor: DK, borderRadius: '12px', overflow: 'hidden' }}>
                   {offerImage && (
-                    <Img
-                      src={offerImage}
-                      alt={offerTitle}
-                      width="600"
-                      style={s.offerImg}
-                    />
+                    <Img src={offerImage} alt={offerTitle} width="580"
+                      style={{ width: '100%', height: '120px', objectFit: 'cover', display: 'block' }} />
                   )}
-                  <Section style={s.offerInner}>
-                    <Text style={s.offerAccent}>Offre sélectionnée</Text>
-                    <Text style={s.offerTitle}>{offerTitle}</Text>
+                  <Section style={{ padding: '14px 18px' }}>
+                    <Text style={{ color: P, fontSize: '9px', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '1.5px', margin: '0 0 5px 0' }}>Offre sélectionnée</Text>
+                    <Text style={{ color: WH, fontSize: '15px', fontWeight: '600', lineHeight: '1.4', margin: 0 }}>{offerTitle}</Text>
                   </Section>
                 </Section>
               </Section>
             )}
 
+            {/* ── Items / commande ── */}
             {selectedItems.length > 0 && (
-              <Section style={{ marginTop: '32px' }}>
-                <Text style={s.sectionLabel}>Commande</Text>
-                <Section style={s.itemsCard}>
+              <Section style={{ marginTop: '12px' }}>
+                <Section style={{ backgroundColor: SF, border: `1px solid ${BL}`, borderRadius: '12px', overflow: 'hidden' }}>
                   {selectedItems.map((item, i) => (
-                    <Section key={i} style={{
-                      ...s.itemRow,
-                      borderBottom: i < selectedItems.length - 1 ? '1px solid #E8E4DA' : 'none',
-                    }}>
+                    <Section key={i} style={{ padding: '12px 18px', borderBottom: i < selectedItems.length - 1 ? `1px solid ${BL}` : 'none' }}>
                       <Row>
                         <Column>
-                          <Text style={s.itemName}>{item.name}</Text>
-                          <Text style={s.itemTypeBadge}>{item.type}</Text>
+                          <Text style={{ fontSize: '13px', color: TP, fontWeight: '500', margin: '0 0 2px 0' }}>{item.name}</Text>
+                          <Text style={{ display: 'inline-block', fontSize: '9px', color: TT, border: `1px solid ${BL}`, borderRadius: '4px', padding: '2px 6px', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '500', margin: 0 }}>{item.type}</Text>
                         </Column>
-                        <Column style={{ width: '80px' }}>
-                          <Text style={s.itemPrice}>{item.price} €</Text>
+                        <Column style={{ width: '65px' }}>
+                          <Text style={{ fontSize: '14px', color: TP, fontWeight: '600', margin: 0, textAlign: 'right' }}>{item.price} €</Text>
                         </Column>
                       </Row>
                     </Section>
                   ))}
-
                   {totalPrice !== undefined && (
-                    <Section style={s.totalRow}>
+                    <Section style={{ background: `linear-gradient(135deg, ${P}, ${C})`, padding: '12px 18px' }}>
                       <Row>
                         <Column>
-                          <Text style={s.totalLabel}>Total</Text>
+                          <Text style={{ color: 'rgba(255,255,255,0.85)', fontSize: '10px', fontWeight: '700', letterSpacing: '1.5px', textTransform: 'uppercase', margin: 0 }}>Total</Text>
                         </Column>
                         <Column>
-                          <Text style={s.totalAmount}>{totalPrice} €</Text>
+                          <Text style={{ color: WH, fontSize: '20px', fontWeight: '700', margin: 0, textAlign: 'right' }}>{totalPrice} €</Text>
                         </Column>
                       </Row>
                     </Section>
@@ -428,21 +199,23 @@ export default function ReservationEmail(props: ReservationEmailProps) {
               </Section>
             )}
 
-            <Section style={s.actionBox}>
-              <Text style={s.actionTitle}>Action requise</Text>
-              <Text style={s.actionText}>
-                Connectez-vous à votre interface de gestion pour confirmer ou refuser
-                cette réservation. Le client sera automatiquement notifié de votre décision.
+            {/* ── Action box ── */}
+            <Section style={{ backgroundColor: '#FFF5F7', border: `1px solid ${RO}`, borderLeft: `4px solid ${P}`, borderRadius: '0 10px 10px 0', padding: '14px 18px', marginTop: '16px' }}>
+              <Text style={{ fontSize: '12px', fontWeight: '700', color: BD, margin: '0 0 4px 0' }}>⚡ Action requise</Text>
+              <Text style={{ fontSize: '12px', color: '#6b2140', lineHeight: '1.6', fontWeight: '400', margin: 0 }}>
+                Connectez-vous à votre interface de gestion pour confirmer ou refuser cette réservation.
+                Le client sera automatiquement notifié.
               </Text>
             </Section>
 
           </Section>
 
-          <Section style={s.footer}>
+          {/* ══ FOOTER ══ */}
+          <Section style={{ backgroundColor: DK, padding: '18px 28px', textAlign: 'center' }}>
             <Link href="https://yvelines.life/" style={{ textDecoration: 'none' }}>
-              <Text style={s.footerBrand}>LifeDeal Yvelines</Text>
+              <Text style={{ color: P, fontSize: '14px', fontWeight: '700', letterSpacing: '0.5px', margin: '0 0 2px 0' }}>LifeDeal Yvelines</Text>
             </Link>
-            <Text style={s.footerSub}>
+            <Text style={{ color: '#6a6a8a', fontSize: '11px', fontWeight: '400', margin: 0 }}>
               Plateforme de deals locaux · © 2026 Tous droits réservés
             </Text>
           </Section>
