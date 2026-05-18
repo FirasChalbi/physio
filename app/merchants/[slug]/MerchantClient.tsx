@@ -162,6 +162,15 @@ export default function MerchantClient({ merchant, offers }: Props) {
   const [showGallery, setShowGallery] = useState(false)
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
 
+  // Track page view
+  useEffect(() => {
+    fetch('/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'merchant', id: merchant._id }),
+    }).catch(() => {})
+  }, [merchant._id])
+
   useEffect(() => {
     const onScroll = () => setHeroScrolled(window.scrollY > 60)
     window.addEventListener("scroll", onScroll, { passive: true })

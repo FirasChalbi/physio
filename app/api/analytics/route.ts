@@ -72,8 +72,10 @@ export async function GET(req: NextRequest) {
     const pendingReservations = reservations.filter((r: any) => r.status === 'pending').length
     const cancelledReservations = reservations.filter((r: any) => r.status === 'cancelled').length
 
-    // ── Total views from offers ──
-    const totalViews = offers.reduce((sum: number, o: any) => sum + (o.viewCount || 0), 0)
+    // ── Total views from offers + merchants ──
+    const offerViews = offers.reduce((sum: number, o: any) => sum + (o.viewCount || 0), 0)
+    const merchantViews = merchants.reduce((sum: number, m: any) => sum + (m.viewCount || 0), 0)
+    const totalViews = offerViews + merchantViews
     const totalSold = offers.reduce((sum: number, o: any) => sum + (o.soldCount || 0), 0)
 
     // ── Top merchants by reservation count ──

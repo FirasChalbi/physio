@@ -70,7 +70,9 @@ export async function GET() {
     // Compute stats
     const totalOffers = offers.length
     const activeOffers = offers.filter((o: any) => o.status === 'active').length
-    const totalViews = offers.reduce((sum: number, o: any) => sum + (o.viewCount || 0), 0)
+    const offerViews = offers.reduce((sum: number, o: any) => sum + (o.viewCount || 0), 0)
+    const merchantPageViews = merchant.viewCount || 0
+    const totalViews = offerViews + merchantPageViews
     const totalSold = offers.reduce((sum: number, o: any) => sum + (o.soldCount || 0), 0)
 
     const totalReservations = reservations.length
@@ -150,6 +152,7 @@ export async function GET() {
         active: merchant.active,
         rating: merchant.rating,
         reviewCount: merchant.reviewCount,
+        viewCount: merchant.viewCount || 0,
         categories: merchant.categories,
         opening_hours: merchant.opening_hours,
         social_media: merchant.social_media,
@@ -159,6 +162,8 @@ export async function GET() {
         totalOffers,
         activeOffers,
         totalViews,
+        offerViews,
+        merchantPageViews,
         totalSold,
         totalReservations,
         confirmedReservations,

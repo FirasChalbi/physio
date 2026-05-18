@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
@@ -53,6 +53,15 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
     }
 
     const allImages = [offer.coverImage, ...(offer.galleryImages || [])]
+
+    // Track page view
+    useEffect(() => {
+        fetch('/api/track-view', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ type: 'offer', id: offer._id }),
+        }).catch(() => {})
+    }, [offer._id])
 
     const merchantUserReviews = (merchant?.user_reviews || []).map((r, i) => ({
         _id: `merchant-${i}`,
