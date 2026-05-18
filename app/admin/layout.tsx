@@ -8,13 +8,13 @@ import {
     LayoutDashboard, Tag, Gift, Store, MapPin,
     Users, ShoppingCart, Star, Image, BarChart3,
     LogOut, Menu, X, ChevronLeft, Search, Bell,
-    ExternalLink, Tent
+    ExternalLink, Tent, Calendar, UserCog
 } from "lucide-react"
 import { useState } from "react"
 import Logo from "@/components/Logo"
 import AdminNotificationPanel from "@/components/AdminNotificationPanel"
 
-const navItems = [
+const adminNavItems = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/categories", label: "Catégories", icon: Tag },
     { href: "/admin/offers", label: "Offres", icon: Gift },
@@ -28,11 +28,22 @@ const navItems = [
     { href: "/admin/analytics", label: "Analytiques", icon: BarChart3 },
 ]
 
+const merchantNavItems = [
+    { href: "/admin", label: "Tableau de bord", icon: LayoutDashboard },
+    { href: "/admin/my-offers", label: "Mes Offres", icon: Gift },
+    { href: "/admin/my-reservations", label: "Mes Réservations", icon: Calendar },
+    { href: "/admin/profile", label: "Mon Profil", icon: UserCog },
+]
+
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
     const { data: session } = useSession()
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [collapsed, setCollapsed] = useState(false)
+
+    const role = (session?.user as any)?.role || 'client'
+    const isMerchant = role === 'merchant'
+    const navItems = isMerchant ? merchantNavItems : adminNavItems
 
     const isActive = (href: string) => {
         if (href === "/admin") return pathname === "/admin"
@@ -61,7 +72,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     {!collapsed ? (
                         <div className="flex flex-col gap-0.5">
                             <Logo size="md" />
-                            <p className="text-[10px] text-[#6a6a80] uppercase tracking-wider pl-7">Admin Panel</p>
+                            <p className="text-[10px] text-[#6a6a80] uppercase tracking-wider pl-7">
+                                {isMerchant ? 'Espace Marchand' : 'Admin Panel'}
+                            </p>
                         </div>
                     ) : (
                         <MapPin className="w-6 h-6 text-[#FF2D55] fill-[#FF2D55]" />
@@ -158,14 +171,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
                     {/* Right side */}
                     <div className="flex items-center gap-3">
-                        <AdminNotificationPanel />
+                        {!isMerchant && <AdminNotificationPanel />}
                         <div className="flex items-center gap-2.5 pl-3 border-l" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
-                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ background: isMerchant ? 'linear-gradient(135deg, #8b5cf6, #a78bfa)' : 'linear-gradient(135deg, #FF2D55, #FF7FA3)' }}>
                                 {session?.user?.name?.[0]?.toUpperCase() || 'A'}
                             </div>
                             <div className="hidden md:block">
                                 <p className="text-sm font-medium text-white">{session?.user?.name || 'Admin'}</p>
-                                <p className="text-[10px] text-[#6a6a80]">{(session?.user as any)?.role || 'admin'}</p>
+                                <p className="text-[10px] text-[#6a6a80]">{isMerchant ? 'Marchand' : 'admin'}</p>
                             </div>
                         </div>
                     </div>

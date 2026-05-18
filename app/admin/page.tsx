@@ -2,11 +2,13 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSession } from "next-auth/react"
 import { Gift, Tag, Store, Users, ShoppingCart, DollarSign, TrendingUp, Eye, ArrowUpRight, Calendar, Image, MapPin, Loader2 } from "lucide-react"
 import { format } from "date-fns"
 import { fr } from "date-fns/locale"
 import Link from "next/link"
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts"
+import MerchantDashboard from "@/components/MerchantDashboard"
 
 type AnalyticsData = {
     totalOffers: number
@@ -50,8 +52,15 @@ const statusColors: Record<string, { bg: string; text: string; label: string }> 
 const categoryColors = ['#FF2D55', '#06b6d4', '#8b5cf6', '#f59e0b', '#f43f5e', '#ec4899', '#14b8a6', '#6366f1']
 
 export default function AdminDashboard() {
+    const { data: session } = useSession()
     const [data, setData] = useState<AnalyticsData | null>(null)
     const [loading, setLoading] = useState(true)
+
+    const role = (session?.user as any)?.role
+    const isMerchant = role === 'merchant'
+
+    // If merchant, render MerchantDashboard
+    if (isMerchant) return <MerchantDashboard />
 
     useEffect(() => {
         fetch('/api/analytics')
