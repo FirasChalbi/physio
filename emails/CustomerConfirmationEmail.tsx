@@ -62,7 +62,7 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
             {/* Header */}
             <Section style={{ background: 'linear-gradient(135deg, #FF2D55 0%, #FF4D6D 100%)', padding: '40px 32px', textAlign: 'center' }}>
               <Img
-                src="https://yvelines.life/logo2.png"
+                src="https://yvelines.life/logo3.png"
                 alt="LifeDeal Yvelines"
                 style={{ margin: '0 auto 24px', height: '48px', width: 'auto', display: 'block' }}
               />
