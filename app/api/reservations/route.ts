@@ -4,7 +4,7 @@ import connectDB from '@/lib/mongodb'
 import { getReservationModel } from '@/lib/models/Reservation'
 import { getNotificationModel } from '@/lib/models/Notification'
 import { getMerchantModel } from '@/lib/models/Merchant'
-import { sendReservationEmail } from '@/lib/email'
+import { sendReservationEmail, sendCustomerConfirmationEmail } from '@/lib/email'
 
 export async function GET(req: NextRequest) {
   try {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
     const Reservation = getReservationModel()
     const Notification = getNotificationModel()
     const body = await req.json()
-    const { offerId, offerTitle, offerImage, merchantId, merchantName, name, phone, date, time, userId, sessionId, selectedItems, totalPrice } = body
+    const { offerId, offerTitle, offerImage, merchantId, merchantName, name, phone, email, date, time, userId, sessionId, selectedItems, totalPrice } = body
 
     if (!merchantId || !name || !phone || !date || !time) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
 
     const reservation = await Reservation.create({
       offerId, offerTitle, offerImage, merchantId, merchantName,
-      name, phone, date, time, userId, sessionId, selectedItems, totalPrice, status: 'pending'
+      name, phone, email, date, time, userId, sessionId, selectedItems, totalPrice, status: 'pending'
     })
 
     // Auto-generate admin notification
@@ -78,6 +78,32 @@ export async function POST(req: NextRequest) {
       }
     } catch (e: any) {
       console.error('[reservations POST] email error:', e?.message || e)
+    }
+
+    // Send confirmation email to customer
+    if (email) {
+      try {
+        const Merchant = getMerchantModel()
+        const merchant = await Merchant.findById(merchantId).lean() as any
+        const dateLabel = new Date(date + 'T00:00').toLocaleDateString('fr-FR', {
+          weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+        })
+        await sendCustomerConfirmationEmail({
+          to: email,
+          customerName: name,
+          customerPhone: phone,
+          customerEmail: email,
+          restaurantName: merchantName,
+          restaurantImage: offerImage || merchant?.coverImage || undefined,
+          reservationDate: dateLabel,
+          reservationTime: time,
+          reservationNumber: (reservation._id as any).toString().slice(-8).toUpperCase(),
+          restaurantAddress: merchant?.full_address || merchant?.address || undefined,
+          totalAmount: totalPrice ? `${totalPrice} €` : undefined,
+        })
+      } catch (e: any) {
+        console.error('[reservations POST] customer email error:', e?.message || e)
+      }
     }
 
     return NextResponse.json(reservation, { status: 201 })

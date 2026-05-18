@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useMemo } from "react"
-import { X, ChevronLeft, ChevronRight, Calendar, Clock, User, Phone, CheckCircle, Loader2, Sparkles, Utensils, Tag } from "lucide-react"
+import { X, ChevronLeft, ChevronRight, Calendar, Clock, User, Phone, Mail, CheckCircle, Loader2, Sparkles, Utensils, Tag } from "lucide-react"
 
 type Offer = { _id: string; title: string; slug: string; coverImage: string; dealPrice: number; originalPrice: number; discountPercent: number; merchantId: string }
 type MenuItem = { name: string; price: number; description?: string; category?: string; image?: string }
@@ -75,6 +75,7 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
   const [selectedTime, setSelectedTime] = useState("")
   const [name, setName] = useState("")
   const [phone, setPhone] = useState("")
+  const [email, setEmail] = useState("")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -94,14 +95,15 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
   const isSelected = (name: string, type: string) => selectedItems.some(i => i.name === name && i.type === type)
 
   const handleSubmit = async () => {
-    if (!name.trim() || !phone.trim()) { setError("Veuillez remplir tous les champs."); return }
+    if (!name.trim() || !phone.trim() || !email.trim()) { setError("Veuillez remplir tous les champs."); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) { setError("Veuillez entrer un email valide."); return }
     setError(""); setLoading(true)
     try {
       let sid = localStorage.getItem("lifedeal_sid")
       if (!sid) { sid = crypto.randomUUID(); localStorage.setItem("lifedeal_sid", sid) }
       const selOffer = selectedItems.find(i => i.type === 'offer')
       const offerObj = selOffer && offers ? offers.find(o => o.title === selOffer.name) : undefined
-      const body: any = { merchantId, merchantName, date: selectedDate, time: selectedTime, name: name.trim(), phone: phone.trim(), sessionId: sid, status: "pending" }
+      const body: any = { merchantId, merchantName, date: selectedDate, time: selectedTime, name: name.trim(), phone: phone.trim(), email: email.trim(), sessionId: sid, status: "pending" }
       if (offerObj) { body.offerId = offerObj._id; body.offerTitle = offerObj.title; body.offerImage = offerObj.coverImage; body.totalPrice = totalPrice || offerObj.dealPrice }
       if (selectedItems.length > 0) { body.selectedItems = selectedItems; if (!offerObj) body.totalPrice = totalPrice }
       const res = await fetch("/api/reservations", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
@@ -113,7 +115,7 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
 
   const handleClose = () => {
     setStep("select"); setSelectedItems([]); setSelectedDate(""); setSelectedTime("")
-    setName(""); setPhone(""); setError(""); setLoading(false); onClose()
+    setName(""); setPhone(""); setEmail(""); setError(""); setLoading(false); onClose()
   }
 
   // Count available tabs
@@ -340,6 +342,14 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
                     className="w-full pl-10 pr-4 py-3 rounded-xl text-sm text-white outline-none" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }} />
                 </div>
               </div>
+              <div>
+                <label className="text-xs font-semibold text-[#6a6a80] uppercase tracking-wider mb-2 block">Email</label>
+                <div className="relative">
+                  <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#6a6a80]" />
+                  <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="jean.dupont@email.com"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl text-sm text-white outline-none" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }} />
+                </div>
+              </div>
 
               {error && <p className="text-xs text-red-400 px-3 py-2 rounded-lg" style={{ background: "rgba(239,68,68,0.08)" }}>{error}</p>}
 
@@ -359,7 +369,7 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
               </div>
               <h3 className="text-lg font-bold text-white mb-2">Réservation envoyée !</h3>
               <p className="text-sm text-[#6a6a80] mb-1">{new Date(selectedDate + "T00:00").toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" })} à {selectedTime}</p>
-              <p className="text-xs text-[#6a6a80] mb-6">Le marchand vous contactera au <span className="text-white">{phone}</span> pour confirmer.</p>
+              <p className="text-xs text-[#6a6a80] mb-6">Le marchand vous contactera au <span className="text-white">{phone}</span> pour confirmer.{email && <> Une confirmation a été envoyée à <span className="text-white">{email}</span>.</>}</p>
               <button onClick={handleClose} className="w-full py-3 rounded-xl text-sm font-semibold text-white" style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)" }}>Fermer</button>
             </div>
           )}

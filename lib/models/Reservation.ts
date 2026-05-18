@@ -17,6 +17,7 @@ export interface IReservation {
   merchantName: string
   name: string
   phone: string
+  email?: string
   date: string
   time: string
   status: ReservationStatus
@@ -42,6 +43,7 @@ const ReservationSchema = new Schema<IReservation>({
   merchantName: { type: String, required: true },
   name:         { type: String, required: true },
   phone:        { type: String, required: true },
+  email:        { type: String, default: '' },
   date:         { type: String, required: true },
   time:         { type: String, required: true },
   status:       { type: String, enum: ['pending', 'confirmed', 'cancelled'], default: 'pending' },
