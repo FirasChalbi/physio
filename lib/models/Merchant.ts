@@ -65,6 +65,9 @@ export interface IMerchant {
   search_job?: string
   search_state?: string
 
+  /* ─── Video ─── */
+  videoUrl?: string
+
   /* ─── Menu & Services ─── */
   menu?: IMenuItem[]
   services?: IServiceItem[]
@@ -135,6 +138,9 @@ const MerchantSchema = new Schema<IMerchant>({
   social_media: { type: Schema.Types.Mixed },
   search_job: { type: String },
   search_state: { type: String },
+
+  /* Video */
+  videoUrl: { type: String },
 
   /* Menu & Services */
   menu: [MenuItemSchema],

@@ -1,13 +1,14 @@
 // app/merchants/[slug]/MerchantClient.tsx — Client component
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
   MapPin, Star, Heart, ArrowLeft, BadgeCheck, Phone, Mail,
   Globe, Store, Clock, ChevronRight, Navigation, Share2,
-  ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag, TrendingUp
+  ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag, TrendingUp,
+  Play, Pause, Volume2, VolumeX
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
 import MenuServiceDrawer from "@/components/MenuServiceDrawer"
@@ -36,7 +37,7 @@ export type Merchant = {
   average_rating?: string; review_count?: string
   latitude?: string; longitude?: string; google_maps_url?: string
   categories?: string[]; opening_hours?: Record<string, string>
-  images?: string[]; user_reviews?: MerchantReview[]
+  images?: string[]; videoUrl?: string; user_reviews?: MerchantReview[]
   social_media?: Record<string, string>
   menu?: MenuItem[]; services?: ServiceItem[]
 }
@@ -161,6 +162,24 @@ export default function MerchantClient({ merchant, offers }: Props) {
   const [heroScrolled, setHeroScrolled] = useState(false)
   const [showGallery, setShowGallery] = useState(false)
   const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [isMuted, setIsMuted] = useState(true)
+  const [videoVisible, setVideoVisible] = useState(false)
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const v = videoRef.current
+    if (!v) return
+    if (v.paused) { v.play(); setIsPlaying(true) } else { v.pause(); setIsPlaying(false) }
+  }
+  const toggleMute = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setIsMuted(v.muted)
+  }
 
   // Track page view
   useEffect(() => {
@@ -170,6 +189,32 @@ export default function MerchantClient({ merchant, offers }: Props) {
       body: JSON.stringify({ type: 'merchant', id: merchant._id }),
     }).catch(() => {})
   }, [merchant._id])
+
+  // Auto-play / pause video as it enters / leaves the viewport
+  useEffect(() => {
+    if (!merchant.videoUrl) return
+    const v = videoRef.current
+    if (!v) return
+    let loaded = false
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          if (!loaded) {
+            v.src = merchant.videoUrl!
+            setVideoVisible(true)
+            loaded = true
+          }
+          v.play().then(() => setIsPlaying(true)).catch(() => {})
+        } else {
+          v.pause()
+          setIsPlaying(false)
+        }
+      },
+      { threshold: 0.3 }
+    )
+    obs.observe(v)
+    return () => obs.disconnect()
+  }, [merchant.videoUrl])
 
   useEffect(() => {
     const onScroll = () => setHeroScrolled(window.scrollY > 60)
@@ -674,6 +719,69 @@ export default function MerchantClient({ merchant, offers }: Props) {
                 </div>
               )
             })}
+          </div>
+        </section>
+      )}
+
+      {/* ══ VIDÉO ══ */}
+      {merchant.videoUrl && (
+        <section className="mb-8">
+          <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Vidéo</h2>
+          <div className="relative rounded-2xl overflow-hidden group" style={{ height: '480px' }}>
+            {/* Video element — lazy loaded */}
+            <video
+              ref={videoRef}
+              loop
+              muted
+              playsInline
+              preload="none"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            {/* Loading placeholder */}
+            {!videoVisible && (
+              <div className="absolute inset-0 flex items-center justify-center z-20"
+                style={{ background: 'var(--surface-2)' }}>
+                <span className="text-sm font-medium animate-pulse" style={{ color: 'var(--text-secondary)' }}>Chargement…</span>
+              </div>
+            )}
+            {/* Dark overlay gradient */}
+            {/* <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/65 z-10" /> */}
+            {/* Top-left: play / mute controls */}
+            <div className="absolute top-5 left-5 flex flex-col gap-2.5 z-30">
+              <button
+                onClick={togglePlay}
+                className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/80 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20"
+              >
+                {isPlaying
+                  ? <Pause className="w-4 h-4 text-white" />
+                  : <Play  className="w-4 h-4 text-white" />}
+              </button>
+              <button
+                onClick={toggleMute}
+                className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/80 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20"
+              >
+                {isMuted
+                  ? <VolumeX className="w-4 h-4 text-white" />
+                  : <Volume2 className="w-4 h-4 text-white" />}
+              </button>
+            </div>
+            {/* Top-right: merchant badge */}
+            <div className="absolute top-5 right-5 z-30">
+              <span className="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/30 backdrop-blur-md"
+                style={{ background: 'rgba(255,255,255,0.15)' }}>
+                {merchant.name}
+              </span>
+            </div>
+            {/* Bottom: name + description */}
+            {/* <div className="absolute bottom-0 left-0 right-0 p-6 z-20"
+              style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%)' }}>
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{merchant.name}</h3>
+              {(merchant.about || merchant.description) && (
+                <p className="text-white/85 text-sm leading-relaxed line-clamp-2">
+                  {merchant.about || merchant.description}
+                </p>
+              )}
+            </div> */}
           </div>
         </section>
       )}

@@ -64,7 +64,7 @@ export async function generateMetadata(
             description: offer.shortDescription || `Économisez ${offer.discountPercent}% chez ${merchant?.name || ""}.`,
             images: [{ url: offer.coverImage }],
             type: "website",
-            url: `https://yvelines.life/offers/${offer.slug}`,
+            url: `https://life-app.fr/offers/${offer.slug}`,
         },
         twitter: {
             card: "summary_large_image",
@@ -72,7 +72,7 @@ export async function generateMetadata(
             images: [offer.coverImage],
         },
         alternates: {
-            canonical: `https://yvelines.life/offers/${offer.slug}`,
+            canonical: `https://life-app.fr/offers/${offer.slug}`,
         },
     }
 }

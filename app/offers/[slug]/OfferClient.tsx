@@ -1,18 +1,19 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
     MapPin, Star, Heart, ChevronLeft, Share2, Phone, Mail, Clock,
     Navigation, ChevronRight, Utensils, Sparkles, Leaf, ShoppingCart, Gift, Check,
+    Play, Pause, Volume2, VolumeX,
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
 
 /* ─── Types ──────────────────────────────────────────── */
 export type Offer = {
     _id: string; title: string; slug: string; shortDescription: string; description: string; coverImage: string;
-    galleryImages?: string[]; originalPrice: number; dealPrice: number; discountPercent: number; rating?: number;
+    galleryImages?: string[]; videoUrl?: string; originalPrice: number; dealPrice: number; discountPercent: number; rating?: number;
     reviewCount?: number; city: string; address?: string; merchantId: string; categoryId: string; soldCount?: number;
     tags?: string[]; perks?: string[]; startDate?: string; endDate?: string
 }
@@ -42,6 +43,24 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
     const [descExpanded, setDescExpanded] = useState(false)
     const [showGallery, setShowGallery] = useState(false)
     const [selectedIdx, setSelectedIdx] = useState<number | null>(null)
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [isMuted, setIsMuted] = useState(true)
+    const [videoVisible, setVideoVisible] = useState(false)
+
+    const togglePlay = (e: React.MouseEvent) => {
+        e.preventDefault()
+        const v = videoRef.current
+        if (!v) return
+        if (v.paused) { v.play(); setIsPlaying(true) } else { v.pause(); setIsPlaying(false) }
+    }
+    const toggleMute = (e: React.MouseEvent) => {
+        e.preventDefault()
+        const v = videoRef.current
+        if (!v) return
+        v.muted = !v.muted
+        setIsMuted(v.muted)
+    }
 
     const toggleFavorite = () => {
         const favs: string[] = JSON.parse(localStorage.getItem("life_favorites") || "[]")
@@ -62,6 +81,32 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
             body: JSON.stringify({ type: 'offer', id: offer._id }),
         }).catch(() => {})
     }, [offer._id])
+
+    // Auto-play / pause video as it enters / leaves the viewport
+    useEffect(() => {
+        if (!offer.videoUrl) return
+        const v = videoRef.current
+        if (!v) return
+        let loaded = false
+        const obs = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    if (!loaded) {
+                        v.src = offer.videoUrl!
+                        setVideoVisible(true)
+                        loaded = true
+                    }
+                    v.play().then(() => setIsPlaying(true)).catch(() => {})
+                } else {
+                    v.pause()
+                    setIsPlaying(false)
+                }
+            },
+            { threshold: 0.3 }
+        )
+        obs.observe(v)
+        return () => obs.disconnect()
+    }, [offer.videoUrl])
 
     const merchantUserReviews = (merchant?.user_reviews || []).map((r, i) => ({
         _id: `merchant-${i}`,
@@ -292,6 +337,59 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                                         </div>
                                     )
                                 })}
+                            </div>
+                        </section>
+                    )}
+
+                    {/* ═══════════ VIDÉO ═══════════ */}
+                    {offer.videoUrl && (
+                        <section className="mb-8">
+                            <h2 className="text-lg font-bold mb-3" style={{ color: "var(--text-primary)" }}>Vidéo</h2>
+                            <div className="relative rounded-2xl overflow-hidden" style={{ height: '480px' }}>
+                                {/* Video — lazy loaded */}
+                                <video
+                                    ref={videoRef}
+                                    loop
+                                    muted
+                                    playsInline
+                                    preload="none"
+                                    className="absolute inset-0 w-full h-full object-cover"
+                                />
+                                {/* Loading placeholder */}
+                                {!videoVisible && (
+                                    <div className="absolute inset-0 flex items-center justify-center z-20"
+                                        style={{ background: 'var(--surface-2)' }}>
+                                        <span className="text-sm font-medium animate-pulse" style={{ color: 'var(--text-secondary)' }}>Chargement…</span>
+                                    </div>
+                                )}
+                                {/* Dark overlay */}
+                                {/* <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/65 z-10" /> */}
+                                {/* Top-left: play / mute */}
+                                <div className="absolute top-5 left-5 flex flex-col gap-2.5 z-30">
+                                    <button onClick={togglePlay}
+                                        className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/80 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20">
+                                        {isPlaying ? <Pause className="w-4 h-4 text-white" /> : <Play className="w-4 h-4 text-white" />}
+                                    </button>
+                                    <button onClick={toggleMute}
+                                        className="w-10 h-10 rounded-full flex items-center justify-center border-2 border-white/80 backdrop-blur-sm transition-all duration-200 hover:scale-110 hover:bg-white/20">
+                                        {isMuted ? <VolumeX className="w-4 h-4 text-white" /> : <Volume2 className="w-4 h-4 text-white" />}
+                                    </button>
+                                </div>
+                                {/* Top-right: offer badge */}
+                                <div className="absolute top-5 right-5 z-30">
+                                    <span className="text-xs font-semibold text-white px-4 py-2 rounded-full border border-white/30 backdrop-blur-md"
+                                        style={{ background: 'rgba(255,255,255,0.15)' }}>
+                                        {merchant?.name || offer.title}
+                                    </span>
+                                </div>
+                                {/* Bottom: title + desc */}
+                                {/* <div className="absolute bottom-0 left-0 right-0 p-6 z-20"
+                                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, transparent 100%)' }}>
+                                    <h3 className="text-2xl font-black text-white mb-1 leading-tight">{offer.title}</h3>
+                                    {offer.shortDescription && (
+                                        <p className="text-white/85 text-sm leading-relaxed line-clamp-2">{offer.shortDescription}</p>
+                                    )}
+                                </div> */}
                             </div>
                         </section>
                     )}

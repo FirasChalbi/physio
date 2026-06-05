@@ -28,7 +28,7 @@ export async function sendReservationEmail(params: SendReservationEmailParams) {
   const html = await render(<ReservationEmail {...emailProps} />)
 
   const { data, error } = await resend.emails.send({
-    from: 'LifeDeal <reservations@yvelines.life>',
+    from: 'LifeDeal <reservations@life-app.fr>',
     to,
     subject: `Nouvelle réservation — ${emailProps.name} · ${emailProps.merchantName}`,
     html,
@@ -62,7 +62,7 @@ export async function sendCustomerConfirmationEmail(params: SendCustomerConfirma
   const html = await render(<CustomerConfirmationEmail {...emailProps} />)
 
   const { data, error } = await resend.emails.send({
-    from: 'LifeDeal <reservations@yvelines.life>',
+    from: 'LifeDeal <reservations@life-app.fr>',
     to,
     subject: `✅ Votre réservation chez ${emailProps.restaurantName} est confirmée !`,
     html,

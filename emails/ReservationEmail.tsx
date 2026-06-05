@@ -31,9 +31,9 @@ interface ReservationEmailProps {
 }
 
 const statusConfig = {
-  pending:   { label: 'En attente de confirmation', bg: '#FFF7ED', border: '#FB923C', text: '#9A3412' },
-  confirmed: { label: 'Confirmée',                  bg: '#F0FDF4', border: '#4ADE80', text: '#166534' },
-  cancelled: { label: 'Annulée',                    bg: '#FEF2F2', border: '#FCA5A5', text: '#991B1B' },
+  pending: { label: 'En attente de confirmation', bg: '#FFF7ED', border: '#FB923C', text: '#9A3412' },
+  confirmed: { label: 'Confirmée', bg: '#F0FDF4', border: '#4ADE80', text: '#166534' },
+  cancelled: { label: 'Annulée', bg: '#FEF2F2', border: '#FCA5A5', text: '#991B1B' },
 };
 
 const formatDate = (d: string) =>
@@ -42,17 +42,17 @@ const formatDate = (d: string) =>
 const formatCreatedAt = (d: string) =>
   new Date(d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 
-const P   = '#FF2D55';   // framboise
-const C   = '#FF4D7A';   // corail
-const BD  = '#8A1C3A';   // bordeaux
-const RO  = '#FF7FA3';   // rose
-const DK  = '#1a1a2e';   // dark
-const TP  = '#1a1a2e';   // text primary
-const TS  = '#6a6a8a';   // text secondary
-const TT  = '#9a9ab0';   // text tertiary
-const SF  = '#F8F8FA';   // surface
-const WH  = '#ffffff';   // white
-const BL  = '#EBEBF0';   // border light
+const P = '#FF2D55';   // framboise
+const C = '#FF4D7A';   // corail
+const BD = '#8A1C3A';   // bordeaux
+const RO = '#FF7FA3';   // rose
+const DK = '#1a1a2e';   // dark
+const TP = '#1a1a2e';   // text primary
+const TS = '#6a6a8a';   // text secondary
+const TT = '#9a9ab0';   // text tertiary
+const SF = '#F8F8FA';   // surface
+const WH = '#ffffff';   // white
+const BL = '#EBEBF0';   // border light
 
 export default function ReservationEmail(props: ReservationEmailProps) {
   const {
@@ -62,7 +62,7 @@ export default function ReservationEmail(props: ReservationEmailProps) {
     sessionId, createdAt,
   } = props;
 
-  const st  = statusConfig[status] ?? statusConfig.pending;
+  const st = statusConfig[status] ?? statusConfig.pending;
   const sid = sessionId ? sessionId.slice(0, 13) : '';
   const hero = merchantCover || offerImage;
 
@@ -212,7 +212,7 @@ export default function ReservationEmail(props: ReservationEmailProps) {
 
           {/* ══ FOOTER ══ */}
           <Section style={{ backgroundColor: DK, padding: '18px 28px', textAlign: 'center' }}>
-            <Link href="https://yvelines.life/" style={{ textDecoration: 'none' }}>
+            <Link href="https://life-app.fr/" style={{ textDecoration: 'none' }}>
               <Text style={{ color: P, fontSize: '14px', fontWeight: '700', letterSpacing: '0.5px', margin: '0 0 2px 0' }}>LifeDeal Yvelines</Text>
             </Link>
             <Text style={{ color: '#6a6a8a', fontSize: '11px', fontWeight: '400', margin: 0 }}>

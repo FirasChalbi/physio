@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "LifeDeal Yvelines — Bons plans & offres locales",
     description: "Découvrez les meilleures offres locales en Yvelines. Économisez jusqu'à -70% avec LifeDeal.",
-    url: "https://yvelines.life",
+    url: "https://life-app.fr",
     siteName: "LifeDeal Yvelines",
     locale: "fr_FR",
     type: "website",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     description: "Découvrez les meilleures offres locales en Yvelines. Économisez jusqu'à -70%.",
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://yvelines.life" },
+  alternates: { canonical: "https://life-app.fr" },
 };
 
 export default function RootLayout({

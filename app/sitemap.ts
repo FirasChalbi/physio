@@ -4,7 +4,7 @@ import connectDB from "@/lib/mongodb"
 import { getMerchantModel } from "@/lib/models/Merchant"
 import { getOfferModel } from "@/lib/models/Offer"
 
-const BASE_URL = "https://yvelines.life"
+const BASE_URL = "https://life-app.fr"
 
 // ─── Static pages ─────────────────────────────────────────────────────────────
 const staticRoutes: MetadataRoute.Sitemap = [

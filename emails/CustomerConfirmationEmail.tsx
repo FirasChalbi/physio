@@ -48,7 +48,7 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
     specialInstructions,
     totalAmount,
     paymentMethod,
-    reservationUrl = 'https://yvelines.life',
+    reservationUrl = 'https://life-app.fr',
   } = props;
 
   return (
@@ -62,7 +62,7 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
             {/* Header */}
             <Section style={{ background: 'linear-gradient(135deg, #FF2D55 0%, #FF4D6D 100%)', padding: '40px 32px', textAlign: 'center' }}>
               <Img
-                src="https://yvelines.life/logo3.png"
+                src="https://life-app.fr/logo3.png"
                 alt="LifeDeal Yvelines"
                 style={{ margin: '0 auto 24px', height: '48px', width: 'auto', display: 'block' }}
               />
@@ -202,8 +202,8 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
               </Text>
               <Text style={{ color: '#6b7280', fontSize: '13px', margin: '0' }}>
                 Contactez notre équipe à{' '}
-                <Link href="mailto:support@yvelines.life" style={{ color: '#FF2D55', textDecoration: 'none' }}>
-                  support@yvelines.life
+                <Link href="mailto:support@life-app.fr" style={{ color: '#FF2D55', textDecoration: 'none' }}>
+                  support@life-app.fr
                 </Link>
               </Text>
             </Section>
@@ -228,10 +228,10 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
 
               <Row style={{ marginBottom: '14px' }}>
                 <Column style={{ textAlign: 'center' }}>
-                  <Link href="https://yvelines.life/mentions-legales" style={{ color: '#9ca3af', fontSize: '11px', textDecoration: 'none', margin: '0 8px' }}>
+                  <Link href="https://life-app.fr/mentions-legales" style={{ color: '#9ca3af', fontSize: '11px', textDecoration: 'none', margin: '0 8px' }}>
                     Mentions légales
                   </Link>
-                  <Link href="https://yvelines.life/confidentialite" style={{ color: '#9ca3af', fontSize: '11px', textDecoration: 'none', margin: '0 8px' }}>
+                  <Link href="https://life-app.fr/confidentialite" style={{ color: '#9ca3af', fontSize: '11px', textDecoration: 'none', margin: '0 8px' }}>
                     Confidentialité
                   </Link>
                 </Column>
@@ -263,5 +263,5 @@ CustomerConfirmationEmail.PreviewProps = {
   specialInstructions: "Table près de la fenêtre si possible",
   totalAmount: "89,90 €",
   paymentMethod: "Carte bancaire",
-  reservationUrl: "https://yvelines.life/reservations/YV240525001",
+  reservationUrl: "https://life-app.fr/reservations/YV240525001",
 };

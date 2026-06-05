@@ -42,7 +42,7 @@ export async function generateMetadata(
       description: aboutText || `Découvrez les offres de ${merchant.name} sur LifeDeal Yvelines.`,
       images: [{ url: merchant.coverImage || merchant.logo || "" }],
       type: "website",
-      url: `https://yvelines.life/merchants/${merchant.slug}`,
+      url: `https://life-app.fr/merchants/${merchant.slug}`,
     },
     twitter: {
       card: "summary",
@@ -50,7 +50,7 @@ export async function generateMetadata(
       images: [merchant.coverImage || merchant.logo || ""],
     },
     alternates: {
-      canonical: `https://yvelines.life/merchants/${merchant.slug}`,
+      canonical: `https://life-app.fr/merchants/${merchant.slug}`,
     },
   }
 }

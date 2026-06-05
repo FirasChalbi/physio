@@ -14,6 +14,7 @@ export interface IOffer {
   address?: string
   coverImage: string
   galleryImages?: string[]
+  videoUrl?: string
   originalPrice: number
   dealPrice: number
   discountPercent: number
@@ -42,6 +43,7 @@ const OfferSchema = new Schema<IOffer>({
   address: { type: String },
   coverImage: { type: String, required: true },
   galleryImages: [{ type: String }],
+  videoUrl: { type: String },
   originalPrice: { type: Number, required: true },
   dealPrice: { type: Number, required: true },
   discountPercent: { type: Number, required: true },
