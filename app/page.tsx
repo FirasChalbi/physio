@@ -813,7 +813,7 @@ export default function HomePage() {
                         Bonjour {userName ? <span className="text-[#FF2D55] font-medium">{userName}</span> : <span className="text-[#FF2D55]"></span>}
                     </p>
                     <h1 className="text-xl font-bold mt-0.5 mb-4" style={{ color: 'var(--text-primary)' }}>
-                        Que cherchez-vous<br />en Yvelines ?
+                        Que cherchez-vous<br />en Île-de-France ?
                     </h1>
                     <SearchAutocomplete
                         placeholders={defaultPlaceholders}

@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "LifeDeal Yvelines",
+    name: "LifeDeal Île-de-France",
     short_name: "LifeDeal",
-    description: "Découvrez les meilleures offres locales en Yvelines",
+    description: "Découvrez les meilleures offres locales en Île-de-France",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

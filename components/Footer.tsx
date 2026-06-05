@@ -13,7 +13,7 @@ export default function Footer() {
           <div>
             <Logo size="sm" />
             <p className="text-xs text-[#6a6a80] mt-2 leading-relaxed max-w-xs">
-              Les meilleures offres locales en Yvelines (78).
+              Les meilleures offres locales en Île-de-France.
             </p>
           </div>
           <a

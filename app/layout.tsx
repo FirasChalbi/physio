@@ -18,12 +18,12 @@ const fredoka = Fredoka({
 
 export const metadata: Metadata = {
   title: "LifeDeal Yvelines — Bons plans & offres locales",
-  description: "Découvrez les meilleures offres locales en Yvelines : restaurants, spa, beauté, artisans, plombiers et plus encore. Économisez jusqu'à -70% avec LifeDeal Yvelines.",
+  description: "Découvrez les meilleures offres locales en Île-de-France : restaurants, spa, beauté, artisans, plombiers et plus encore. Économisez jusqu'à -70% avec LifeDeal Yvelines.",
   keywords: ["bons plans", "yvelines", "offres locales", "deals", "restaurants", "spa", "beauté", "plombiers", "78"],
   authors: [{ name: "LifeDeal" }],
   openGraph: {
     title: "LifeDeal Yvelines — Bons plans & offres locales",
-    description: "Découvrez les meilleures offres locales en Yvelines. Économisez jusqu'à -70% avec LifeDeal.",
+    description: "Découvrez les meilleures offres locales en Île-de-France. Économisez jusqu'à -70% avec LifeDeal.",
     url: "https://life-app.fr",
     siteName: "LifeDeal Yvelines",
     locale: "fr_FR",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "LifeDeal Yvelines — Bons plans & offres locales",
-    description: "Découvrez les meilleures offres locales en Yvelines. Économisez jusqu'à -70%.",
+    description: "Découvrez les meilleures offres locales en Île-de-France. Économisez jusqu'à -70%.",
   },
   robots: { index: true, follow: true },
   alternates: { canonical: "https://life-app.fr" },
