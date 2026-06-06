@@ -261,19 +261,23 @@ export default function MerchantClient({ merchant, offers }: Props) {
         }}>
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <button onClick={() => router.back()}
-            className="flex items-center gap-2 text-white/60 hover:text-white transition-colors group">
+            className={`flex items-center gap-2 transition-colors group ${heroScrolled ? "text-gray-500 hover:text-gray-900" : "text-white/60 hover:text-white"}`}>
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
             <span className="text-sm font-medium">Retour</span>
           </button>
           {heroScrolled && (
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-white">{merchant.name}</span>
-              {merchant.verified && <BadgeCheck className="w-4 h-4 text-cyan-400" />}
+              <span className="text-sm font-semibold text-gray-900">{merchant.name}</span>
+              {merchant.verified && <BadgeCheck className="w-4 h-4 text-cyan-500" />}
             </div>
           )}
           <button
             onClick={() => navigator.share?.({ title: merchant.name, url: window.location.href })}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm text-white/50 hover:text-white hover:bg-white/[0.06] transition-all border border-white/[0.06]">
+            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm transition-all border ${
+              heroScrolled
+                ? "text-gray-500 hover:text-gray-900 hover:bg-gray-100 border-gray-200"
+                : "text-white/50 hover:text-white hover:bg-white/[0.06] border-white/[0.06]"
+            }`}>
             <Share2 className="w-3.5 h-3.5" />
             Partager
           </button>
