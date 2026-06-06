@@ -166,6 +166,13 @@ export default function MerchantClient({ merchant, offers }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(true)
   const [videoVisible, setVideoVisible] = useState(false)
+  const photoScrollRef = useRef<HTMLDivElement>(null)
+
+  const scrollPhotos = (dir: "left" | "right") => {
+    const el = photoScrollRef.current
+    if (!el) return
+    el.scrollBy({ left: dir === "right" ? 320 : -320, behavior: "smooth" })
+  }
 
   const togglePlay = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -541,7 +548,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
         </aside>
 
         {/* ══════ RIGHT MAIN CONTENT ══════ */}
-        <main className="px-4 md:px-0">
+        <main className="px-4 md:px-0 min-w-0 overflow-hidden">
 
       {/* ══ ABOUT ══ */}
       {aboutText && (
@@ -680,45 +687,67 @@ export default function MerchantClient({ merchant, offers }: Props) {
           </div>
 
           {/* Mosaic grid: groups of [1 large + 2 stacked] */}
-          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-            {Array.from({ length: Math.ceil(merchant.images.length / 3) }).map((_, gi) => {
-              const base = gi * 3
-              const [img0, img1, img2] = merchant.images!.slice(base, base + 3)
-              return (
-                <div key={gi} className="flex gap-2 shrink-0">
-                  {/* Large image */}
-                  {img0 && (
-                    <button onClick={() => setShowGallery(true)}
-                      className="w-52 h-52 md:w-64 md:h-64 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
-                      <img src={img0} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                    </button>
-                  )}
-                  {/* Two stacked small images */}
-                  {(img1 || img2) && (
-                    <div className="flex flex-col gap-2 shrink-0 h-52 md:h-64">
-                      {img1 && (
+          <div className="relative">
+            {/* Clipped scrollable strip */}
+            <div className="overflow-hidden rounded-2xl">
+              <div ref={photoScrollRef} className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                {Array.from({ length: Math.ceil(merchant.images.length / 3) }).map((_, gi) => {
+                  const base = gi * 3
+                  const [img0, img1, img2] = merchant.images!.slice(base, base + 3)
+                  return (
+                    <div key={gi} className="flex gap-2 shrink-0">
+                      {img0 && (
                         <button onClick={() => setShowGallery(true)}
-                          className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform">
-                          <img src={img1} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                          className="w-52 h-52 md:w-64 md:h-64 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
+                          <img src={img0} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                         </button>
                       )}
-                      {img2 && (
-                        <button onClick={() => setShowGallery(true)}
-                          className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform relative">
-                          <img src={img2} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-                          {/* "+ more" overlay on last visible group if there are more images */}
-                          {gi === Math.ceil(merchant.images!.length / 3) - 1 && merchant.images!.length > (base + 3) && (
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
-                              <span className="text-white font-bold text-sm">+{merchant.images!.length - (base + 3)}</span>
-                            </div>
+                      {(img1 || img2) && (
+                        <div className="flex flex-col gap-2 shrink-0 h-52 md:h-64">
+                          {img1 && (
+                            <button onClick={() => setShowGallery(true)}
+                              className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform">
+                              <img src={img1} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                            </button>
                           )}
-                        </button>
+                          {img2 && (
+                            <button onClick={() => setShowGallery(true)}
+                              className="w-[104px] md:w-32 flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform relative">
+                              <img src={img2} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                              {gi === Math.ceil(merchant.images!.length / 3) - 1 && merchant.images!.length > (base + 3) && (
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
+                                  <span className="text-white font-bold text-sm">+{merchant.images!.length - (base + 3)}</span>
+                                </div>
+                              )}
+                            </button>
+                          )}
+                        </div>
                       )}
                     </div>
-                  )}
-                </div>
-              )
-            })}
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Left arrow — desktop only */}
+            <button
+              onClick={() => scrollPhotos("left")}
+              className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition-all hover:scale-110"
+              style={{ background: "var(--surface-1)", border: "1px solid var(--border)", color: "var(--text-primary)" }}
+              aria-label="Précédent"
+            >
+              <ChevronRight className="w-4 h-4 rotate-180" />
+            </button>
+
+            {/* Right arrow — desktop only */}
+            <button
+              onClick={() => scrollPhotos("right")}
+              className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full items-center justify-center shadow-lg transition-all hover:scale-110"
+              style={{ background: "var(--surface-1)", border: "1px solid var(--border)", color: "var(--text-primary)" }}
+              aria-label="Suivant"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </section>
       )}
