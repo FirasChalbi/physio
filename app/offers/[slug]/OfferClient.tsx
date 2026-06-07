@@ -95,12 +95,13 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
         const v = videoRef.current
         if (!v) return
         let loaded = false
+        const onCanPlay = () => setVideoVisible(true)
+        v.addEventListener('canplay', onCanPlay)
         const obs = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
                     if (!loaded) {
                         v.src = offer.videoUrl!
-                        setVideoVisible(true)
                         loaded = true
                     }
                     v.play().then(() => setIsPlaying(true)).catch(() => {})
@@ -112,7 +113,7 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
             { threshold: 0.3 }
         )
         obs.observe(v)
-        return () => obs.disconnect()
+        return () => { obs.disconnect(); v.removeEventListener('canplay', onCanPlay) }
     }, [offer.videoUrl])
 
     const merchantUserReviews = (merchant?.user_reviews || []).map((r, i) => ({
@@ -389,9 +390,10 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                                 />
                                 {/* Loading placeholder */}
                                 {!videoVisible && (
-                                    <div className="absolute inset-0 flex items-center justify-center z-20"
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center z-20"
                                         style={{ background: 'var(--surface-2)' }}>
-                                        <span className="text-sm font-medium animate-pulse" style={{ color: 'var(--text-secondary)' }}>Chargement…</span>
+                                        <div className="w-10 h-10 rounded-full border-[3px] border-[#FF2D55]/20 border-t-[#FF2D55] animate-spin mb-3" />
+                                        <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>Chargement de la vidéo…</span>
                                     </div>
                                 )}
                                 {/* Dark overlay */}
