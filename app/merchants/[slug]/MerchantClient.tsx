@@ -203,13 +203,16 @@ export default function MerchantClient({ merchant, offers }: Props) {
     const v = videoRef.current
     if (!v) return
     let loaded = false
-    const onCanPlay = () => setVideoVisible(true)
-    v.addEventListener('canplay', onCanPlay)
+    // Use both canplay and loadeddata — iOS Safari sometimes only fires one
+    const onReady = () => setVideoVisible(true)
+    v.addEventListener('canplay', onReady)
+    v.addEventListener('loadeddata', onReady)
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
           if (!loaded) {
             v.src = merchant.videoUrl!
+            v.load() // Explicitly call load() for iOS Safari
             loaded = true
           }
           v.play().then(() => setIsPlaying(true)).catch(() => {})
@@ -221,7 +224,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
       { threshold: 0.3 }
     )
     obs.observe(v)
-    return () => { obs.disconnect(); v.removeEventListener('canplay', onCanPlay) }
+    return () => { obs.disconnect(); v.removeEventListener('canplay', onReady); v.removeEventListener('loadeddata', onReady) }
   }, [merchant.videoUrl])
 
   useEffect(() => {
@@ -761,15 +764,19 @@ export default function MerchantClient({ merchant, offers }: Props) {
       {merchant.videoUrl && (
         <section className="mb-8">
           <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Vidéo</h2>
-          <div className="relative rounded-2xl overflow-hidden group" style={{ height: '480px' }}>
+          <div className="relative rounded-2xl overflow-hidden group" style={{ height: '480px', backgroundColor: '#000' }}>
             {/* Video element — lazy loaded */}
             <video
               ref={videoRef}
               loop
               muted
               playsInline
+              // @ts-ignore — webkit-playsinline needed for older iOS Safari
+              webkit-playsinline="true"
               preload="none"
+              poster={merchant.coverImage || ''}
               className="absolute inset-0 w-full h-full object-cover"
+              style={{ backgroundColor: '#000' }}
             />
             {/* Loading placeholder */}
             {!videoVisible && (
@@ -921,13 +928,13 @@ export default function MerchantClient({ merchant, offers }: Props) {
                 style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                 <div className="flex items-center gap-2.5 mb-3">
                   {rev.reviewer_photo ? (
-                    <img src={rev.reviewer_photo} alt="" className="w-8 h-8 rounded-full object-cover shrink-0" />
-                  ) : (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                      style={{ background: "linear-gradient(135deg,#FF2D55,#FF7FA3)" }}>
-                      {rev.reviewer_name[0]}
-                    </div>
-                  )}
+                    <img src={rev.reviewer_photo} alt="" className="w-8 h-8 rounded-full object-cover shrink-0"
+                      onError={(e) => { const el = e.currentTarget; el.style.display = 'none'; const fb = el.nextElementSibling as HTMLElement; if (fb) fb.style.display = 'flex'; }} />
+                  ) : null}
+                  <div className={`w-8 h-8 rounded-full items-center justify-center text-xs font-bold text-white shrink-0${rev.reviewer_photo ? ' hidden' : ' flex'}`}
+                    style={{ background: "linear-gradient(135deg,#FF2D55,#FF7FA3)", display: rev.reviewer_photo ? 'none' : 'flex' }}>
+                    {(rev.reviewer_name || 'A')[0]}
+                  </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{rev.reviewer_name}</p>
                     <p className="text-[10px] text-[#6a6a80]">{rev.date}</p>
@@ -976,13 +983,13 @@ export default function MerchantClient({ merchant, offers }: Props) {
                   style={{ background: "var(--surface-1)", borderColor: "var(--card-border)" }}>
                   <div className="flex items-center gap-3 mb-3">
                     {rev.reviewer_photo ? (
-                      <img src={rev.reviewer_photo} alt="" className="w-10 h-10 rounded-full object-cover shrink-0" />
-                    ) : (
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
-                        style={{ background: "linear-gradient(135deg,#FF2D55,#FF7FA3)" }}>
-                        {rev.reviewer_name[0]}
-                      </div>
-                    )}
+                      <img src={rev.reviewer_photo} alt="" className="w-10 h-10 rounded-full object-cover shrink-0"
+                        onError={(e) => { const el = e.currentTarget; el.style.display = 'none'; const fb = el.nextElementSibling as HTMLElement; if (fb) fb.style.display = 'flex'; }} />
+                    ) : null}
+                    <div className={`w-10 h-10 rounded-full items-center justify-center text-sm font-bold text-white shrink-0${rev.reviewer_photo ? ' hidden' : ' flex'}`}
+                      style={{ background: "linear-gradient(135deg,#FF2D55,#FF7FA3)", display: rev.reviewer_photo ? 'none' : 'flex' }}>
+                      {(rev.reviewer_name || 'A')[0]}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium truncate" style={{ color: 'var(--text-primary)' }}>{rev.reviewer_name}</p>
                       <p className="text-[11px] text-[#6a6a80]">{rev.date}</p>
