@@ -829,7 +829,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
       )}
 
       {/* ══ VIDÉO SIMPLE (fallback compatible tous appareils) ══ */}
-      {merchant.videoUrl && (
+      {/* {merchant.videoUrl && (
         <section className="mb-8">
           <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Découvrir en vidéo</h2>
           <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#000' }}>
@@ -847,7 +847,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
             </video>
           </div>
         </section>
-      )}
+      )} */}
 
       {/* ══ GALLERY DRAWER ══ */}
       {showGallery && (

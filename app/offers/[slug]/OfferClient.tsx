@@ -436,7 +436,7 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                     )}
 
                     {/* ═══════════ VIDÉO SIMPLE (fallback compatible tous appareils) ═══════════ */}
-                    {offer.videoUrl && (
+                    {/* {offer.videoUrl && (
                         <section className="mb-8">
                             <h2 className="text-lg font-bold mb-3" style={{ color: "var(--text-primary)" }}>Découvrir en vidéo</h2>
                             <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#000' }}>
@@ -454,7 +454,7 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                                 </video>
                             </div>
                         </section>
-                    )}
+                    )} */}
 
                     {/* ═══════════ AVIS CLIENTS ═══════════ */}
                     <section className="mb-8">
