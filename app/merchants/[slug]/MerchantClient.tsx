@@ -828,6 +828,27 @@ export default function MerchantClient({ merchant, offers }: Props) {
         </section>
       )}
 
+      {/* ══ VIDÉO SIMPLE (fallback compatible tous appareils) ══ */}
+      {merchant.videoUrl && (
+        <section className="mb-8">
+          <h2 className="text-base md:text-lg font-bold mb-3" style={{ color: 'var(--text-primary)' }}>Découvrir en vidéo</h2>
+          <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#000' }}>
+            <video
+              controls
+              playsInline
+              webkit-playsinline="true"
+              preload="metadata"
+              poster={merchant.coverImage || ''}
+              className="w-full rounded-2xl"
+              style={{ maxHeight: '480px', backgroundColor: '#000' }}
+            >
+              <source src={merchant.videoUrl} type="video/mp4" />
+              Votre navigateur ne supporte pas la lecture vidéo.
+            </video>
+          </div>
+        </section>
+      )}
+
       {/* ══ GALLERY DRAWER ══ */}
       {showGallery && (
         <div className="fixed inset-0 z-[200] flex flex-col justify-end" onClick={() => setShowGallery(false)}>

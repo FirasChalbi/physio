@@ -435,6 +435,27 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                         </section>
                     )}
 
+                    {/* ═══════════ VIDÉO SIMPLE (fallback compatible tous appareils) ═══════════ */}
+                    {offer.videoUrl && (
+                        <section className="mb-8">
+                            <h2 className="text-lg font-bold mb-3" style={{ color: "var(--text-primary)" }}>Découvrir en vidéo</h2>
+                            <div className="rounded-2xl overflow-hidden" style={{ backgroundColor: '#000' }}>
+                                <video
+                                    controls
+                                    playsInline
+                                    webkit-playsinline="true"
+                                    preload="metadata"
+                                    poster={offer.coverImage}
+                                    className="w-full rounded-2xl"
+                                    style={{ maxHeight: '480px', backgroundColor: '#000' }}
+                                >
+                                    <source src={offer.videoUrl} type="video/mp4" />
+                                    Votre navigateur ne supporte pas la lecture vidéo.
+                                </video>
+                            </div>
+                        </section>
+                    )}
+
                     {/* ═══════════ AVIS CLIENTS ═══════════ */}
                     <section className="mb-8">
                         <div className="flex items-center justify-between mb-4">
