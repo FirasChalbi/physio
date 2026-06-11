@@ -8,7 +8,7 @@ import {
     LayoutDashboard, Tag, Gift, Store, MapPin,
     Users, ShoppingCart, Star, Image, BarChart3,
     LogOut, Menu, X, ChevronLeft, Search, Bell,
-    ExternalLink, Tent, Calendar, UserCog
+    ExternalLink, Tent, Calendar, UserCog, Mail
 } from "lucide-react"
 import { useState } from "react"
 import Logo from "@/components/Logo"
@@ -26,6 +26,7 @@ const adminNavItems = [
     { href: "/admin/reviews", label: "Avis", icon: Star },
     { href: "/admin/banners", label: "Bannières", icon: Image },
     { href: "/admin/analytics", label: "Analytiques", icon: BarChart3 },
+    { href: "/admin/email-campaigns", label: "Emails Marchands", icon: Mail },
 ]
 
 const merchantNavItems = [
