@@ -15,10 +15,9 @@ import {
   Column,
   Hr,
 } from '@react-email/components';
-
 interface WelcomeEmailModernProps {
   restaurantName?: string;
-  ownerName?: string;
+  platform?: string;
   heroImage?: string;
   dishImage?: string;
   interiorImage?: string;
@@ -32,7 +31,7 @@ interface WelcomeEmailModernProps {
 
 export default function WelcomeEmailModern({
   restaurantName = "Trattoria Bella Vista",
-  ownerName = "Marco",
+  platform = "LifeDeal",
   heroImage = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&h=400&fit=crop",
   dishImage = "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&q=80",
   interiorImage = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=400&h=300&fit=crop",
@@ -43,7 +42,6 @@ export default function WelcomeEmailModern({
   websiteUrl = "https://life-app.fr/admin",
   trialDays = 30,
 }: WelcomeEmailModernProps) {
-
   // Inline styles (no Tailwind - pure inline for email compatibility)
   const colors = {
     bg: '#fafaf9',
@@ -98,13 +96,17 @@ export default function WelcomeEmailModern({
 
           {/* Welcome Message */}
           <Section style={{ padding: '48px 32px' }}>
-            <Text style={{ fontSize: '16px', color: colors.neutral600, lineHeight: '1.6', marginBottom: '24px', margin: '0 0 24px' }}>
-              Cher <strong>{ownerName}</strong>,
-            </Text>
-            <Text style={{ fontSize: '16px', color: colors.neutral600, lineHeight: '1.6', margin: 0 }}>
-              Nous sommes ravis de vous présenter votre nouvelle plateforme digitale. 
-              Chaque fonctionnalité a été pensée pour enrichir l'expérience de vos clients 
-              et simplifier la gestion de votre établissement.
+            <Text style={{ fontSize: '15px', color: colors.neutral600, lineHeight: '1.75', margin: 0 }}>
+              Nous avons préparé votre page sur{" "}
+              <strong style={{ fontWeight: 500, color: colors.neutral900 }}>
+                {platform}
+              </strong>
+              . Pendant{" "}
+              <strong style={{ fontWeight: 500, color: colors.neutral900 }}>
+                {trialDays} jours
+              </strong>
+              , vos clients peuvent découvrir votre menu, réserver une table et
+              laisser leurs avis — le tout au même endroit.
             </Text>
           </Section>
 

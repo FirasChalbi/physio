@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       emailComponent = (
         <WelcomeEmailModern
           restaurantName={data.restaurantName}
-          ownerName={data.ownerName}
+          platform={data.platform || 'LifeDeal'}
           heroImage={data.heroImage}
           dishImage={data.dishImage}
           interiorImage={data.interiorImage}

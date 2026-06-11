@@ -32,6 +32,7 @@ const templates = [
     colorLabel: "Or & Crème",
     fields: [
       { key: "restaurantName", label: "Nom du restaurant", placeholder: "La Trattoria del Centro", required: true },
+      { key: "platform", label: "Nom de la plateforme", placeholder: "LifeDeal" },
       { key: "phone", label: "Téléphone", placeholder: "+33 1 23 45 67 89" },
       { key: "address", label: "Adresse (\\n pour saut de ligne)", placeholder: "12 Rue des Abbesses\\n75018 Paris" },
       { key: "hours", label: "Horaires", placeholder: "Mar–Dim · 12h–22h30" },
@@ -52,7 +53,7 @@ const templates = [
     colorLabel: "Vert & Neutre",
     fields: [
       { key: "restaurantName", label: "Nom du restaurant", placeholder: "Trattoria Bella Vista", required: true },
-      { key: "ownerName", label: "Nom du propriétaire", placeholder: "Marco", required: true },
+      { key: "platform", label: "Nom de la plateforme", placeholder: "LifeDeal" },
       { key: "phoneNumber", label: "Téléphone", placeholder: "+33 1 42 86 75 23" },
       { key: "address", label: "Adresse", placeholder: "15 Rue de Rivoli, 75001 Paris" },
       { key: "email", label: "Email du restaurant", placeholder: "contact@restaurant.fr" },
@@ -291,6 +292,7 @@ export default function EmailCampaignsPage() {
       setFormData(prev => ({
         ...prev,
         restaurantName: merchant.name,
+        platform: "LifeDeal",
         phone: merchant.phone || "",
         address: addr,
         hours: hours,
@@ -303,6 +305,7 @@ export default function EmailCampaignsPage() {
       setFormData(prev => ({
         ...prev,
         restaurantName: merchant.name,
+        platform: "LifeDeal",
         phoneNumber: merchant.phone || "",
         address: addr,
         email: merchant.email || "",
