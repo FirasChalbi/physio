@@ -33,74 +33,45 @@ const t = {
   sans: "'DM Sans', Helvetica, Arial, sans-serif",
 };
 
-// ─── SVG icons (inline, email-safe) ──────────────────────────────────────────
+// ─── SVG icons replaced with email-safe PNG icons ──────────────────────────
 const IconCalendar = () => (
-  <svg
+  <Img
+    src="https://img.icons8.com/ios/50/6B6560/calendar.png"
+    alt="Calendrier"
     width="18"
     height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#6B6560"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="4" width="18" height="18" rx="2" />
-    <line x1="16" y1="2" x2="16" y2="6" />
-    <line x1="8" y1="2" x2="8" y2="6" />
-    <line x1="3" y1="10" x2="21" y2="10" />
-    <circle cx="12" cy="16" r="1.5" />
-  </svg>
+    style={{ display: 'block' }}
+  />
 );
 
 const IconMenu = () => (
-  <svg
+  <Img
+    src="https://img.icons8.com/ios/50/6B6560/menu--v1.png"
+    alt="Menu"
     width="18"
     height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#6B6560"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="4" y1="6" x2="20" y2="6" />
-    <line x1="4" y1="10" x2="20" y2="10" />
-    <line x1="4" y1="14" x2="14" y2="14" />
-    <rect x="3" y="3" width="18" height="18" rx="2" />
-  </svg>
+    style={{ display: 'block' }}
+  />
 );
 
 const IconStar = () => (
-  <svg
+  <Img
+    src="https://img.icons8.com/ios/50/6B6560/star--v1.png"
+    alt="Etoile"
     width="18"
     height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#6B6560"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-  </svg>
+    style={{ display: 'block' }}
+  />
 );
 
 const IconPhoto = () => (
-  <svg
+  <Img
+    src="https://img.icons8.com/ios/50/6B6560/picture.png"
+    alt="Photos"
     width="18"
     height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="#6B6560"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" />
-    <circle cx="8.5" cy="8.5" r="1.5" />
-    <polyline points="21 15 16 10 5 21" />
-  </svg>
+    style={{ display: 'block' }}
+  />
 );
 
 // ─── Feature list ─────────────────────────────────────────────────────────────
