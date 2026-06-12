@@ -8,7 +8,7 @@ import {
   MapPin, Star, Heart, ArrowLeft, BadgeCheck, Phone, Mail,
   Globe, Store, Clock, ChevronRight, Navigation, Share2,
   ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag, TrendingUp,
-  Play, Pause, Volume2, VolumeX
+  Play, Pause, Volume2, VolumeX, Users, Upload
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
 import MenuServiceDrawer from "@/components/MenuServiceDrawer"
@@ -92,7 +92,7 @@ function StarRow({ rating, size = 14 }: { rating: number; size?: number }) {
     <span className="flex gap-0.5">
       {Array.from({ length: 5 }).map((_, i) => (
         <Star key={i} style={{ width: size, height: size }}
-          className={i < Math.round(rating) ? "text-amber-400 fill-amber-400" : "text-[#333]"} />
+          className={i < Math.round(rating) ? "text-amber-400 fill-amber-400" : "text-amber-400"} />
       ))}
     </span>
   )
@@ -297,8 +297,8 @@ export default function MerchantClient({ merchant, offers }: Props) {
               alt={merchant.name}
               className="w-full h-full object-cover"
             />
-            {/* Mobile gradient — exactly original */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/30 md:hidden" />
+            {/* Mobile gradient — lighter since identity is now below hero */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/40 md:hidden" />
             {/* Desktop gradient — richer fade so identity text reads clearly */}
             <div className="absolute inset-0 hidden md:block" style={{
               background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(10,10,15,0.65) 45%, rgba(10,10,15,0.15) 75%, rgba(10,10,15,0.3) 100%)"
@@ -313,7 +313,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
           </div>
         )}
 
-        {/* Mobile top bar — exactly original */}
+        {/* Mobile top bar */}
         <div className="absolute top-0 left-0 right-0 flex items-center justify-between p-4 md:hidden z-10">
           <button onClick={() => router.back()}
             className="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-md"
@@ -322,10 +322,16 @@ export default function MerchantClient({ merchant, offers }: Props) {
           </button>
           <div className="flex gap-2">
             <button
+              onClick={() => toggleFav(merchant._id)}
+              className="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-md"
+              style={{ background: "rgba(0,0,0,0.4)" }}>
+              <Heart className={`w-4 h-4 ${favorites.has(merchant._id) ? "text-red-500 fill-red-500" : "text-white"}`} />
+            </button>
+            <button
               onClick={() => navigator.share?.({ title: merchant.name, url: window.location.href })}
               className="w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-md"
               style={{ background: "rgba(0,0,0,0.4)" }}>
-              <Share2 className="w-4 h-4 text-white" />
+              <Upload className="w-4 h-4 text-white" />
             </button>
           </div>
         </div>
@@ -371,55 +377,93 @@ export default function MerchantClient({ merchant, offers }: Props) {
       </div>
 
       {/* ══ TWO-COLUMN LAYOUT ══ */}
-      <div className="max-w-7xl mx-auto md:grid md:grid-cols-[340px_1fr] md:gap-10 md:px-6 md:pt-6 md:pb-8 relative z-10">
+      <div className="max-w-7xl mx-auto md:grid md:grid-cols-[340px_1fr] md:gap-10 md:px-6 md:pt-6 md:pb-8 relative z-10 -mt-5 " >
 
         {/* ══════ LEFT SIDEBAR ══════ */}
-        <aside className="md:sticky md:top-20 md:self-start px-4 md:px-0 -mt-8 relative z-10 mb-6 md:mb-0">
+        <aside className="md:sticky md:top-20 md:self-start px-4 md:px-0  relative z-10 mb-6 md:mb-0 bg-[#ffffff] rounded-t-[16px]">
 
           {/* Logo + name — mobile only (desktop shows in hero) */}
-          <div className="flex items-end gap-3 mb-4 md:hidden">
+          <div className="flex items-start gap-3.5 mb-3 md:hidden">
             {merchant.logo ? (
-              <img src={merchant.logo} alt="" className="w-16 h-16 rounded-2xl object-cover border-4 shadow-lg shrink-0"
+              <img src={merchant.logo} alt="" className="w-[86px] h-[86px] rounded-2xl object-cover border-[3px] shadow-lg shrink-0 -mt-5"
                 style={{ borderColor: "var(--surface-0)" }} />
             ) : (
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center border-4 shrink-0"
+              <div className="w-[72px] h-[72px] rounded-2xl flex items-center justify-center border-[3px] shrink-0 -mt-4"
                 style={{ borderColor: "var(--surface-0)", background: "rgba(139,92,246,0.12)" }}>
                 {isResto ? <Utensils className="w-7 h-7 text-violet-400" /> : <Store className="w-7 h-7 text-violet-400" />}
               </div>
             )}
-            <div className="pb-1 flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <h1 className="text-xl font-bold text-white leading-tight">{merchant.name}</h1>
-                {merchant.verified && <BadgeCheck className="w-5 h-5 text-cyan-400 shrink-0" />}
+            <div className="pt-3 flex-1 min-w-0">
+              <div className="flex items-center gap-1.5">
+                <h1 className="text-2xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>{merchant.name}</h1>
+                {merchant.verified && <BadgeCheck className="w-5.5 h-5.5 text-white fill-blue-500 shrink-0" />}
               </div>
               {merchant.categories && merchant.categories.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mt-1.5">
-                  {merchant.categories.slice(0, 3).map(c => (
-                    <span key={c} className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-                      style={{ background: "rgba(255,45,85,0.1)", color: "#FF2D55", border: "1px solid rgba(255,45,85,0.2)" }}>
-                      {c}
-                    </span>
-                  ))}
-                </div>
+                <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                  {merchant.categories.slice(0, 3).join(' · ')}
+                </p>
               )}
             </div>
           </div>
 
-          {/* Rating + location — mobile only */}
-          <div className="flex items-center gap-4 mb-4 md:hidden">
+          {/* Rating + open status — mobile only */}
+          <div className="flex items-center gap-2 flex-wrap mb-3 md:hidden">
             {numRating > 0 && (
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-1">
                 <StarRow rating={numRating} />
-                <span className="text-white text-sm font-semibold">{typeof numRating === "number" && numRating % 1 !== 0 ? numRating.toFixed(1) : numRating}</span>
+                {/* <span className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{typeof numRating === "number" && numRating % 1 !== 0 ? numRating.toFixed(1) : numRating}</span> */}
                 <span className="text-[#6a6a80] text-xs">({reviewCount} avis)</span>
               </div>
             )}
+            {merchant.opening_hours && (() => {
+              const todayVal = merchant.opening_hours[TODAY_KEY] || "—"
+              const isOpen = todayVal !== "Fermé" && todayVal !== "—"
+              return (
+                <div className="flex items-center gap-1.5">
+                  {numRating > 0 && <span className="text-gray-400 text-xs pr-2">|</span>}
+                  <span className="w-1.5 h-1.5 rounded-full" style={{ background: isOpen ? '#22c55e' : '#ef4444' }} />
+                  <span className="text-sm font-medium" style={{ color: isOpen ? '#22c55e' : '#ef4444' }}>
+                    {isOpen ? 'Ouvert' : 'Fermé'}
+                  </span>
+                  {isOpen && <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>· Ferme à {todayVal.split('–')[1]?.trim() || todayVal}</span>}
+                </div>
+              )
+            })()}
+          </div>
+
+          {/* Category chips — mobile only */}
+          {merchant.categories && merchant.categories.length > 0 && (
+            <div className="flex flex-wrap gap-2 mb-4 md:hidden">
+              {merchant.categories.map(c => (
+                <span key={c} className="px-3 py-1.5 rounded-full text-xs font-medium border"
+                  style={{ borderColor: 'var(--border)', color: 'var(--text-primary)', background: 'var(--surface-1)' }}>
+                  {c}
+                </span>
+              ))}
+            </div>
+          )}
+
+          {/* Info strip — mobile only (location, hours, capacity) */}
+          <div className="flex items-stretch gap-0 mb-4 rounded-2xl border overflow-hidden md:hidden" style={{ borderColor: 'var(--border)', background: 'var(--surface-1)' }}>
             {(merchant.municipality || merchant.city) && (
-              <span className="flex items-center gap-1 text-sm text-[#8888a0]">
-                <MapPin className="w-3.5 h-3.5 text-[#FF2D55]" />
-                {merchant.municipality || merchant.city}
-              </span>
+              <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center border-r" style={{ borderColor: 'var(--border)' }}>
+                <MapPin className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+                <span className="text-xs font-medium leading-tight" style={{ color: 'var(--text-primary)' }}>{merchant.municipality || merchant.city}</span>
+                {merchant.street && <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.street.split(',')[0]?.substring(0, 10)}</span>}
+              </div>
             )}
+            {merchant.opening_hours && (
+              <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center border-r" style={{ borderColor: 'var(--border)' }}>
+                <Clock className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+                <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>Horaires</span>
+                <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>Voir détails</span>
+              </div>
+            )}
+            <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center">
+              <Users className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+              <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{isResto ? 'Restaurant' : 'Commerce'}</span>
+              <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.categories?.[0] || 'Local'}</span>
+            </div>
           </div>
 
           {/* Desktop rating strip — hidden on mobile */}
@@ -441,8 +485,34 @@ export default function MerchantClient({ merchant, offers }: Props) {
             </div>
           )}
 
-          {/* Action buttons — same on both */}
-          <div className="flex gap-2 mb-6">
+          {/* Action buttons — mobile redesigned */}
+          <div className="flex gap-2 mb-6 md:hidden">
+            {(offers.length > 0 || (merchant.menu && merchant.menu.length > 0) || (merchant.services && merchant.services.length > 0)) && (
+              <button
+                onClick={() => setShowReservation(true)}
+                className="flex-1 flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white shadow-lg"
+                style={{ background: "linear-gradient(135deg,#FF2D55,#CC2444)", boxShadow: '0 4px 14px rgba(255,45,85,0.3)' }}>
+                <Calendar className="w-4 h-4" />
+                Réserver
+              </button>
+            )}
+            {merchant.phone && (
+              <a href={`tel:${merchant.phone}`}
+                className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-xs font-medium border"
+                style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: 'var(--surface-1)' }}>
+                <Phone className="w-4 h-4" />
+              </a>
+            )}
+            {mapPageUrl && (
+              <button onClick={() => router.push(mapPageUrl)}
+                className="flex items-center justify-center gap-2 px-4 py-3.5 rounded-xl text-xs font-medium border"
+                style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: 'var(--surface-1)' }}>
+                <Navigation className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+          {/* Action buttons — desktop */}
+          <div className="hidden md:flex gap-2 mb-6">
             {(offers.length > 0 || (merchant.menu && merchant.menu.length > 0) || (merchant.services && merchant.services.length > 0)) && (
               <button
                 onClick={() => setShowReservation(true)}
@@ -706,8 +776,15 @@ export default function MerchantClient({ merchant, offers }: Props) {
                     <div key={gi} className="flex gap-2 shrink-0">
                       {img0 && (
                         <button onClick={() => setShowGallery(true)}
-                          className="w-52 h-52 md:w-64 md:h-64 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
+                          className="relative w-52 h-52 md:w-64 md:h-64 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
                           <img src={img0} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                          {gi === 0 && (
+                            <span className="absolute bottom-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold text-white backdrop-blur-sm"
+                              style={{ background: 'rgba(0,0,0,0.55)' }}>
+                              <Users className="w-3 h-3" />
+                              {merchant.images!.length}
+                            </span>
+                          )}
                         </button>
                       )}
                       {(img1 || img2) && (
