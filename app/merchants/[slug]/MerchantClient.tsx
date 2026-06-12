@@ -378,7 +378,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
       </div>
 
       {/* ══ TWO-COLUMN LAYOUT ══ */}
-      <div className="max-w-7xl mx-auto md:grid md:grid-cols-[340px_1fr] md:gap-10 md:px-6 md:pt-6 md:pb-8 relative z-10 -mt-5 " >
+      <div className="max-w-7xl mx-auto md:grid md:grid-cols-[340px_1fr] md:gap-10 md:px-6 md:pt-6 md:pb-8 relative z-10 -mt-5 md:mt-2 " >
 
         {/* ══════ LEFT SIDEBAR ══════ */}
         <aside className="md:sticky md:top-20 md:self-start px-4 md:px-0  relative z-10 mb-6 md:mb-0 bg-[#ffffff] rounded-t-[16px]">
