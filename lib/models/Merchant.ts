@@ -52,6 +52,7 @@ export interface IMerchant {
   userId?: string
   rank?: number
   viewCount?: number
+  loyalClients?: number
 
   /* ─── Groupon-style fields ─── */
   latitude?: string
@@ -126,6 +127,7 @@ const MerchantSchema = new Schema<IMerchant>({
   userId: { type: String },
   rank: { type: Number, default: 999 },
   viewCount: { type: Number, default: 0 },
+  loyalClients: { type: Number },
 
   /* Groupon-style */
   latitude: { type: String },

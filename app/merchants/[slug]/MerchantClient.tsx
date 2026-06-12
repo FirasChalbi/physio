@@ -40,6 +40,7 @@ export type Merchant = {
   images?: string[]; videoUrl?: string; user_reviews?: MerchantReview[]
   social_media?: Record<string, string>
   menu?: MenuItem[]; services?: ServiceItem[]
+  loyalClients?: number;
 }
 
 export type Offer = {
@@ -449,20 +450,25 @@ export default function MerchantClient({ merchant, offers }: Props) {
               <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center border-r" style={{ borderColor: 'var(--border)' }}>
                 <MapPin className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
                 <span className="text-xs font-medium leading-tight" style={{ color: 'var(--text-primary)' }}>{merchant.municipality || merchant.city}</span>
-                {merchant.street && <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.street.split(',')[0]?.substring(0, 10)}</span>}
+                {/* {merchant.street && <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.street.split(',')[0]?.substring(0, 10)}</span>} */}
               </div>
             )}
-            {merchant.opening_hours && (
+            {merchant.loyalClients != null ? (
+              <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center border-r" style={{ borderColor: 'var(--border)' }}>
+                <Users className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+                <span className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>{merchant.loyalClients.toLocaleString()}</span>
+                <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>Clients fidèles</span>
+              </div>
+            ) : merchant.opening_hours ? (
               <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center border-r" style={{ borderColor: 'var(--border)' }}>
                 <Clock className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
                 <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>Horaires</span>
-                <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>Voir détails</span>
               </div>
-            )}
+            ) : null}
             <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center">
               <Users className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
               <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{isResto ? 'Restaurant' : 'Commerce'}</span>
-              <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.categories?.[0] || 'Local'}</span>
+              {/* <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.categories?.[0] || 'Local'}</span> */}
             </div>
           </div>
 
@@ -539,7 +545,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
           </div>
 
           {/* Divider — mobile only */}
-          <div className="border-b mb-6 md:hidden" style={{ borderColor: "var(--border)" }} />
+          {/* <div className="border-b mb-6 md:hidden" style={{ borderColor: "var(--border)" }} /> */}
 
           {/* Desktop-only sidebar sections */}
           <div className="hidden md:block">
@@ -627,6 +633,64 @@ export default function MerchantClient({ merchant, offers }: Props) {
 
         {/* ══════ RIGHT MAIN CONTENT ══════ */}
         <main className="px-4 md:px-0 min-w-0 overflow-hidden">
+
+      {/* ══ PHOTOS — mobile only (desktop renders below) ══ */}
+      {merchant.images && merchant.images.length > 0 && (
+        <section className="mb-8 md:hidden">
+          {/* <div className="flex items-center justify-between mb-3 px-0">
+            <h2 className="text-base font-bold" style={{ color: 'var(--text-primary)' }}>Photos</h2>
+            <button onClick={() => setShowGallery(true)} className="text-sm text-[#FF2D55] font-medium">
+              Voir tout ({merchant.images.length})
+            </button>
+          </div> */}
+          <div className="overflow-hidden rounded-2xl">
+            <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+              {Array.from({ length: Math.ceil(merchant.images.length / 3) }).map((_, gi) => {
+                const base = gi * 3
+                const [img0, img1, img2] = merchant.images!.slice(base, base + 3)
+                return (
+                  <div key={gi} className="flex gap-2 shrink-0">
+                    {img0 && (
+                      <button onClick={() => setShowGallery(true)}
+                        className="relative w-52 h-52 rounded-2xl overflow-hidden shrink-0 active:scale-[0.98] transition-transform">
+                        <img src={img0} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                        {gi === 0 && (
+                          <span className="absolute bottom-2.5 left-2.5 flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-semibold text-white backdrop-blur-sm"
+                            style={{ background: 'rgba(0,0,0,0.55)' }}>
+                            <Users className="w-3 h-3" />
+                            {merchant.images!.length}
+                          </span>
+                        )}
+                      </button>
+                    )}
+                    {(img1 || img2) && (
+                      <div className="flex flex-col gap-2 shrink-0 h-52">
+                        {img1 && (
+                          <button onClick={() => setShowGallery(true)}
+                            className="w-[104px] flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform">
+                            <img src={img1} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                          </button>
+                        )}
+                        {img2 && (
+                          <button onClick={() => setShowGallery(true)}
+                            className="w-[104px] flex-1 rounded-2xl overflow-hidden active:scale-[0.98] transition-transform relative">
+                            <img src={img2} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                            {gi === Math.ceil(merchant.images!.length / 3) - 1 && merchant.images!.length > (base + 3) && (
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center rounded-2xl">
+                                <span className="text-white font-bold text-sm">+{merchant.images!.length - (base + 3)}</span>
+                              </div>
+                            )}
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ══ ABOUT ══ */}
       {aboutText && (
@@ -754,9 +818,9 @@ export default function MerchantClient({ merchant, offers }: Props) {
         )
       })()}
 
-      {/* ══ PHOTOS ══ */}
+      {/* ══ PHOTOS — desktop only (mobile renders above À propos) ══ */}
       {merchant.images && merchant.images.length > 0 && (
-        <section className="mb-8">
+        <section className="mb-8 hidden md:block">
           <div className="flex items-center justify-between mb-3 px-0">
             <h2 className="text-base md:text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Photos</h2>
             <button onClick={() => setShowGallery(true)} className="text-sm text-[#FF2D55] font-medium">
