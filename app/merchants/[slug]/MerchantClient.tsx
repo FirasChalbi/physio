@@ -41,6 +41,8 @@ export type Merchant = {
   social_media?: Record<string, string>
   menu?: MenuItem[]; services?: ServiceItem[]
   loyalClients?: number;
+  search_job: string;
+  search_state: string;
 }
 
 export type Offer = {
@@ -399,11 +401,20 @@ export default function MerchantClient({ merchant, offers }: Props) {
                 <h1 className="text-2xl font-bold leading-tight" style={{ color: 'var(--text-primary)' }}>{merchant.name}</h1>
                 {merchant.verified && <BadgeCheck className="w-5.5 h-5.5 text-white fill-blue-500 shrink-0" />}
               </div>
-              {merchant.categories && merchant.categories.length > 0 && (
-                <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
-                  {merchant.categories.slice(0, 3).join(' · ')}
-                </p>
-              )}
+              {(() => {
+                const parts = [
+                  merchant.search_job,
+                  merchant.search_state,
+                  merchant.categories && merchant.categories.length > 0
+                    ? merchant.categories[merchant.categories.length - 1]
+                    : undefined,
+                ].filter(Boolean)
+                return parts.length > 0 ? (
+                  <p className="text-sm mt-0.5" style={{ color: 'var(--text-secondary)' }}>
+                    {parts.join(' · ')}
+                  </p>
+                ) : null
+              })()}
             </div>
           </div>
 
@@ -465,11 +476,30 @@ export default function MerchantClient({ merchant, offers }: Props) {
                 <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>Horaires</span>
               </div>
             ) : null}
-            <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center">
-              <Users className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
-              <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{isResto ? 'Restaurant' : 'Commerce'}</span>
-              {/* <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>{merchant.categories?.[0] || 'Local'}</span> */}
-            </div>
+            {(() => {
+              const menuCount = merchant.menu?.length ?? 0
+              const serviceCount = merchant.services?.length ?? 0
+              if (menuCount > 0) return (
+                <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center">
+                  <Utensils className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+                  <span className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>{menuCount}</span>
+                  <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>Plats</span>
+                </div>
+              )
+              if (serviceCount > 0) return (
+                <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center">
+                  <Sparkles className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+                  <span className="text-xs font-bold" style={{ color: 'var(--text-primary)' }}>{serviceCount}</span>
+                  <span className="text-[10px] mt-0.5" style={{ color: 'var(--text-secondary)' }}>Services</span>
+                </div>
+              )
+              return (
+                <div className="flex-1 flex flex-col items-center justify-center py-3 px-2 text-center">
+                  <Users className="w-4 h-4 mb-1" style={{ color: 'var(--text-secondary)' }} />
+                  <span className="text-xs font-medium" style={{ color: 'var(--text-primary)' }}>{isResto ? 'Restaurant' : 'Commerce'}</span>
+                </div>
+              )
+            })()}
           </div>
 
           {/* Desktop rating strip — hidden on mobile */}
