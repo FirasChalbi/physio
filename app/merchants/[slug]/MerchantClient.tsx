@@ -404,7 +404,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
               {(() => {
                 const parts = [
                   merchant.search_job,
-                  merchant.search_state,
+                  // merchant.search_state,
                   merchant.categories && merchant.categories.length > 0
                     ? merchant.categories[merchant.categories.length - 1]
                     : undefined,
