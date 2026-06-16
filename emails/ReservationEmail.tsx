@@ -213,7 +213,7 @@ export default function ReservationEmail(props: ReservationEmailProps) {
           {/* ══ FOOTER ══ */}
           <Section style={{ backgroundColor: DK, padding: '18px 28px', textAlign: 'center' }}>
             <Link href="https://life-app.fr/" style={{ textDecoration: 'none' }}>
-              <Text style={{ color: P, fontSize: '14px', fontWeight: '700', letterSpacing: '0.5px', margin: '0 0 2px 0' }}>LifeDeal Yvelines</Text>
+              <Text style={{ color: P, fontSize: '14px', fontWeight: '700', letterSpacing: '0.5px', margin: '0 0 2px 0' }}>LifeDeal</Text>
             </Link>
             <Text style={{ color: '#6a6a8a', fontSize: '11px', fontWeight: '400', margin: 0 }}>
               Plateforme de deals locaux · © 2026 Tous droits réservés

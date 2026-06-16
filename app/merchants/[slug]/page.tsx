@@ -31,22 +31,22 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const { slug } = await params
   const merchant = await getMerchant(slug)
-  if (!merchant) return { title: "Marchand introuvable — LifeDeal Yvelines" }
+  if (!merchant) return { title: "Marchand introuvable — LifeDeal" }
 
   const aboutText = merchant.about || merchant.description || ""
   return {
-    title: `${merchant.name} — LifeDeal Yvelines`,
+    title: `${merchant.name} — LifeDeal`,
     description: aboutText || `${merchant.name} à ${merchant.city || "Yvelines"}. Réservez sur LifeDeal.`,
     openGraph: {
-      title: `${merchant.name} — LifeDeal Yvelines`,
-      description: aboutText || `Découvrez les offres de ${merchant.name} sur LifeDeal Yvelines.`,
+      title: `${merchant.name} — LifeDeal`,
+      description: aboutText || `Découvrez les offres de ${merchant.name} sur LifeDeal.`,
       images: [{ url: merchant.coverImage || merchant.logo || "" }],
       type: "website",
       url: `https://life-app.fr/merchants/${merchant.slug}`,
     },
     twitter: {
       card: "summary",
-      title: `${merchant.name} — LifeDeal Yvelines`,
+      title: `${merchant.name} — LifeDeal`,
       images: [merchant.coverImage || merchant.logo || ""],
     },
     alternates: {

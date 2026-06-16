@@ -63,7 +63,7 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
             <Section style={{ background: 'linear-gradient(135deg, #FF2D55 0%, #FF4D6D 100%)', padding: '40px 32px', textAlign: 'center' }}>
               <Img
                 src="https://life-app.fr/logo3.png"
-                alt="LifeDeal Yvelines"
+                alt="LifeDeal"
                 style={{ margin: '0 auto 24px', height: '48px', width: 'auto', display: 'block' }}
               />
               <Text style={{ color: '#ffffff', fontSize: '30px', fontWeight: '700', lineHeight: '36px', margin: '0 0 8px 0' }}>
@@ -211,7 +211,7 @@ export default function CustomerConfirmationEmail(props: CustomerConfirmationEma
             {/* Footer */}
             <Section style={{ padding: '24px 32px', background: '#020304', textAlign: 'center' }}>
               <Text style={{ color: '#ffffff', fontSize: '13px', margin: '0 0 14px 0' }}>
-                © LifeDeal Yvelines - Tous droits réservés
+                © LifeDeal - Tous droits réservés
               </Text>
 
               <Row style={{ marginBottom: '14px' }}>

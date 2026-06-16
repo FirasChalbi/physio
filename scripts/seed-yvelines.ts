@@ -697,7 +697,8 @@ async function main() {
   const hashedPassword = await bcrypt.hash('admin123', 12)
   await mongoose.connection.db!.collection('users').updateOne(
     { email: 'admin@lifeapp.fr' },
-    { $setOnInsert: {
+    {
+      $setOnInsert: {
         name: 'Admin LifeApp',
         email: 'admin@lifeapp.fr',
         password: hashedPassword,
@@ -705,7 +706,8 @@ async function main() {
         active: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }},
+      }
+    },
     { upsert: true }
   )
   console.log('✅ Admin user ready (admin@lifeapp.fr / admin123)')
@@ -760,7 +762,7 @@ async function main() {
   }
   console.log(`✅ ${familyCount} activités famille Yvelines insérées`)
 
-  console.log('\n🎉 Seed Yvelines terminé ! LifeDeal Yvelines est prêt.')
+  console.log('\n🎉 Seed Yvelines terminé ! LifeDeal est prêt.')
   console.log('📍 Zones couvertes : Versailles, SGE, Poissy, Rambouillet, Les Mureaux, Sartrouville, Conflans, Vélizy, Mantes-la-Jolie')
 
   await mongoose.disconnect()

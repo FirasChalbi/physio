@@ -28,7 +28,7 @@ export default function Footer() {
         </div>
 
         <nav className="flex flex-wrap gap-x-5 gap-y-2 mb-8">
-          {['Accueil','Offres','Carte','Réservations','Compte'].map((label) => (
+          {['Accueil', 'Offres', 'Carte', 'Réservations', 'Compte'].map((label) => (
             <Link
               key={label}
               href={label === 'Accueil' ? '/' : `/${label.toLowerCase()}`}
@@ -41,7 +41,7 @@ export default function Footer() {
 
         <div className="pt-5 flex items-center justify-between" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <p className="text-[10px] text-[#4a4a60]">
-            © {new Date().getFullYear()} LifeDeal Yvelines. Tous droits réservés.
+            © {new Date().getFullYear()} LifeDeal. Tous droits réservés.
           </p>
         </div>
       </div>

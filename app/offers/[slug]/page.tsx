@@ -50,17 +50,17 @@ export async function generateMetadata(
 ): Promise<Metadata> {
     const { slug } = await params
     const offer = await getOffer(slug)
-    if (!offer) return { title: "Offre introuvable — LifeDeal Yvelines" }
+    if (!offer) return { title: "Offre introuvable — LifeDeal" }
 
     const merchant = offer.merchantId ? await getMerchant(offer.merchantId) : null
     const description = offer.shortDescription ||
         `${offer.title} à ${offer.dealPrice}€ au lieu de ${offer.originalPrice}€. ${offer.discountPercent}% de réduction chez ${merchant?.name || ""} à ${offer.city}.`
 
     return {
-        title: `${offer.title} — LifeDeal Yvelines`,
+        title: `${offer.title} — LifeDeal`,
         description,
         openGraph: {
-            title: `${offer.title} — LifeDeal Yvelines`,
+            title: `${offer.title} — LifeDeal`,
             description: offer.shortDescription || `Économisez ${offer.discountPercent}% chez ${merchant?.name || ""}.`,
             images: [{ url: offer.coverImage }],
             type: "website",
@@ -68,7 +68,7 @@ export async function generateMetadata(
         },
         twitter: {
             card: "summary_large_image",
-            title: `${offer.title} — LifeDeal Yvelines`,
+            title: `${offer.title} — LifeDeal`,
             images: [offer.coverImage],
         },
         alternates: {
