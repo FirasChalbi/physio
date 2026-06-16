@@ -11,20 +11,31 @@ export async function GET() {
     }
 
     const userId = (session.user as any).id
+    const userRole = (session.user as any).role
 
     await connectDB()
     const Merchant = getMerchantModel()
     const Reservation = getReservationModel()
 
-    const merchant = await Merchant.findOne({ userId }).lean() as any
-    if (!merchant) {
-      return NextResponse.json({ error: "Aucun marchand lié" }, { status: 404 })
-    }
+    let reservations: any[]
 
-    const merchantId = merchant._id.toString()
-    const reservations = await Reservation.find({ merchantId })
-      .sort({ createdAt: -1 })
-      .lean()
+    if (userRole === 'admin') {
+      // Admin sees ALL reservations
+      reservations = await Reservation.find({})
+        .sort({ createdAt: -1 })
+        .lean()
+    } else {
+      // Merchant sees only their own reservations
+      const merchant = await Merchant.findOne({ userId }).lean() as any
+      if (!merchant) {
+        return NextResponse.json({ error: "Aucun marchand lié" }, { status: 404 })
+      }
+
+      const merchantId = merchant._id.toString()
+      reservations = await Reservation.find({ merchantId })
+        .sort({ createdAt: -1 })
+        .lean()
+    }
 
     const formatted = reservations.map((r: any) => ({
       _id: r._id.toString(),
@@ -38,6 +49,8 @@ export async function GET() {
       selectedItems: r.selectedItems || [],
       offerTitle: r.offerTitle || '',
       offerImage: r.offerImage || '',
+      merchantName: r.merchantName || '',
+      merchantId: r.merchantId || '',
       createdAt: r.createdAt,
     }))
 
@@ -56,6 +69,7 @@ export async function PUT(req: NextRequest) {
     }
 
     const userId = (session.user as any).id
+    const userRole = (session.user as any).role
     const { reservationId, status } = await req.json()
 
     if (!reservationId || !status) {
@@ -70,20 +84,20 @@ export async function PUT(req: NextRequest) {
     const Merchant = getMerchantModel()
     const Reservation = getReservationModel()
 
-    // Verify this merchant belongs to the user
-    const merchant = await Merchant.findOne({ userId }).lean() as any
-    if (!merchant) {
-      return NextResponse.json({ error: "Aucun marchand lié" }, { status: 404 })
-    }
-
     const reservation = await Reservation.findById(reservationId)
     if (!reservation) {
       return NextResponse.json({ error: "Réservation introuvable" }, { status: 404 })
     }
 
-    // Verify the reservation belongs to this merchant
-    if (reservation.merchantId !== merchant._id.toString()) {
-      return NextResponse.json({ error: "Accès refusé" }, { status: 403 })
+    // Admin can update any reservation; merchants can only update their own
+    if (userRole !== 'admin') {
+      const merchant = await Merchant.findOne({ userId }).lean() as any
+      if (!merchant) {
+        return NextResponse.json({ error: "Aucun marchand lié" }, { status: 404 })
+      }
+      if (reservation.merchantId !== merchant._id.toString()) {
+        return NextResponse.json({ error: "Accès refusé" }, { status: 403 })
+      }
     }
 
     reservation.status = status

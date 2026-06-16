@@ -22,7 +22,7 @@ const adminNavItems = [
     { href: "/admin/family-activities", label: "Activités famille", icon: Tent },
     { href: "/admin/locations", label: "Villes", icon: MapPin },
     { href: "/admin/users", label: "Utilisateurs", icon: Users },
-    { href: "/admin/orders", label: "Commandes", icon: ShoppingCart },
+    { href: "/admin/my-reservations", label: "Réservations", icon: ShoppingCart },
     { href: "/admin/reviews", label: "Avis", icon: Star },
     { href: "/admin/banners", label: "Bannières", icon: Image },
     { href: "/admin/analytics", label: "Analytiques", icon: BarChart3 },

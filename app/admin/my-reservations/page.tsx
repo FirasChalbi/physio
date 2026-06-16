@@ -1,6 +1,6 @@
 "use client"
 import { useEffect, useState } from "react"
-import { Calendar, Loader2, CheckCircle2, XCircle, Clock, Phone, User } from "lucide-react"
+import { Calendar, Loader2, CheckCircle2, XCircle, Clock, Phone, User, Store } from "lucide-react"
 
 const statusConfig: Record<string, { bg: string; text: string; label: string }> = {
     pending: { bg: 'rgba(245,158,11,0.1)', text: '#f59e0b', label: 'En attente' },
@@ -13,6 +13,7 @@ export default function MyReservationsPage() {
     const [loading, setLoading] = useState(true)
     const [filter, setFilter] = useState("all")
     const [updating, setUpdating] = useState<string | null>(null)
+    const [merchantFilter, setMerchantFilter] = useState("")
 
     useEffect(() => {
         fetch('/api/merchant-reservations')
@@ -42,7 +43,15 @@ export default function MyReservationsPage() {
         </div>
     )
 
-    const filtered = reservations.filter(r => filter === 'all' || r.status === filter)
+    // Get unique merchant names for the filter
+    const merchantNames = [...new Set(reservations.map(r => r.merchantName).filter(Boolean))]
+
+    const filtered = reservations.filter(r => {
+        const statusMatch = filter === 'all' || r.status === filter
+        const merchantMatch = !merchantFilter || r.merchantName === merchantFilter
+        return statusMatch && merchantMatch
+    })
+
     const stats = {
         total: reservations.length,
         pending: reservations.filter(r => r.status === 'pending').length,
@@ -54,7 +63,7 @@ export default function MyReservationsPage() {
     return (
         <div className="space-y-6 animate-fade-in">
             <div>
-                <h1 className="text-2xl font-bold text-white">Mes Réservations</h1>
+                <h1 className="text-2xl font-bold text-white">Toutes les Réservations</h1>
                 <p className="text-sm text-[#6a6a80] mt-1">{stats.total} réservations · {stats.revenue.toLocaleString('fr-FR')} € de revenus</p>
             </div>
 
@@ -80,7 +89,7 @@ export default function MyReservationsPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2 items-center">
                 {['all', 'pending', 'confirmed', 'cancelled'].map(s => (
                     <button key={s} onClick={() => setFilter(s)}
                         className={`px-3 py-2 rounded-xl text-xs font-medium transition-colors ${filter === s ? 'text-white' : 'text-[#6a6a80] hover:text-white'}`}
@@ -89,6 +98,20 @@ export default function MyReservationsPage() {
                         {s === 'all' ? 'Toutes' : statusConfig[s]?.label || s}
                     </button>
                 ))}
+
+                {merchantNames.length > 1 && (
+                    <select
+                        value={merchantFilter}
+                        onChange={e => setMerchantFilter(e.target.value)}
+                        className="ml-auto px-3 py-2 rounded-xl text-xs font-medium text-white border transition-colors"
+                        style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.08)', outline: 'none' }}
+                    >
+                        <option value="">Tous les marchands</option>
+                        {merchantNames.map(name => (
+                            <option key={name} value={name}>{name}</option>
+                        ))}
+                    </select>
+                )}
             </div>
 
             {/* Table */}
@@ -97,6 +120,7 @@ export default function MyReservationsPage() {
                     <table className="w-full">
                         <thead><tr className="border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                             <th className="text-left py-3 px-5 text-[11px] uppercase tracking-wider text-[#6a6a80] font-medium">Client</th>
+                            <th className="text-left py-3 px-5 text-[11px] uppercase tracking-wider text-[#6a6a80] font-medium">Marchand</th>
                             <th className="text-left py-3 px-5 text-[11px] uppercase tracking-wider text-[#6a6a80] font-medium hidden md:table-cell">Téléphone</th>
                             <th className="text-left py-3 px-5 text-[11px] uppercase tracking-wider text-[#6a6a80] font-medium">Date</th>
                             <th className="text-left py-3 px-5 text-[11px] uppercase tracking-wider text-[#6a6a80] font-medium hidden md:table-cell">Montant</th>
@@ -105,7 +129,7 @@ export default function MyReservationsPage() {
                         </tr></thead>
                         <tbody>
                             {filtered.length === 0 ? (
-                                <tr><td colSpan={6} className="py-12 text-center text-[#6a6a80]">Aucune réservation</td></tr>
+                                <tr><td colSpan={7} className="py-12 text-center text-[#6a6a80]">Aucune réservation</td></tr>
                             ) : filtered.map(r => {
                                 const st = statusConfig[r.status] || statusConfig.pending
                                 return (
@@ -119,6 +143,12 @@ export default function MyReservationsPage() {
                                                     <span className="text-sm font-medium text-white">{r.customer}</span>
                                                     {r.offerTitle && <p className="text-xs text-[#6a6a80] truncate max-w-[160px]">{r.offerTitle}</p>}
                                                 </div>
+                                            </div>
+                                        </td>
+                                        <td className="py-3.5 px-5">
+                                            <div className="flex items-center gap-2">
+                                                <Store className="w-3.5 h-3.5 text-[#6a6a80]" />
+                                                <span className="text-sm text-[#a0a0b8] truncate max-w-[140px]">{r.merchantName || '—'}</span>
                                             </div>
                                         </td>
                                         <td className="py-3.5 px-5 text-sm text-[#a0a0b8] hidden md:table-cell">{r.phone}</td>

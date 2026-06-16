@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         type: 'new_reservation',
         title: '📋 Nouvelle réservation',
         body: `${name} a réservé chez ${merchantName} pour le ${date} à ${time}${totalPrice ? ` — ${totalPrice} €` : ''}`,
-        link: '/admin/orders',
+        link: '/admin/my-reservations',
       })
     } catch { }
 

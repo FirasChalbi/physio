@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
           type: 'new_reservation',
           title: '📋 Nouvelle réservation',
           body: `${name} a réservé chez ${merchantName} pour le ${date} à ${time}${totalPrice ? ` — ${totalPrice} €` : ''}`,
-          link: '/admin/orders',
+          link: '/admin/my-reservations',
         })
         created.push(notif)
         break
@@ -151,7 +151,7 @@ export async function POST(req: NextRequest) {
               type: 'new_reservation',
               title: '📋 Nouvelle réservation',
               body: `${res.name} a réservé chez ${res.merchantName} pour le ${res.date} à ${res.time}${res.totalPrice ? ` — ${res.totalPrice} €` : ''}`,
-              link: '/admin/orders',
+              link: '/admin/my-reservations',
             }))
           }
         }

@@ -93,7 +93,7 @@ export default function AdminDashboard() {
         { label: "Catégories", value: data.totalCategories.toString(), sub: 'actives', icon: Tag, color: '#06b6d4', glow: 'rgba(6, 182, 212, 0.15)', href: '/admin/categories' },
         { label: "Marchands", value: data.totalMerchants.toString(), sub: 'actifs', icon: Store, color: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.15)', href: '/admin/merchants' },
         { label: "Utilisateurs", value: data.totalUsers.toString(), sub: 'inscrits', icon: Users, color: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', href: '/admin/users' },
-        { label: "Réservations", value: data.totalReservations.toString(), sub: `${data.confirmedReservations} confirmées`, icon: Calendar, color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.15)', href: '/admin/orders' },
+        { label: "Réservations", value: data.totalReservations.toString(), sub: `${data.confirmedReservations} confirmées`, icon: Calendar, color: '#f43f5e', glow: 'rgba(244, 63, 94, 0.15)', href: '/admin/my-reservations' },
         { label: "Revenue", value: `${data.totalRevenue.toLocaleString('fr-FR')} €`, sub: 'total', icon: DollarSign, color: '#FF2D55', glow: 'rgba(255, 45, 85, 0.15)', href: '/admin/analytics' },
     ]
 
@@ -254,7 +254,7 @@ export default function AdminDashboard() {
                 <div className="lg:col-span-2 rounded-2xl border overflow-hidden" style={{ background: '#12121a', borderColor: 'rgba(255,255,255,0.06)' }}>
                     <div className="p-5 flex items-center justify-between border-b" style={{ borderColor: 'rgba(255,255,255,0.06)' }}>
                         <h2 className="text-base font-semibold text-white">Réservations récentes</h2>
-                        <Link href="/admin/orders" className="text-sm text-[#FF2D55] hover:text-[#FF4D7A] font-medium transition-colors">
+                        <Link href="/admin/my-reservations" className="text-sm text-[#FF2D55] hover:text-[#FF4D7A] font-medium transition-colors">
                             Voir tout →
                         </Link>
                     </div>
