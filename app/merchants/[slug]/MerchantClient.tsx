@@ -1321,6 +1321,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
           merchantId={merchant._id}
           menu={merchant.menu}
           services={merchant.services}
+          openingHours={merchant.opening_hours}
         />
       )}
     </div>

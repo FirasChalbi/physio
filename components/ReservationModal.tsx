@@ -1,7 +1,7 @@
 // components/ReservationModal.tsx
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { X, ChevronLeft, ChevronRight, Calendar, Clock, User, Phone, Mail, CheckCircle, Loader2, Sparkles, Utensils, Tag } from "lucide-react"
 
 type Offer = { _id: string; title: string; slug: string; coverImage: string; dealPrice: number; originalPrice: number; discountPercent: number; merchantId: string }
@@ -13,10 +13,41 @@ interface Props {
   open: boolean; onClose: () => void
   offers?: Offer[]; merchantName: string; merchantId: string
   menu?: MenuItem[]; services?: ServiceItem[]
+  openingHours?: Record<string, string>
 }
 
 const MONTHS_FR = ["Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]
-const TIME_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"]
+const DEFAULT_TIME_SLOTS = ["09:00","09:30","10:00","10:30","11:00","11:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00"]
+const DAY_KEYS = ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"]
+
+/** Parse an opening-hours value like "09:00 – 18:00" or "09:00–12:00, 14:00–18:00" into
+ *  30-min time-slot arrays. Returns null when the value is missing / "Fermé". */
+function generateTimeSlotsFromHours(hoursStr?: string): string[] | null {
+  if (!hoursStr || hoursStr.trim().toLowerCase() === "fermé") return null
+  const ranges = hoursStr.split(/,|\bet\b/i).map(s => s.trim()).filter(Boolean)
+  const slots: string[] = []
+  for (const range of ranges) {
+    // Accept en-dash (U+2013), em-dash (U+2014), hyphen-minus, and any Unicode dash
+    const parts = range.split(/[\u2013\u2014\u2012\u2015\-]/).map(s => s.trim())
+    if (parts.length < 2) continue
+    const [startStr, endStr] = parts
+    const startMatch = startStr.match(/(\d{1,2}):(\d{2})/)
+    const endMatch = endStr.match(/(\d{1,2}):(\d{2})/)
+    if (!startMatch || !endMatch) continue
+    const sh = Number(startMatch[1]), sm = Number(startMatch[2])
+    const eh = Number(endMatch[1]), em = Number(endMatch[2])
+    if (isNaN(sh) || isNaN(sm) || isNaN(eh) || isNaN(em)) continue
+    let cur = sh * 60 + sm
+    const end = eh * 60 + em
+    while (cur < end) {
+      const h = Math.floor(cur / 60)
+      const m = cur % 60
+      slots.push(`${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`)
+      cur += 30
+    }
+  }
+  return slots.length > 0 ? slots : null
+}
 const dowLabels = ["L","M","M","J","V","S","D"]
 function getDaysInMonth(y: number, m: number) { return new Date(y, m + 1, 0).getDate() }
 function getFirstDow(y: number, m: number) { return (new Date(y, m, 1).getDay() + 6) % 7 }
@@ -62,7 +93,7 @@ function MiniCalendar({ selected, onSelect }: { selected: string; onSelect: (d: 
   )
 }
 
-export default function ReservationModal({ open, onClose, offers, merchantName, merchantId, menu, services }: Props) {
+export default function ReservationModal({ open, onClose, offers, merchantName, merchantId, menu, services, openingHours }: Props) {
   const hasOffers = !!(offers && offers.length > 0)
   const hasMenu = !!(menu && menu.length > 0)
   const hasServices = !!(services && services.length > 0)
@@ -81,6 +112,33 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
 
   // ⚠️ useMemo MUST be before any early return — Rules of Hooks
   const totalPrice = useMemo(() => selectedItems.reduce((s, i) => s + i.price, 0), [selectedItems])
+
+  // Compute available time slots from opening hours + selected date
+  // When no date is selected, use today's day as default
+  const availableTimeSlots = useMemo(() => {
+    if (!openingHours) return DEFAULT_TIME_SLOTS
+    const dateObj = selectedDate ? new Date(selectedDate + "T00:00") : new Date()
+    const dayKey = DAY_KEYS[dateObj.getDay()]
+    const dayHours = openingHours[dayKey]
+    const generated = generateTimeSlotsFromHours(dayHours)
+    return generated || DEFAULT_TIME_SLOTS
+  }, [selectedDate, openingHours])
+
+  // Check if the selected day is closed
+  const isClosedDay = useMemo(() => {
+    if (!openingHours) return false
+    const dateObj = selectedDate ? new Date(selectedDate + "T00:00") : new Date()
+    const dayKey = DAY_KEYS[dateObj.getDay()]
+    const dayHours = openingHours[dayKey]
+    return !dayHours || dayHours.trim().toLowerCase() === "fermé"
+  }, [selectedDate, openingHours])
+
+  // Clear selectedTime when date changes and the time slot is no longer available
+  useEffect(() => {
+    if (selectedTime && !availableTimeSlots.includes(selectedTime)) {
+      setSelectedTime("")
+    }
+  }, [availableTimeSlots])  // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!open) return null
 
@@ -285,13 +343,23 @@ export default function ReservationModal({ open, onClose, offers, merchantName, 
 
               <div className="p-4 rounded-xl" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)" }}>
                 <div className="flex items-center gap-2 mb-3"><Clock className="w-4 h-4 text-[#FF2D55]" /><p className="text-xs font-semibold text-white uppercase tracking-wider">Heure</p></div>
-                <div className="grid grid-cols-4 gap-2">
-                  {TIME_SLOTS.map(t => (
-                    <button key={t} onClick={() => setSelectedTime(t)}
-                      className={`py-2 rounded-xl text-xs font-medium transition-all ${selectedTime === t ? "text-white" : "text-[#8888a0] hover:text-white"}`}
-                      style={selectedTime === t ? { background: "linear-gradient(135deg,#FF2D55,#CC2444)" } : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>{t}</button>
-                  ))}
-                </div>
+                {isClosedDay ? (
+                  <div className="flex flex-col items-center justify-center py-6 gap-2">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: "rgba(239,68,68,0.1)" }}>
+                      <Clock className="w-5 h-5 text-red-400" />
+                    </div>
+                    <p className="text-sm font-medium text-red-400">Fermé ce jour</p>
+                    <p className="text-xs text-[#6a6a80] text-center">Veuillez choisir un autre jour</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2">
+                    {availableTimeSlots.map(t => (
+                      <button key={t} onClick={() => setSelectedTime(t)}
+                        className={`py-2 rounded-xl text-xs font-medium transition-all ${selectedTime === t ? "text-white" : "text-[#8888a0] hover:text-white"}`}
+                        style={selectedTime === t ? { background: "linear-gradient(135deg,#FF2D55,#CC2444)" } : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}>{t}</button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {(selectedDate || selectedTime) && (
