@@ -21,6 +21,12 @@ type Category = {
   _id: string; name: string; slug: string; icon?: string
 }
 
+const DEFAULT_MAP_TILE_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+const MAP_TILE_URL = process.env.NEXT_PUBLIC_MAP_TILE_URL || DEFAULT_MAP_TILE_URL
+const MAP_TILE_ATTRIBUTION = process.env.NEXT_PUBLIC_MAP_TILE_ATTRIBUTION
+  || '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+const usesDefaultMapTiles = MAP_TILE_URL === DEFAULT_MAP_TILE_URL
+
 /* ─── Category icon SVGs for map pins ───────────────────── */
 const CATEGORY_SVGS: Record<string, string> = {
   restaurant: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>',
@@ -757,10 +763,11 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
         <ZoomControls />
         <ClickHandler active={manualMode} onPick={handleMapClick} />
 
-        {/* Dark tile layer */}
+        {/* Map tiles; the no-key OSM fallback is darkened to match the app theme. */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution={MAP_TILE_ATTRIBUTION}
+          className={usesDefaultMapTiles ? "map-tiles-dark" : undefined}
+          url={MAP_TILE_URL}
         />
 
         {/* User location */}
@@ -1068,6 +1075,12 @@ export default function MapComponent({ focusLocation }: { focusLocation?: { lat:
 
       {/* ── Dark popup CSS override ── */}
       <style>{`
+        .leaflet-container {
+          background: #0a0a0f;
+        }
+        .map-tiles-dark {
+          filter: grayscale(0.25) invert(1) hue-rotate(180deg) brightness(0.72) contrast(0.9);
+        }
         .leaflet-popup-content-wrapper {
           background: transparent !important;
           box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
