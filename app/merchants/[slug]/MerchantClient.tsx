@@ -5,12 +5,13 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
-  MapPin, Star, Heart, ArrowLeft, BadgeCheck, Phone, Mail,
+  MapPin, Star, Heart, ArrowLeft, BadgeCheck, Phone,
   Globe, Store, Clock, ChevronRight, Navigation, Share2,
   ExternalLink, Utensils, Calendar, Sparkles, Timer, DollarSign, Tag, TrendingUp,
   Play, Pause, Volume2, VolumeX, Users, Upload
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
+import EmailContact from "@/components/EmailContact"
 import MenuServiceDrawer from "@/components/MenuServiceDrawer"
 
 /* ─── Types ──────────────────────────────────────────── */
@@ -613,14 +614,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
                   </a>
                 )}
                 {merchant.email && (
-                  <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-                    <Mail className="w-5 h-5 text-[#FF2D55] shrink-0" />
-                    <div className="flex-1">
-                      <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
-                      <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.email}</p>
-                    </div>
-                    <ChevronRight className="w-4 h-4 text-[#333]" />
-                  </a>
+                  <EmailContact email={merchant.email} className="flex items-center gap-4 px-5 py-4 border-b" />
                 )}
                 {(merchant.website || merchant.domain) && (
                   <a href={merchant.website || `https://${merchant.domain}`} target="_blank" rel="noopener noreferrer"
@@ -1243,14 +1237,7 @@ export default function MerchantClient({ merchant, offers }: Props) {
 
           {/* Email */}
           {merchant.email && (
-            <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 px-5 py-4 border-b" style={{ borderColor: "var(--border)" }}>
-              <Mail className="w-5 h-5 text-[#FF2D55] shrink-0" />
-              <div className="flex-1">
-                <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
-                <p className="text-sm" style={{ color: 'var(--text-primary)' }}>{merchant.email}</p>
-              </div>
-              <ChevronRight className="w-4 h-4 text-[#333]" />
-            </a>
+            <EmailContact email={merchant.email} className="flex items-center gap-4 px-5 py-4 border-b" />
           )}
 
           {/* Website */}

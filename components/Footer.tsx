@@ -5,6 +5,15 @@ import Link from "next/link"
 import { Instagram } from "lucide-react"
 import Logo from "@/components/Logo"
 
+const footerLinks = [
+  { label: "Accueil", href: "/" },
+  { label: "Offres", href: "/offers" },
+  { label: "Catégories", href: "/categories" },
+  { label: "Carte", href: "/map" },
+  { label: "Réservations", href: "/reservations" },
+  { label: "Compte", href: "/account" },
+]
+
 export default function Footer() {
   return (
     <footer className="mt-8 pb-24 md:pb-0" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
@@ -28,10 +37,10 @@ export default function Footer() {
         </div>
 
         <nav className="flex flex-wrap gap-x-5 gap-y-2 mb-8">
-          {['Accueil', 'Offres', 'Carte', 'Réservations', 'Compte'].map((label) => (
+          {footerLinks.map(({ label, href }) => (
             <Link
               key={label}
-              href={label === 'Accueil' ? '/' : `/${label.toLowerCase()}`}
+              href={href}
               className="text-xs text-[#8888a0] hover:text-white transition-colors"
             >
               {label}

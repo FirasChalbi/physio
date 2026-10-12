@@ -4,11 +4,12 @@ import { useState, useEffect, useRef } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import {
-    MapPin, Star, Heart, ChevronLeft, Share2, Phone, Mail, Clock,
+    MapPin, Star, Heart, ChevronLeft, Share2, Phone, Clock,
     Navigation, ChevronRight, Utensils, Sparkles, Leaf, ShoppingCart, Gift, Check,
     Play, Pause, Volume2, VolumeX,
 } from "lucide-react"
 import ReservationModal from "@/components/ReservationModal"
+import EmailContact from "@/components/EmailContact"
 
 /* ─── Types ──────────────────────────────────────────── */
 export type Offer = {
@@ -549,14 +550,7 @@ export default function OfferClient({ offer, merchant, reviews }: Props) {
                             )}
 
                             {merchant?.email && (
-                                <a href={`mailto:${merchant.email}`} className="flex items-center gap-4 py-4">
-                                    <Mail className="w-5 h-5 text-[#FF2D55] flex-shrink-0" />
-                                    <div className="flex-1">
-                                        <p className="text-xs text-[#6a6a80] mb-0.5">Email</p>
-                                        <p className="text-sm" style={{ color: "var(--text-primary)" }}>{merchant.email}</p>
-                                    </div>
-                                    <ChevronRight className="w-4 h-4 text-[#333]" />
-                                </a>
+                                <EmailContact email={merchant.email} className="flex items-center gap-4 py-4" />
                             )}
                         </div>
                     </section>

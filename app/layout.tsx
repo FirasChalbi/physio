@@ -36,7 +36,6 @@ export const metadata: Metadata = {
     description: "Découvrez les meilleures offres locales en Île-de-France. Économisez jusqu'à -70%.",
   },
   robots: { index: true, follow: true },
-  alternates: { canonical: "https://life-app.fr" },
 };
 
 export default function RootLayout({
